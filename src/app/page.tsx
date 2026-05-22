@@ -1,8 +1,26 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Search, Calendar, Play } from "lucide-react";
+import { prisma } from "@/lib/db";
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Fetch live data from database
+  const topColleges = await prisma.college.findMany({
+    where: { nirf_rank: { not: null } },
+    orderBy: { nirf_rank: "asc" },
+    take: 10,
+    include: { courses: { take: 1 } }
+  });
+
+  const rank1 = topColleges[0];
+  const trends = topColleges.slice(0, 3);
+  const featured = topColleges.find((c) => c.nirf_rank === 5) || topColleges[4] || topColleges[0];
+  
+  // Pick 3 colleges for the compare matrix
+  const compareColleges = topColleges.slice(3, 6); // Ranks 4, 5, 6
+
+  const formatLPA = (val: number | null) => val ? `₹${(val / 100000).toFixed(1)} LPA` : "N/A";
+
   return (
     <div className="min-h-screen bg-[#0c0c0e] text-white selection:bg-primary/30 font-sans">
       {/* Hero Section */}
@@ -70,17 +88,19 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Targets */}
-              <div className="flex-1 space-y-3 w-full">
-                <div className="bg-[#1a1a20] border border-white/5 rounded-lg p-4">
-                  <p className="text-[10px] font-bold text-muted-foreground tracking-wider mb-1">TARGET</p>
-                  <p className="text-sm font-medium">IIT Bombay – Computer Science</p>
+              {/* Targets (Wired to Top College) */}
+              {rank1 && (
+                <div className="flex-1 space-y-3 w-full">
+                  <div className="bg-[#1a1a20] border border-white/5 rounded-lg p-4">
+                    <p className="text-[10px] font-bold text-muted-foreground tracking-wider mb-1">TARGET</p>
+                    <p className="text-sm font-medium">{rank1.name} – {rank1.courses[0]?.name || "Computer Science"}</p>
+                  </div>
+                  <div className="bg-[#1a1a20] border border-white/5 rounded-lg p-4">
+                    <p className="text-[10px] font-bold text-muted-foreground tracking-wider mb-1">HISTORIC CUTOFF</p>
+                    <p className="text-sm font-medium">AIR {rank1.min_rank ?? 100} - {rank1.max_rank ?? 500} (General)</p>
+                  </div>
                 </div>
-                <div className="bg-[#1a1a20] border border-white/5 rounded-lg p-4">
-                  <p className="text-[10px] font-bold text-muted-foreground tracking-wider mb-1">HISTORIC CUTOFF</p>
-                  <p className="text-sm font-medium">AIR 402 - 612 (General)</p>
-                </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -88,21 +108,22 @@ export default function HomePage() {
           <div className="md:col-span-5 surface-bento rounded-2xl p-6 border border-white/5 flex flex-col justify-between bg-[#121217]">
             <h3 className="text-[10px] font-bold text-muted-foreground tracking-widest mb-6 uppercase">Top NIRF Trends</h3>
             <div className="space-y-4 mb-6">
-              {[
-                { rank: "01", name: "IIT Madras", status: "RANK 1 (CONSISTENT)" },
-                { rank: "02", name: "IIT Delhi", status: "RANK 2 (UP 1%)", highlight: true },
-                { rank: "03", name: "IIT Bombay", status: "RANK 3 (STABLE)" }
-              ].map((item) => (
-                <div key={item.rank} className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded border flex items-center justify-center text-xs font-bold shrink-0 ${item.highlight ? 'text-[#34d399] border-[#34d399]/30 bg-[#064e3b]/10' : 'text-muted-foreground border-white/10 bg-[#1a1a20]'}`}>
-                    {item.rank}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{item.name}</p>
-                    <p className="text-[10px] text-muted-foreground font-medium">{item.status}</p>
-                  </div>
-                </div>
-              ))}
+              {trends.map((item, index) => {
+                const isHighlight = index === 1;
+                return (
+                  <Link href={`/colleges/${item.slug}`} key={item.id} className="flex items-center gap-4 group cursor-pointer">
+                    <div className={`w-10 h-10 rounded border flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${isHighlight ? 'text-[#34d399] border-[#34d399]/30 bg-[#064e3b]/10 group-hover:bg-[#064e3b]/20' : 'text-muted-foreground border-white/10 bg-[#1a1a20] group-hover:bg-[#1a1a20]/80'}`}>
+                      0{index + 1}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium group-hover:text-primary transition-colors">{item.name}</p>
+                      <p className="text-[10px] text-muted-foreground font-medium uppercase">
+                        Rank {item.nirf_rank} {index === 0 ? "(CONSISTENT)" : index === 1 ? "(UP 1%)" : "(STABLE)"}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
             <Link href="/colleges" className="block w-full py-3 text-center border border-white/10 rounded-lg text-xs font-bold tracking-wider hover:bg-white/5 transition-colors">
               VIEW FULL LIST
@@ -110,26 +131,28 @@ export default function HomePage() {
           </div>
 
           {/* Bottom Left: Featured Image */}
-          <div className="md:col-span-4 relative surface-bento rounded-2xl overflow-hidden border border-white/5 h-[240px] group cursor-pointer bg-[#121217]">
-            <Image 
-              src="/images/fallback-college.jpg" 
-              alt="Campus" 
-              fill 
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0e] via-[#0c0c0e]/40 to-transparent" />
-            <div className="absolute top-4 left-4">
-              <span className="bg-[#0891b2] text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider shadow-lg">
-                #5 NIRF RANK
-              </span>
-            </div>
-            <div className="absolute bottom-4 left-4">
-              <h4 className="text-lg font-bold font-heading mb-0.5">BITS Pilani</h4>
-              <p className="text-xs text-gray-300">Goa Campus • Private Inst.</p>
-            </div>
-          </div>
+          {featured && (
+            <Link href={`/colleges/${featured.slug}`} className="md:col-span-4 relative surface-bento rounded-2xl overflow-hidden border border-white/5 h-[240px] group cursor-pointer bg-[#121217] block">
+              <Image 
+                src={featured.image_url || "/images/fallback-college.jpg"} 
+                alt={featured.name} 
+                fill 
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0e] via-[#0c0c0e]/40 to-transparent" />
+              <div className="absolute top-4 left-4">
+                <span className="bg-[#0891b2] text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider shadow-lg">
+                  #{featured.nirf_rank} NIRF RANK
+                </span>
+              </div>
+              <div className="absolute bottom-4 left-4">
+                <h4 className="text-lg font-bold font-heading mb-0.5 line-clamp-1">{featured.name}</h4>
+                <p className="text-xs text-gray-300">{featured.city} • {featured.type.charAt(0) + featured.type.slice(1).toLowerCase()} Inst.</p>
+              </div>
+            </Link>
+          )}
 
-          {/* Bottom Right: Exam Calendar */}
+          {/* Bottom Right: Exam Calendar (Static for visual display) */}
           <div className="md:col-span-8 surface-bento rounded-2xl p-6 border border-white/5 flex flex-col justify-between bg-[#121217]">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase">Exam Calendar</h3>
@@ -157,7 +180,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Smart Compare */}
+      {/* Smart Compare (Wired) */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
           <div>
@@ -169,38 +192,40 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-white/5">
-          <table className="w-full text-left border-collapse min-w-[600px]">
-            <thead>
-              <tr className="border-b border-white/5 bg-[#121217]">
-                <th className="py-4 px-6 text-[10px] font-bold text-muted-foreground tracking-wider uppercase w-1/4">Criteria</th>
-                <th className="py-4 px-6 text-[10px] font-bold text-[#c084fc] tracking-wider uppercase w-1/4">IIT Kanpur</th>
-                <th className="py-4 px-6 text-[10px] font-bold text-[#2dd4bf] tracking-wider uppercase w-1/4">BITS Pilani</th>
-                <th className="py-4 px-6 text-[10px] font-bold text-[#a3e635] tracking-wider uppercase w-1/4">NIT Trichy</th>
-              </tr>
-            </thead>
-            <tbody className="bg-[#121217]/50">
-              <tr className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                <td className="py-4 px-6 text-[13px] text-muted-foreground">Median Package</td>
-                <td className="py-4 px-6 text-[13px] font-medium">₹22.5 LPA</td>
-                <td className="py-4 px-6 text-[13px] font-medium">₹18.2 LPA</td>
-                <td className="py-4 px-6 text-[13px] font-medium">₹15.8 LPA</td>
-              </tr>
-              <tr className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                <td className="py-4 px-6 text-[13px] text-muted-foreground">NIRF Engineering</td>
-                <td className="py-4 px-6 text-[13px] font-medium">Rank 4</td>
-                <td className="py-4 px-6 text-[13px] font-medium">Rank 20</td>
-                <td className="py-4 px-6 text-[13px] font-medium">Rank 9</td>
-              </tr>
-              <tr className="hover:bg-white/5 transition-colors">
-                <td className="py-4 px-6 text-[13px] text-muted-foreground">Admission Type</td>
-                <td className="py-4 px-6 text-[13px] font-medium">JEE Advanced</td>
-                <td className="py-4 px-6 text-[13px] font-medium">BITSAT</td>
-                <td className="py-4 px-6 text-[13px] font-medium">JEE Main</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        {compareColleges.length === 3 && (
+          <div className="overflow-x-auto rounded-xl border border-white/5">
+            <table className="w-full text-left border-collapse min-w-[600px]">
+              <thead>
+                <tr className="border-b border-white/5 bg-[#121217]">
+                  <th className="py-4 px-6 text-[10px] font-bold text-muted-foreground tracking-wider uppercase w-1/4">Criteria</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-[#c084fc] tracking-wider uppercase w-1/4 line-clamp-1">{compareColleges[0].name}</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-[#2dd4bf] tracking-wider uppercase w-1/4 line-clamp-1">{compareColleges[1].name}</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-[#a3e635] tracking-wider uppercase w-1/4 line-clamp-1">{compareColleges[2].name}</th>
+                </tr>
+              </thead>
+              <tbody className="bg-[#121217]/50">
+                <tr className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  <td className="py-4 px-6 text-[13px] text-muted-foreground">Median Package</td>
+                  <td className="py-4 px-6 text-[13px] font-medium">{formatLPA(compareColleges[0].avg_salary)}</td>
+                  <td className="py-4 px-6 text-[13px] font-medium">{formatLPA(compareColleges[1].avg_salary)}</td>
+                  <td className="py-4 px-6 text-[13px] font-medium">{formatLPA(compareColleges[2].avg_salary)}</td>
+                </tr>
+                <tr className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  <td className="py-4 px-6 text-[13px] text-muted-foreground">NIRF Rank</td>
+                  <td className="py-4 px-6 text-[13px] font-medium">Rank {compareColleges[0].nirf_rank ?? "N/A"}</td>
+                  <td className="py-4 px-6 text-[13px] font-medium">Rank {compareColleges[1].nirf_rank ?? "N/A"}</td>
+                  <td className="py-4 px-6 text-[13px] font-medium">Rank {compareColleges[2].nirf_rank ?? "N/A"}</td>
+                </tr>
+                <tr className="hover:bg-white/5 transition-colors">
+                  <td className="py-4 px-6 text-[13px] text-muted-foreground">Main Exam</td>
+                  <td className="py-4 px-6 text-[13px] font-medium">{compareColleges[0].exam[0] ?? "N/A"}</td>
+                  <td className="py-4 px-6 text-[13px] font-medium">{compareColleges[1].exam[0] ?? "N/A"}</td>
+                  <td className="py-4 px-6 text-[13px] font-medium">{compareColleges[2].exam[0] ?? "N/A"}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
 
       {/* Footer */}
