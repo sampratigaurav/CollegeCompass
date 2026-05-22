@@ -7,9 +7,10 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/colleges", label: "Colleges" },
+  { href: "/", label: "Explore" },
   { href: "/compare", label: "Compare" },
   { href: "/predictor", label: "Predictor" },
+  { href: "/saved", label: "Saved" },
 ];
 
 export function Navbar() {
@@ -23,12 +24,9 @@ export function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2.5 font-bold text-xl tracking-tight"
+            className="flex items-center gap-2.5 font-bold text-2xl tracking-tight font-heading"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <GraduationCap className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="hidden sm:block">CollegeCompass</span>
+            <span>CollegeCompass</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -39,8 +37,8 @@ export function Navbar() {
                 href={href}
                 className={cn(
                   "px-4 py-2 rounded-md text-sm font-medium transition-colors",
-                  pathname === href || pathname.startsWith(href + "/")
-                    ? "bg-primary/10 text-primary"
+                  pathname === href
+                    ? "text-primary border-b-2 border-primary rounded-none"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 )}
               >
@@ -53,9 +51,9 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/predictor"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md active:scale-95"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:bg-primary/90 hover:shadow-md active:scale-[0.98] interactive-glow"
             >
-              Check My Chances
+              Get Started
             </Link>
           </div>
 
