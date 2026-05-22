@@ -36,6 +36,12 @@ model College {
   ai_summary           String?     @db.Text
   tags                 String[]
   best_for             String[]
+  // Enrichment Pipeline Data
+  image_source         String?
+  domain_trust         String?
+  image_score          Int?
+  enriched_at          String?
+  verification_priority String?
 
   courses   Course[]
   reviews   Review[]

@@ -1,0 +1,802 @@
+{
+  "iit-madras": {
+    "website": "https://www.iit-madras.ac.in",
+    "image_url": "https://images.pexels.com/photos/20200756/pexels-photo-20200756.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 17,
+    "enriched_at": "2026-05-22T12:23:44.791Z"
+  },
+  "iim-ahmedabad": {
+    "website": "https://www.iim-ahmedabad.ac.in",
+    "image_url": "https://images.pexels.com/photos/6813051/pexels-photo-6813051.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 17,
+    "enriched_at": "2026-05-22T12:23:45.117Z"
+  },
+  "aiims-delhi": {
+    "website": "https://www.aiims-delhi.ac.in",
+    "image_url": "https://admissionshala.com/images/images/academic-22143.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 50,
+    "enriched_at": "2026-05-22T12:23:47.606Z"
+  },
+  "iit-delhi": {
+    "website": "https://www.iit-delhi.ac.in",
+    "image_url": "https://cep.digivarsity.com/iit-delhi/img/aboutBgs.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:23:48.434Z"
+  },
+  "nlsiu-bangalore": {
+    "website": "https://www.nlsiu-bangalore.ac.in",
+    "image_url": "https://www.careerplanb.co/wp-content/uploads/2025/09/WhatsApp-Image-2025-09-05-at-18.53.14_7009159e-1024x683.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:23:50.491Z"
+  },
+  "pgimer-chandigarh": {
+    "website": "https://www.pgimer-chandigarh.ac.in",
+    "image_url": "https://images.pexels.com/photos/36899861/pexels-photo-36899861.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:23:51.359Z"
+  },
+  "iim-bangalore": {
+    "website": "https://www.iim-bangalore.ac.in",
+    "image_url": "https://www.iihm.ac.in/public/frontend/img/iihm/campus-bangalore.webp",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 40,
+    "enriched_at": "2026-05-22T12:23:54.091Z"
+  },
+  "iit-bombay": {
+    "website": "https://www.iit-bombay.ac.in",
+    "image_url": "https://akm-img-a-in.tosshub.com/aajtak/images/story/202401/659789e561612-iit-bombay-placement-054731787-16x9.jpg?size=1200:675",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 32,
+    "enriched_at": "2026-05-22T12:23:54.839Z"
+  },
+  "nlu-delhi": {
+    "website": "https://www.nlu-delhi.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:23:56.290Z"
+  },
+  "cmc-vellore": {
+    "website": "https://www.cmc-vellore.ac.in",
+    "image_url": "https://images.pexels.com/photos/5147362/pexels-photo-5147362.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:23:57.164Z"
+  },
+  "iim-kozhikode": {
+    "website": "https://www.iim-kozhikode.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:23:58.449Z"
+  },
+  "nalsar-hyderabad": {
+    "website": "https://www.nalsar-hyderabad.ac.in",
+    "image_url": "https://images.pexels.com/photos/16086326/pexels-photo-16086326.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:23:58.984Z"
+  },
+  "iit-kanpur": {
+    "website": "https://www.iit-kanpur.ac.in",
+    "image_url": "https://www.fillandfind.com/uploads/institute/Indian-Institute-of-Technology,-Kanpurdetail-at-fillandfind-com-201607261424291661963686.png",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 30,
+    "enriched_at": "2026-05-22T12:24:01.568Z"
+  },
+  "nujs-kolkata": {
+    "website": "https://www.nujs-kolkata.ac.in",
+    "image_url": "https://www.nujs.edu/wp-content/uploads/2022/12/IMG20221203103235.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 12,
+    "enriched_at": "2026-05-22T12:24:05.617Z"
+  },
+  "iit-delhi-dms": {
+    "website": "https://www.iit-delhi-dms.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:07.184Z"
+  },
+  "iit-kharagpur": {
+    "website": "https://www.iit-kharagpur.ac.in",
+    "image_url": "https://schoolforskills.in/assets/img/sfsiitkgp.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 50,
+    "enriched_at": "2026-05-22T12:24:09.616Z"
+  },
+  "iim-lucknow": {
+    "website": "https://www.iim-lucknow.ac.in",
+    "image_url": "https://images.pexels.com/photos/5147363/pexels-photo-5147363.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:24:10.537Z"
+  },
+  "jipmer-puducherry": {
+    "website": "https://www.jipmer-puducherry.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:13.842Z"
+  },
+  "sgpgims-lucknow": {
+    "website": "https://www.sgpgims-lucknow.ac.in",
+    "image_url": "https://www.myfirstcollege.com/images/detail_page/banner1.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 20,
+    "enriched_at": "2026-05-22T12:24:15.319Z"
+  },
+  "iit-roorkee": {
+    "website": "https://www.iit-roorkee.ac.in",
+    "image_url": "https://images.picxy.com/cache/2019/7/8/97ad2af1902023cb0e12de0b77b76bee.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 26,
+    "enriched_at": "2026-05-22T12:24:18.625Z"
+  },
+  "gnlu-gandhinagar": {
+    "website": "https://www.gnlu-gandhinagar.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:19.559Z"
+  },
+  "xlri-jamshedpur": {
+    "website": "https://www.xlri-jamshedpur.ac.in",
+    "image_url": "https://timesproweb-static-backend-prod.s3.ap-south-1.amazonaws.com/large_XLRI_PMSP_Campus_Image_8e57af7151.webp",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 35,
+    "enriched_at": "2026-05-22T12:24:19.889Z"
+  },
+  "iit-hyderabad": {
+    "website": "https://www.iit-hyderabad.ac.in",
+    "image_url": "https://www.careerplanb.co/wp-content/uploads/2025/09/298-1024x683.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:22.885Z"
+  },
+  "iim-calcutta": {
+    "website": "https://www.iim-calcutta.ac.in",
+    "image_url": "https://c8.alamy.com/comp/AR8278/indian-institute-of-management-iim-calcutta-now-kolkata-west-bengal-AR8278.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 13,
+    "enriched_at": "2026-05-22T12:24:23.355Z"
+  },
+  "iim-indore": {
+    "website": "https://www.iim-indore.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:26.764Z"
+  },
+  "nit-trichy": {
+    "website": "https://www.nit-trichy.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:27.363Z"
+  },
+  "fms-delhi": {
+    "website": "https://www.fms-delhi.ac.in",
+    "image_url": "https://images.pexels.com/photos/14902046/pexels-photo-14902046.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 17,
+    "enriched_at": "2026-05-22T12:24:29.748Z"
+  },
+  "bits-pilani": {
+    "website": "https://www.bits-pilani.ac.in",
+    "image_url": "https://images.pexels.com/photos/18005470/pexels-photo-18005470.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 17,
+    "enriched_at": "2026-05-22T12:24:31.748Z"
+  },
+  "iit-indore": {
+    "website": "https://www.iit-indore.ac.in",
+    "image_url": "https://media.assettype.com/freepressjournal/2026-01-15/bqcy8zyj/Add-a-subheading-45.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 32,
+    "enriched_at": "2026-05-22T12:24:35.070Z"
+  },
+  "nit-rourkela": {
+    "website": "https://www.nit-rourkela.ac.in",
+    "image_url": "https://i.ytimg.com/vi/eMx2Q_yuZfw/maxresdefault.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 33,
+    "enriched_at": "2026-05-22T12:24:39.872Z"
+  },
+  "iit-bhu": {
+    "website": "https://www.iit-bhu.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:41.202Z"
+  },
+  "srm-kattankulathur": {
+    "website": "https://www.srm-kattankulathur.ac.in",
+    "image_url": "https://images.pexels.com/photos/9792417/pexels-photo-9792417.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 39,
+    "enriched_at": "2026-05-22T12:24:44.385Z"
+  },
+  "iit-guwahati": {
+    "website": "https://www.iit-guwahati.ac.in",
+    "image_url": "https://www.iiitg.ac.in/uploads/2023/05/02/7bca2b37ef91bdfe38456e657a3248e3.webp",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:24:44.820Z"
+  },
+  "aiims-rishikesh": {
+    "website": "https://www.aiims-rishikesh.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:45.948Z"
+  },
+  "aiims-bhubaneswar": {
+    "website": "https://www.aiims-bhubaneswar.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:49.897Z"
+  },
+  "iit-ism-dhanbad": {
+    "website": "https://www.iit-ism-dhanbad.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:50.745Z"
+  },
+  "vit-vellore": {
+    "website": "https://www.vit-vellore.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:51.518Z"
+  },
+  "jadavpur-university": {
+    "website": "https://www.jadavpur-university.ac.in",
+    "image_url": "https://assets.thehansindia.com/h-upload/2023/09/06/1378200-jadavpur-university.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 32,
+    "enriched_at": "2026-05-22T12:24:55.185Z"
+  },
+  "nit-surathkal": {
+    "website": "https://www.nit-surathkal.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:55.339Z"
+  },
+  "iit-patna": {
+    "website": "https://www.iit-patna.ac.in",
+    "image_url": "https://bitmesra.ac.in/UploadedDocuments/user_pratyush_869/Header/Header3e16c2a45a0e4ff3904cbb453975ea0d_P-2.jpeg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 26,
+    "enriched_at": "2026-05-22T12:24:55.876Z"
+  },
+  "anna-university-chennai": {
+    "website": "https://www.anna-university-chennai.ac.in",
+    "image_url": "https://media.licdn.com/dms/image/v2/C511BAQGy_eQHEqTAlA/company-background_10000/company-background_10000/0/1583945661843/uvoccet_cover?e=2147483647&v=beta&t=RjYFLYwkIVhTn6Y1kxWcQQC-YrxmhJ7drNJ4BVgfcaU",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 31,
+    "enriched_at": "2026-05-22T12:24:58.773Z"
+  },
+  "nit-calicut": {
+    "website": "https://www.nit-calicut.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:24:59.952Z"
+  },
+  "aiims-jodhpur": {
+    "website": "https://www.aiims-jodhpur.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:25:00.033Z"
+  },
+  "west-bengal-institute-of-technology-kolkata-0": {
+    "website": "https://www.west-bengal-institute-of-technology-kolkata-0.ac.in",
+    "image_url": "https://images.pexels.com/photos/33927819/pexels-photo-33927819.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 17,
+    "enriched_at": "2026-05-22T12:25:02.505Z"
+  },
+  "tiet-patiala": {
+    "website": "https://www.tiet-patiala.ac.in",
+    "image_url": "https://ugpgcollege.com/wp-content/uploads/2024/05/How-to-Apply-For-Direct-Admission-To-Thapar-University-1024x576.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 30,
+    "enriched_at": "2026-05-22T12:25:02.724Z"
+  },
+  "dtu-delhi": {
+    "website": "https://www.dtu-delhi.ac.in",
+    "image_url": "https://edusure.in/wp-content/uploads/2025/05/DTU-Mobile.webp",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 39,
+    "enriched_at": "2026-05-22T12:25:04.177Z"
+  },
+  "telangana-institute-of-technology-hyderabad-16": {
+    "website": "https://www.telangana-institute-of-technology-hyderabad-16.ac.in",
+    "image_url": "https://collegeguruji.co.in/wp-content/uploads/2023/06/iithyd_1125.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 22,
+    "enriched_at": "2026-05-22T12:25:08.091Z"
+  },
+  "delhi-university-of-new-delhi-14": {
+    "website": "https://www.delhi-university-of-new-delhi-14.ac.in",
+    "image_url": "https://sol.du.ac.in/assets/slider/1.png",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 26,
+    "enriched_at": "2026-05-22T12:25:09.010Z"
+  },
+  "gujarat-institute-of-technology-surat-50": {
+    "website": "https://www.gujarat-institute-of-technology-surat-50.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:25:09.300Z"
+  },
+  "maharashtra-institute-of-technology-nagpur-42": {
+    "website": "https://www.maharashtra-institute-of-technology-nagpur-42.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:25:13.636Z"
+  },
+  "west-bengal-institute-of-technology-kolkata-6": {
+    "website": "https://www.west-bengal-institute-of-technology-kolkata-6.ac.in",
+    "image_url": "https://s3-ap-south-1.amazonaws.com/ricedigitals3bucket/AUPortalContent/2026/05/06181627/1600-900-1.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 36,
+    "enriched_at": "2026-05-22T12:25:14.010Z"
+  },
+  "west-bengal-institute-of-technology-kolkata-31": {
+    "website": "https://www.west-bengal-institute-of-technology-kolkata-31.ac.in",
+    "image_url": "https://www.uluberiacollege.in/uploads/1779086814.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 25,
+    "enriched_at": "2026-05-22T12:25:16.140Z"
+  },
+  "uttar-pradesh-university-of-noida-27": {
+    "website": "https://www.uttar-pradesh-university-of-noida-27.ac.in",
+    "image_url": "https://collegedost.in/wp-content/uploads/2025/09/Top-10-Engineering-Colleges-in-Noida.png",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 25,
+    "enriched_at": "2026-05-22T12:25:17.308Z"
+  },
+  "tamil-nadu-institute-of-technology-chennai-30": {
+    "website": "https://www.tamil-nadu-institute-of-technology-chennai-30.ac.in",
+    "image_url": "https://images.pexels.com/photos/12903045/pexels-photo-12903045.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:25:18.355Z"
+  },
+  "uttar-pradesh-university-of-noida-44": {
+    "website": "https://www.uttar-pradesh-university-of-noida-44.ac.in",
+    "image_url": "https://images.pexels.com/photos/798721/pexels-photo-798721.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 17,
+    "enriched_at": "2026-05-22T12:25:18.702Z"
+  },
+  "karnataka-university-of-bengaluru-15": {
+    "website": "https://www.karnataka-university-of-bengaluru-15.ac.in",
+    "image_url": "https://images.pexels.com/photos/29229169/pexels-photo-29229169.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:25:20.494Z"
+  },
+  "mit-manipal": {
+    "website": "https://www.mit-manipal.ac.in",
+    "image_url": "https://image-static.collegedunia.com/public/college_data/images/campusimage/14265_campus.webp",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 75,
+    "enriched_at": "2026-05-22T12:25:21.762Z"
+  },
+  "tamil-nadu-institute-of-technology-chennai-24": {
+    "website": "https://www.tamil-nadu-institute-of-technology-chennai-24.ac.in",
+    "image_url": "https://www.citchennai.edu.in/images/dynamic/banners/01.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 24,
+    "enriched_at": "2026-05-22T12:25:22.108Z"
+  },
+  "delhi-institute-of-technology-new-delhi-9": {
+    "website": "https://www.delhi-institute-of-technology-new-delhi-9.ac.in",
+    "image_url": "https://blogassets.leverageedu.com/media/uploads/sites/9/2023/11/13161622/Indian-Exam-Blogs-Covers-2-1.png",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 30,
+    "enriched_at": "2026-05-22T12:25:24.001Z"
+  },
+  "tamil-nadu-institute-of-technology-chennai-11": {
+    "website": "https://www.tamil-nadu-institute-of-technology-chennai-11.ac.in",
+    "image_url": "https://campushunt.in/photogallery/SMK.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 65,
+    "enriched_at": "2026-05-22T12:25:25.940Z"
+  },
+  "maharashtra-institute-of-technology-pune-33": {
+    "website": "https://www.maharashtra-institute-of-technology-pune-33.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:25:26.835Z"
+  },
+  "karnataka-institute-of-technology-mysuru-29": {
+    "website": "https://www.karnataka-institute-of-technology-mysuru-29.ac.in",
+    "image_url": "https://images.indianexpress.com/2025/07/Karnatakas-first-medical-college-Know-all-about-it-Photo-via-MMCRI.png",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 36,
+    "enriched_at": "2026-05-22T12:25:28.220Z"
+  },
+  "west-bengal-institute-of-technology-kolkata-48": {
+    "website": "https://www.west-bengal-institute-of-technology-kolkata-48.ac.in",
+    "image_url": "https://storage.googleapis.com/educrib/colleges/uploads/Kuriakose Gregorios College (KG), Kottayam Cover.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 20,
+    "enriched_at": "2026-05-22T12:25:30.753Z"
+  },
+  "west-bengal-institute-of-technology-kolkata-45": {
+    "website": "https://www.west-bengal-institute-of-technology-kolkata-45.ac.in",
+    "image_url": "https://www.admissionwala.in/storage/productimages/about-1.webp",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 22,
+    "enriched_at": "2026-05-22T12:25:30.910Z"
+  },
+  "maharashtra-institute-of-technology-mumbai-17": {
+    "website": "https://www.maharashtra-institute-of-technology-mumbai-17.ac.in",
+    "image_url": "https://image-static.collegedunia.com/public/college_data/images/campusimage/14205_infra.webp",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 65,
+    "enriched_at": "2026-05-22T12:25:33.004Z"
+  },
+  "gujarat-university-of-ahmedabad-38": {
+    "website": "https://www.gujarat-university-of-ahmedabad-38.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:25:34.850Z"
+  },
+  "delhi-institute-of-technology-new-delhi-46": {
+    "website": "https://www.delhi-institute-of-technology-new-delhi-46.ac.in",
+    "image_url": "https://colleges18.s3.ap-south-1.amazonaws.com/Ch_BP_Government_Engineering_College_New_Delhi_3_f99299b33d.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 20,
+    "enriched_at": "2026-05-22T12:25:35.314Z"
+  },
+  "delhi-institute-of-technology-new-delhi-18": {
+    "website": "https://www.delhi-institute-of-technology-new-delhi-18.ac.in",
+    "image_url": "https://images.indianexpress.com/2023/06/ggsipu-4col.jpg?w=1200",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 32,
+    "enriched_at": "2026-05-22T12:25:36.546Z"
+  },
+  "tamil-nadu-institute-of-technology-coimbatore-36": {
+    "website": "https://www.tamil-nadu-institute-of-technology-coimbatore-36.ac.in",
+    "image_url": "https://ik.imagekit.io/syustaging/SYU_PREPROD/COVER-IMAGE_fliBk5EmLo.webp?tr=w-3840",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 48,
+    "enriched_at": "2026-05-22T12:25:39.096Z"
+  },
+  "maharashtra-institute-of-technology-mumbai-8": {
+    "website": "https://www.maharashtra-institute-of-technology-mumbai-8.ac.in",
+    "image_url": "https://hbsu.ac.in/uploads/slider/admission2026-27.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 45,
+    "enriched_at": "2026-05-22T12:25:39.386Z"
+  },
+  "tamil-nadu-institute-of-technology-chennai-4": {
+    "website": "https://www.tamil-nadu-institute-of-technology-chennai-4.ac.in",
+    "image_url": "https://takshashilauniv.ac.in/wp-content/uploads/2026/01/TAKSHA_B-13.12.25-04.webp",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 22,
+    "enriched_at": "2026-05-22T12:25:41.052Z"
+  },
+  "karnataka-institute-of-technology-mysuru-7": {
+    "website": "https://www.karnataka-institute-of-technology-mysuru-7.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:25:43.781Z"
+  },
+  "telangana-university-of-hyderabad-47": {
+    "website": "https://www.telangana-university-of-hyderabad-47.ac.in",
+    "image_url": "https://i.ytimg.com/vi/mlZjEpyUwQE/maxresdefault.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 33,
+    "enriched_at": "2026-05-22T12:25:43.903Z"
+  },
+  "maharashtra-institute-of-technology-mumbai-34": {
+    "website": "https://www.maharashtra-institute-of-technology-mumbai-34.ac.in",
+    "image_url": "https://cdn.itm.ac.in/2025/11/Top-BBA-Colleges-in-Navi-Mumbai.jpeg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 25,
+    "enriched_at": "2026-05-22T12:25:47.397Z"
+  },
+  "telangana-institute-of-technology-hyderabad-39": {
+    "website": "https://www.telangana-institute-of-technology-hyderabad-39.ac.in",
+    "image_url": "https://admissionsadmin.kabconsultants.com/CollegeImages/MainBuildingImages/c09800b0-ba48-471f-91c6-91208845a6d1IMG_20210922_161145.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:25:47.803Z"
+  },
+  "maharashtra-university-of-mumbai-35": {
+    "website": "https://www.maharashtra-university-of-mumbai-35.ac.in",
+    "image_url": "https://images.pexels.com/photos/36950972/pexels-photo-36950972.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:25:50.275Z"
+  },
+  "west-bengal-institute-of-technology-kolkata-25": {
+    "website": "https://www.west-bengal-institute-of-technology-kolkata-25.ac.in",
+    "image_url": "https://nitdgp.ac.in/uploads/maingate_withNIRF20253.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 24,
+    "enriched_at": "2026-05-22T12:25:53.308Z"
+  },
+  "tamil-nadu-institute-of-technology-coimbatore-19": {
+    "website": "https://www.tamil-nadu-institute-of-technology-coimbatore-19.ac.in",
+    "image_url": "https://www.knowafest.com/files/uploads/rdinaz 19_final1_jpeg_800kb_size-2019100407.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 14,
+    "enriched_at": "2026-05-22T12:25:53.350Z"
+  },
+  "delhi-university-of-new-delhi-5": {
+    "website": "https://www.delhi-university-of-new-delhi-5.ac.in",
+    "image_url": "https://www.du.ac.in/uploads/du/images/maps/North Campus.png",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:25:53.486Z"
+  },
+  "telangana-university-of-hyderabad-32": {
+    "website": "https://www.telangana-university-of-hyderabad-32.ac.in",
+    "image_url": "https://images.pexels.com/photos/2982449/pexels-photo-2982449.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:25:55.861Z"
+  },
+  "uttar-pradesh-institute-of-technology-noida-49": {
+    "website": "https://www.uttar-pradesh-institute-of-technology-noida-49.ac.in",
+    "image_url": "https://content.jdmagicbox.com/v2/comp/delhi/m2/011pxx11.xx11.140724161006.f2m2/catalogue/lord-krishna-institute-greater-noida-noida-management-institutes-m8kfigghbp.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 23,
+    "enriched_at": "2026-05-22T12:25:56.539Z"
+  },
+  "rvce-bangalore": {
+    "website": "https://www.rvce-bangalore.ac.in",
+    "image_url": "https://preview.redd.it/rv-university-mysore-v0-ckbw32jxaf4g1.jpg?width=2560&format=pjpg&auto=webp&s=5420151c56af7b12e38c65b343b39dfe671990d2",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 46,
+    "enriched_at": "2026-05-22T12:25:57.663Z"
+  },
+  "west-bengal-institute-of-technology-kolkata-21": {
+    "website": "https://www.west-bengal-institute-of-technology-kolkata-21.ac.in",
+    "image_url": "https://cache.careers360.mobi/media/article_images/2025/12/4/IEM-Kolkata.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 32,
+    "enriched_at": "2026-05-22T12:25:59.842Z"
+  },
+  "gujarat-institute-of-technology-surat-37": {
+    "website": "https://www.gujarat-institute-of-technology-surat-37.ac.in",
+    "image_url": "https://itmbu.ac.in/wp-content/uploads/2024/01/ITM-SLS-Baroda-University-Campus-Sculpture.webp",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 44,
+    "enriched_at": "2026-05-22T12:26:00.934Z"
+  },
+  "tamil-nadu-institute-of-technology-chennai-23": {
+    "website": "https://www.tamil-nadu-institute-of-technology-chennai-23.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:26:01.138Z"
+  },
+  "tamil-nadu-institute-of-technology-coimbatore-28": {
+    "website": "https://www.tamil-nadu-institute-of-technology-coimbatore-28.ac.in",
+    "image_url": "https://i.ytimg.com/vi/LzlRCOPpgLs/maxresdefault.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 33,
+    "enriched_at": "2026-05-22T12:26:03.763Z"
+  },
+  "uttar-pradesh-university-of-lucknow-3": {
+    "website": "https://www.uttar-pradesh-university-of-lucknow-3.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:26:05.911Z"
+  },
+  "gujarat-institute-of-technology-surat-13": {
+    "website": "https://www.gujarat-institute-of-technology-surat-13.ac.in",
+    "image_url": "https://centralstatejobs.in/storage/jobs/og/2326.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 22,
+    "enriched_at": "2026-05-22T12:26:08.351Z"
+  },
+  "gujarat-institute-of-technology-ahmedabad-12": {
+    "website": "https://www.gujarat-institute-of-technology-ahmedabad-12.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:26:08.974Z"
+  },
+  "maharashtra-institute-of-technology-nagpur-20": {
+    "website": "https://www.maharashtra-institute-of-technology-nagpur-20.ac.in",
+    "image_url": "https://crm.clcsikar.com/modules/publishx/uploads/posts/236/WhatsApp Image 2025-06-13 at 12.33.28_926ba1f0.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 26,
+    "enriched_at": "2026-05-22T12:26:11.688Z"
+  },
+  "west-bengal-university-of-kolkata-10": {
+    "website": "https://www.west-bengal-university-of-kolkata-10.ac.in",
+    "image_url": "https://images.pexels.com/photos/33603541/pexels-photo-33603541.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 18,
+    "enriched_at": "2026-05-22T12:26:11.861Z"
+  },
+  "delhi-institute-of-technology-new-delhi-51": {
+    "website": "https://www.delhi-institute-of-technology-new-delhi-51.ac.in",
+    "image_url": "https://www.igdtuw.ac.in/IGDTUW/uploads/1570752655.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 60,
+    "enriched_at": "2026-05-22T12:26:13.322Z"
+  },
+  "karnataka-university-of-mysuru-43": {
+    "website": "https://www.karnataka-university-of-mysuru-43.ac.in",
+    "image_url": "https://c8.alamy.com/comp/B493RK/crawford-hall-part-of-mysore-university-in-india-B493RK.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 13,
+    "enriched_at": "2026-05-22T12:26:14.950Z"
+  },
+  "karnataka-university-of-mysuru-2": {
+    "website": "https://www.karnataka-university-of-mysuru-2.ac.in",
+    "image_url": "https://jssstuniv.in/assets/img/bg/sjcebg.jpeg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 34,
+    "enriched_at": "2026-05-22T12:26:16.693Z"
+  },
+  "tamil-nadu-institute-of-technology-coimbatore-40": {
+    "website": "https://www.tamil-nadu-institute-of-technology-coimbatore-40.ac.in",
+    "image_url": "https://image-static.collegedunia.com/public/college_data/images/appImage/24346_PARK_APP.jpg",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 22,
+    "enriched_at": "2026-05-22T12:26:16.898Z"
+  },
+  "tamil-nadu-university-of-chennai-52": {
+    "website": "https://www.tamil-nadu-university-of-chennai-52.ac.in",
+    "image_url": "https://images.pexels.com/photos/9432498/pexels-photo-9432498.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "image_source": "pexels",
+    "domain_trust": "low",
+    "image_score": 29,
+    "enriched_at": "2026-05-22T12:26:17.242Z"
+  },
+  "telangana-institute-of-technology-hyderabad-26": {
+    "website": "https://www.telangana-institute-of-technology-hyderabad-26.ac.in",
+    "image_url": "https://mjcollege.ac.in/gallery-photos/1776833797AI_Website_Driven_Workshop_2026_26.JPG",
+    "image_source": "google",
+    "domain_trust": "low",
+    "image_score": 50,
+    "enriched_at": "2026-05-22T12:26:22.002Z"
+  },
+  "tamil-nadu-university-of-chennai-41": {
+    "website": "https://www.tamil-nadu-university-of-chennai-41.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:26:22.997Z"
+  },
+  "tamil-nadu-institute-of-technology-chennai-1": {
+    "website": "https://www.tamil-nadu-institute-of-technology-chennai-1.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:26:24.411Z"
+  },
+  "gujarat-institute-of-technology-ahmedabad-22": {
+    "website": "https://www.gujarat-institute-of-technology-ahmedabad-22.ac.in",
+    "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+    "image_source": "fallback",
+    "domain_trust": "low",
+    "image_score": 0,
+    "enriched_at": "2026-05-22T12:26:27.954Z"
+  }
+}

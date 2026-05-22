@@ -16,9 +16,24 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 
+import * as fs from 'fs';
 
-
-import { colleges } from './colleges';
+// Try to load enriched data first, fallback to raw data
+let collegesData: any[] = [];
+try {
+  const enrichedPath = path.resolve(process.cwd(), 'data', 'colleges.enriched.json');
+  if (fs.existsSync(enrichedPath)) {
+    console.log('Loading enriched college data...');
+    collegesData = JSON.parse(fs.readFileSync(enrichedPath, 'utf8'));
+  } else {
+    const rawPath = path.resolve(process.cwd(), 'data', 'colleges.raw.json');
+    console.log('Loading raw college data (enriched not found)...');
+    collegesData = JSON.parse(fs.readFileSync(rawPath, 'utf8'));
+  }
+} catch (error) {
+  console.error('Failed to load college data JSON files:', error);
+  process.exit(1);
+}
 
 // ─── Realistic Review Templates ───────────────────────────────────────────────
 
@@ -93,7 +108,7 @@ async function main() {
   await prisma.exam.createMany({ data: exams });
   console.log("✅ Seeded Exams");
 
-  for (const college of colleges) {
+  for (const college of collegesData) {
     const { courses, ...collegeData } = college;
 
     // Generate Tags
@@ -128,7 +143,7 @@ async function main() {
 
     // Create courses
     await prisma.course.createMany({
-      data: courses.map((c) => ({ ...c, collegeId: created.id })),
+      data: courses.map((c: any) => ({ ...c, collegeId: created.id })),
     });
 
     // Create synthetic reviews

@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { CollegeDetail } from "@/types";
+import { FallbackImage } from "@/components/shared/FallbackImage";
+import { useState } from "react";
 
 function formatSalary(sal: number | null): string {
   if (!sal) return "N/A";
@@ -60,18 +62,25 @@ export function CollegeDetailClientView({
   college: CollegeDetail;
   avgReviewRating: number;
 }) {
+  const [imgError, setImgError] = useState(!college.image_url);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Premium Cinematic Hero */}
       <div className="relative h-72 md:h-96 overflow-hidden">
-        <Image
-          src={college.image_url || "/images/fallback-college.jpg"}
-          alt={`${college.name} campus`}
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
+        {imgError ? (
+          <FallbackImage name={college.name} className="absolute inset-0 h-full w-full" />
+        ) : (
+          <Image
+            src={college.image_url || ""}
+            alt={`${college.name} campus`}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+            onError={() => setImgError(true)}
+          />
+        )}
         {/* Radial + Linear Gradients for maximum premium feel */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(124,58,237,0.15),transparent_50%)] mix-blend-screen" />

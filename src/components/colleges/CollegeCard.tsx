@@ -4,6 +4,8 @@ import { MapPin, Star, TrendingUp, Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CollegeCard as CollegeCardType } from "@/types";
 import { motion } from "framer-motion";
+import { FallbackImage } from "@/components/shared/FallbackImage";
+import { useState } from "react";
 
 interface CollegeCardProps {
   college: CollegeCardType;
@@ -29,6 +31,8 @@ const typeColors: Record<string, string> = {
 };
 
 export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCardProps) {
+  const [imgError, setImgError] = useState(!college.image_url);
+
   return (
     <motion.div 
       whileHover={{ y: -4 }}
@@ -37,13 +41,18 @@ export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCa
     >
       {/* Image */}
       <div className="relative h-44 overflow-hidden bg-muted">
-        <Image
-          src={college.image_url || "/images/fallback-college.jpg"}
-          alt={`${college.name} campus`}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+        {imgError ? (
+          <FallbackImage name={college.name} className="absolute inset-0 h-full w-full" />
+        ) : (
+          <Image
+            src={college.image_url || ""}
+            alt={`${college.name} campus`}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={() => setImgError(true)}
+          />
+        )}
         {/* NIRF Badge */}
         {college.nirf_rank && (
           <Badge variant="glass" className="absolute top-3 left-3 text-cyan-400 font-bold border-cyan-400/30">

@@ -1,6 +1,4 @@
-import { CollegeType } from "@prisma/client";
-
-export const colleges = [
+[
   {
     "name": "Indian Institute of Technology Madras",
     "slug": "iit-madras",
@@ -13,7 +11,7 @@ export const colleges = [
     "nirf_rank": 1,
     "placement_percentage": 80,
     "avg_salary": 2300000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1952,
     "accreditation": "NAAC A++",
     "exam": [
@@ -51,7 +49,7 @@ export const colleges = [
     "nirf_rank": 1,
     "placement_percentage": 100,
     "avg_salary": 3500000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1968,
     "accreditation": "NAAC A++",
     "exam": [
@@ -83,7 +81,7 @@ export const colleges = [
     "nirf_rank": 1,
     "placement_percentage": 80,
     "avg_salary": 1200000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1977,
     "accreditation": "NAAC A++",
     "exam": [
@@ -115,7 +113,7 @@ export const colleges = [
     "nirf_rank": 1,
     "placement_percentage": 84,
     "avg_salary": 1800000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1961,
     "accreditation": "NAAC A++",
     "exam": [
@@ -147,7 +145,7 @@ export const colleges = [
     "nirf_rank": 2,
     "placement_percentage": 87,
     "avg_salary": 2100000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1989,
     "accreditation": "NAAC A++",
     "exam": [
@@ -185,7 +183,7 @@ export const colleges = [
     "nirf_rank": 2,
     "placement_percentage": 97,
     "avg_salary": 3300000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1966,
     "accreditation": "NAAC A++",
     "exam": [
@@ -217,7 +215,7 @@ export const colleges = [
     "nirf_rank": 2,
     "placement_percentage": 80,
     "avg_salary": 1000000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1997,
     "accreditation": "NAAC A++",
     "exam": [
@@ -249,7 +247,7 @@ export const colleges = [
     "nirf_rank": 2,
     "placement_percentage": 89,
     "avg_salary": 1600000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1982,
     "accreditation": "NAAC A++",
     "exam": [
@@ -281,7 +279,7 @@ export const colleges = [
     "nirf_rank": 3,
     "placement_percentage": 81,
     "avg_salary": 2200000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1982,
     "accreditation": "NAAC A++",
     "exam": [
@@ -319,7 +317,7 @@ export const colleges = [
     "nirf_rank": 3,
     "placement_percentage": 100,
     "avg_salary": 3000000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1965,
     "accreditation": "NAAC A++",
     "exam": [
@@ -351,7 +349,7 @@ export const colleges = [
     "nirf_rank": 3,
     "placement_percentage": 99,
     "avg_salary": 1100000,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1967,
     "accreditation": "NAAC A++",
     "exam": [
@@ -383,7 +381,7 @@ export const colleges = [
     "nirf_rank": 3,
     "placement_percentage": 91,
     "avg_salary": 1500000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1992,
     "accreditation": "NAAC A++",
     "exam": [
@@ -415,7 +413,7 @@ export const colleges = [
     "nirf_rank": 4,
     "placement_percentage": 83,
     "avg_salary": 2000000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1958,
     "accreditation": "NAAC A++",
     "exam": [
@@ -453,7 +451,7 @@ export const colleges = [
     "nirf_rank": 4,
     "placement_percentage": 99,
     "avg_salary": 2800000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1977,
     "accreditation": "NAAC A++",
     "exam": [
@@ -485,7 +483,7 @@ export const colleges = [
     "nirf_rank": 4,
     "placement_percentage": 99,
     "avg_salary": 1000000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1977,
     "accreditation": "NAAC A++",
     "exam": [
@@ -517,7 +515,7 @@ export const colleges = [
     "nirf_rank": 4,
     "placement_percentage": 84,
     "avg_salary": 1400000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1989,
     "accreditation": "NAAC A++",
     "exam": [
@@ -549,7 +547,7 @@ export const colleges = [
     "nirf_rank": 5,
     "placement_percentage": 84,
     "avg_salary": 1900000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1961,
     "accreditation": "NAAC A++",
     "exam": [
@@ -587,7 +585,7 @@ export const colleges = [
     "nirf_rank": 5,
     "placement_percentage": 86,
     "avg_salary": 3100000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1974,
     "accreditation": "NAAC A++",
     "exam": [
@@ -619,7 +617,7 @@ export const colleges = [
     "nirf_rank": 5,
     "placement_percentage": 87,
     "avg_salary": 1100000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1972,
     "accreditation": "NAAC A++",
     "exam": [
@@ -651,7 +649,7 @@ export const colleges = [
     "nirf_rank": 5,
     "placement_percentage": 100,
     "avg_salary": 1300000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1963,
     "accreditation": "NAAC A++",
     "exam": [
@@ -683,7 +681,7 @@ export const colleges = [
     "nirf_rank": 6,
     "placement_percentage": 84,
     "avg_salary": 1800000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1961,
     "accreditation": "NAAC A++",
     "exam": [
@@ -721,7 +719,7 @@ export const colleges = [
     "nirf_rank": 6,
     "placement_percentage": 82,
     "avg_salary": 3200000,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 2000,
     "accreditation": "NAAC A++",
     "exam": [
@@ -753,7 +751,7 @@ export const colleges = [
     "nirf_rank": 7,
     "placement_percentage": 80,
     "avg_salary": 1750000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1956,
     "accreditation": "NAAC A++",
     "exam": [
@@ -791,7 +789,7 @@ export const colleges = [
     "nirf_rank": 7,
     "placement_percentage": 82,
     "avg_salary": 3400000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1986,
     "accreditation": "NAAC A++",
     "exam": [
@@ -823,7 +821,7 @@ export const colleges = [
     "nirf_rank": 8,
     "placement_percentage": 90,
     "avg_salary": 1700000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1978,
     "accreditation": "NAAC A++",
     "exam": [
@@ -861,7 +859,7 @@ export const colleges = [
     "nirf_rank": 8,
     "placement_percentage": 89,
     "avg_salary": 2800000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1977,
     "accreditation": "NAAC A++",
     "exam": [
@@ -893,7 +891,7 @@ export const colleges = [
     "nirf_rank": 9,
     "placement_percentage": 83,
     "avg_salary": 1200000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1996,
     "accreditation": "NAAC A++",
     "exam": [
@@ -931,7 +929,7 @@ export const colleges = [
     "nirf_rank": 9,
     "placement_percentage": 93,
     "avg_salary": 2500000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1997,
     "accreditation": "NAAC A++",
     "exam": [
@@ -963,7 +961,7 @@ export const colleges = [
     "nirf_rank": 10,
     "placement_percentage": 87,
     "avg_salary": 1600000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1979,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1001,7 +999,7 @@ export const colleges = [
     "nirf_rank": 11,
     "placement_percentage": 86,
     "avg_salary": 1700000,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1977,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1039,7 +1037,7 @@ export const colleges = [
     "nirf_rank": 12,
     "placement_percentage": 98,
     "avg_salary": 1500000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1969,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1077,7 +1075,7 @@ export const colleges = [
     "nirf_rank": 13,
     "placement_percentage": 91,
     "avg_salary": 1100000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1958,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1115,7 +1113,7 @@ export const colleges = [
     "nirf_rank": 13,
     "placement_percentage": 90,
     "avg_salary": 900000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1978,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1147,7 +1145,7 @@ export const colleges = [
     "nirf_rank": 14,
     "placement_percentage": 89,
     "avg_salary": 700000,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1963,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1185,7 +1183,7 @@ export const colleges = [
     "nirf_rank": 14,
     "placement_percentage": 98,
     "avg_salary": 900000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1980,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1217,7 +1215,7 @@ export const colleges = [
     "nirf_rank": 15,
     "placement_percentage": 99,
     "avg_salary": 1400000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1987,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1255,7 +1253,7 @@ export const colleges = [
     "nirf_rank": 16,
     "placement_percentage": 80,
     "avg_salary": 850000,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1950,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1293,7 +1291,7 @@ export const colleges = [
     "nirf_rank": 17,
     "placement_percentage": 82,
     "avg_salary": 1100000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1968,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1331,7 +1329,7 @@ export const colleges = [
     "nirf_rank": 18,
     "placement_percentage": 90,
     "avg_salary": 900000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1958,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1369,7 +1367,7 @@ export const colleges = [
     "nirf_rank": 19,
     "placement_percentage": 100,
     "avg_salary": 1300000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1997,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1407,7 +1405,7 @@ export const colleges = [
     "nirf_rank": 19,
     "placement_percentage": 89,
     "avg_salary": 900000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1997,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1439,7 +1437,7 @@ export const colleges = [
     "nirf_rank": 20,
     "placement_percentage": 87,
     "avg_salary": 750000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1963,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1477,7 +1475,7 @@ export const colleges = [
     "nirf_rank": 21,
     "placement_percentage": 95,
     "avg_salary": 1050000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1966,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1515,7 +1513,7 @@ export const colleges = [
     "nirf_rank": 29,
     "placement_percentage": 84,
     "avg_salary": 950000,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1966,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1553,7 +1551,7 @@ export const colleges = [
     "nirf_rank": 30,
     "placement_percentage": 80,
     "avg_salary": 900000,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1995,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1591,7 +1589,7 @@ export const colleges = [
     "nirf_rank": 52,
     "placement_percentage": 94,
     "avg_salary": 1292350,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1988,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1630,7 +1628,7 @@ export const colleges = [
     "nirf_rank": 52,
     "placement_percentage": 95,
     "avg_salary": 1140046,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1987,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1669,7 +1667,7 @@ export const colleges = [
     "nirf_rank": 53,
     "placement_percentage": 81,
     "avg_salary": 1029272,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1964,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1708,7 +1706,7 @@ export const colleges = [
     "nirf_rank": 54,
     "placement_percentage": 94,
     "avg_salary": 960992,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1969,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1746,7 +1744,7 @@ export const colleges = [
     "nirf_rank": 55,
     "placement_percentage": 95,
     "avg_salary": 1282658,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1959,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1785,7 +1783,7 @@ export const colleges = [
     "nirf_rank": 55,
     "placement_percentage": 80,
     "avg_salary": 958740,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1954,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1824,7 +1822,7 @@ export const colleges = [
     "nirf_rank": 56,
     "placement_percentage": 82,
     "avg_salary": 1104699,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1963,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1863,7 +1861,7 @@ export const colleges = [
     "nirf_rank": 56,
     "placement_percentage": 99,
     "avg_salary": 1212378,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1969,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1901,7 +1899,7 @@ export const colleges = [
     "nirf_rank": 56,
     "placement_percentage": 99,
     "avg_salary": 1171819,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1964,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1940,7 +1938,7 @@ export const colleges = [
     "nirf_rank": 57,
     "placement_percentage": 93,
     "avg_salary": 1289561,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1962,
     "accreditation": "NAAC A++",
     "exam": [
@@ -1978,7 +1976,7 @@ export const colleges = [
     "nirf_rank": 58,
     "placement_percentage": 100,
     "avg_salary": 900000,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1976,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2017,7 +2015,7 @@ export const colleges = [
     "nirf_rank": 59,
     "placement_percentage": 88,
     "avg_salary": 1214564,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1971,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2055,7 +2053,7 @@ export const colleges = [
     "nirf_rank": 59,
     "placement_percentage": 83,
     "avg_salary": 1099203,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1991,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2094,7 +2092,7 @@ export const colleges = [
     "nirf_rank": 60,
     "placement_percentage": 88,
     "avg_salary": 931563,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1968,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2133,7 +2131,7 @@ export const colleges = [
     "nirf_rank": 60,
     "placement_percentage": 99,
     "avg_salary": 1205508,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1972,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2172,7 +2170,7 @@ export const colleges = [
     "nirf_rank": 61,
     "placement_percentage": 89,
     "avg_salary": 881764,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1993,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2211,7 +2209,7 @@ export const colleges = [
     "nirf_rank": 61,
     "placement_percentage": 87,
     "avg_salary": 903046,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1950,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2250,7 +2248,7 @@ export const colleges = [
     "nirf_rank": 61,
     "placement_percentage": 85,
     "avg_salary": 860012,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1973,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2289,7 +2287,7 @@ export const colleges = [
     "nirf_rank": 61,
     "placement_percentage": 90,
     "avg_salary": 974458,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1988,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2328,7 +2326,7 @@ export const colleges = [
     "nirf_rank": 62,
     "placement_percentage": 96,
     "avg_salary": 960341,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1957,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2367,7 +2365,7 @@ export const colleges = [
     "nirf_rank": 64,
     "placement_percentage": 93,
     "avg_salary": 1133518,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1966,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2406,7 +2404,7 @@ export const colleges = [
     "nirf_rank": 65,
     "placement_percentage": 100,
     "avg_salary": 843722,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1980,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2444,7 +2442,7 @@ export const colleges = [
     "nirf_rank": 66,
     "placement_percentage": 92,
     "avg_salary": 1166716,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1965,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2483,7 +2481,7 @@ export const colleges = [
     "nirf_rank": 73,
     "placement_percentage": 100,
     "avg_salary": 936587,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1980,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2522,7 +2520,7 @@ export const colleges = [
     "nirf_rank": 75,
     "placement_percentage": 83,
     "avg_salary": 909713,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1961,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2561,7 +2559,7 @@ export const colleges = [
     "nirf_rank": 76,
     "placement_percentage": 87,
     "avg_salary": 966275,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1958,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2600,7 +2598,7 @@ export const colleges = [
     "nirf_rank": 77,
     "placement_percentage": 86,
     "avg_salary": 809640,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1952,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2638,7 +2636,7 @@ export const colleges = [
     "nirf_rank": 77,
     "placement_percentage": 81,
     "avg_salary": 1202424,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1977,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2677,7 +2675,7 @@ export const colleges = [
     "nirf_rank": 77,
     "placement_percentage": 82,
     "avg_salary": 1239118,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1975,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2715,7 +2713,7 @@ export const colleges = [
     "nirf_rank": 78,
     "placement_percentage": 82,
     "avg_salary": 829571,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1974,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2754,7 +2752,7 @@ export const colleges = [
     "nirf_rank": 79,
     "placement_percentage": 88,
     "avg_salary": 1002410,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1972,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2793,7 +2791,7 @@ export const colleges = [
     "nirf_rank": 80,
     "placement_percentage": 85,
     "avg_salary": 1150061,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1960,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2831,7 +2829,7 @@ export const colleges = [
     "nirf_rank": 81,
     "placement_percentage": 94,
     "avg_salary": 878207,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1981,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2870,7 +2868,7 @@ export const colleges = [
     "nirf_rank": 82,
     "placement_percentage": 89,
     "avg_salary": 993632,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1991,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2909,7 +2907,7 @@ export const colleges = [
     "nirf_rank": 83,
     "placement_percentage": 88,
     "avg_salary": 1205946,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1975,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2947,7 +2945,7 @@ export const colleges = [
     "nirf_rank": 83,
     "placement_percentage": 80,
     "avg_salary": 1052818,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1958,
     "accreditation": "NAAC A++",
     "exam": [
@@ -2986,7 +2984,7 @@ export const colleges = [
     "nirf_rank": 85,
     "placement_percentage": 97,
     "avg_salary": 1050000,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1954,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3025,7 +3023,7 @@ export const colleges = [
     "nirf_rank": 85,
     "placement_percentage": 99,
     "avg_salary": 965626,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1972,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3064,7 +3062,7 @@ export const colleges = [
     "nirf_rank": 85,
     "placement_percentage": 85,
     "avg_salary": 1083376,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1975,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3103,7 +3101,7 @@ export const colleges = [
     "nirf_rank": 88,
     "placement_percentage": 83,
     "avg_salary": 1145351,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 2000,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3142,7 +3140,7 @@ export const colleges = [
     "nirf_rank": 88,
     "placement_percentage": 94,
     "avg_salary": 1271627,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1962,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3181,7 +3179,7 @@ export const colleges = [
     "nirf_rank": 89,
     "placement_percentage": 90,
     "avg_salary": 812417,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1974,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3219,7 +3217,7 @@ export const colleges = [
     "nirf_rank": 89,
     "placement_percentage": 94,
     "avg_salary": 1287419,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1963,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3258,7 +3256,7 @@ export const colleges = [
     "nirf_rank": 90,
     "placement_percentage": 81,
     "avg_salary": 1144007,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1981,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3297,7 +3295,7 @@ export const colleges = [
     "nirf_rank": 90,
     "placement_percentage": 98,
     "avg_salary": 897596,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1950,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3336,7 +3334,7 @@ export const colleges = [
     "nirf_rank": 91,
     "placement_percentage": 84,
     "avg_salary": 1289010,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1966,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3374,7 +3372,7 @@ export const colleges = [
     "nirf_rank": 92,
     "placement_percentage": 99,
     "avg_salary": 966908,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1950,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3413,7 +3411,7 @@ export const colleges = [
     "nirf_rank": 93,
     "placement_percentage": 87,
     "avg_salary": 907318,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1976,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3451,7 +3449,7 @@ export const colleges = [
     "nirf_rank": 94,
     "placement_percentage": 88,
     "avg_salary": 942709,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1979,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3490,7 +3488,7 @@ export const colleges = [
     "nirf_rank": 95,
     "placement_percentage": 93,
     "avg_salary": 1054949,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1970,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3528,7 +3526,7 @@ export const colleges = [
     "nirf_rank": 95,
     "placement_percentage": 90,
     "avg_salary": 840915,
-    "type": CollegeType.DEEMED,
+    "type": "DEEMED",
     "established": 1967,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3566,7 +3564,7 @@ export const colleges = [
     "nirf_rank": 97,
     "placement_percentage": 83,
     "avg_salary": 1258280,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1993,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3605,7 +3603,7 @@ export const colleges = [
     "nirf_rank": 97,
     "placement_percentage": 100,
     "avg_salary": 1208988,
-    "type": CollegeType.GOVERNMENT,
+    "type": "GOVERNMENT",
     "established": 1998,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3643,7 +3641,7 @@ export const colleges = [
     "nirf_rank": 98,
     "placement_percentage": 84,
     "avg_salary": 1249075,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1979,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3682,7 +3680,7 @@ export const colleges = [
     "nirf_rank": 98,
     "placement_percentage": 90,
     "avg_salary": 1037685,
-    "type": CollegeType.PRIVATE,
+    "type": "PRIVATE",
     "established": 1981,
     "accreditation": "NAAC A++",
     "exam": [
@@ -3709,4 +3707,4 @@ export const colleges = [
       }
     ]
   }
-];
+]
