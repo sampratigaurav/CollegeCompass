@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Search, Calendar, Play } from "lucide-react";
+import { Calendar, Play, Building2, Map, Wallet, TrendingUp } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { SearchBar } from "@/components/shared/SearchBar";
 
 export default async function HomePage() {
   // Fetch live data from database
@@ -18,6 +19,18 @@ export default async function HomePage() {
   
   // Pick 3 colleges for the compare matrix
   const compareColleges = topColleges.slice(3, 6); // Ranks 4, 5, 6
+
+  // Dashboard Stats
+  const totalColleges = await prisma.college.count();
+  const avgFeesAgg = await prisma.college.aggregate({ _avg: { fees_min: true } });
+  const avgFees = avgFeesAgg._avg.fees_min || 0;
+  const topPlacementAgg = await prisma.college.aggregate({ _max: { placement_percentage: true } });
+  const topPlacement = topPlacementAgg._max.placement_percentage || 0;
+  const uniqueStates = await prisma.college.groupBy({ by: ['state'] });
+  const statesCovered = uniqueStates.length;
+
+  // Exams
+  const exams = await prisma.exam.findMany({ take: 3 });
 
   const formatLPA = (val: number | null) => val ? `₹${(val / 100000).toFixed(1)} LPA` : "N/A";
 
@@ -39,22 +52,33 @@ export default async function HomePage() {
 
         {/* Search Bar with Predict Button */}
         <div className="relative max-w-2xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-center bg-[#1a1a20] border border-white/10 rounded-full p-2 pl-6 shadow-2xl focus-within:border-primary/50 transition-colors gap-3 sm:gap-0">
-            <div className="flex w-full items-center">
-              <Search className="h-5 w-5 text-muted-foreground shrink-0" />
-              <input 
-                type="text" 
-                placeholder="Search IITs, NITs, B-Schools..." 
-                className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-muted-foreground text-sm ml-3 w-full"
-              />
-            </div>
+          <div className="flex flex-col sm:flex-row items-center bg-[#1a1a20] border border-white/10 rounded-full p-2 pl-6 shadow-2xl focus-within:border-primary/50 transition-colors gap-3 sm:gap-0 relative z-50">
+            <SearchBar />
             <Link 
               href="/predictor"
-              className="bg-[#c084fc] hover:bg-[#a855f7] text-white rounded-full px-6 py-2.5 text-sm font-medium transition-transform active:scale-[0.98] shadow-[0_0_15px_rgba(192,132,252,0.3)] shrink-0 whitespace-nowrap w-full sm:w-auto text-center"
+              className="bg-[#c084fc] hover:bg-[#a855f7] text-white rounded-full px-6 py-2.5 text-sm font-medium transition-transform active:scale-[0.98] shadow-[0_0_15px_rgba(192,132,252,0.3)] shrink-0 whitespace-nowrap w-full sm:w-auto text-center z-10"
             >
               Predict My<br className="hidden sm:block" />Chances
             </Link>
           </div>
+        </div>
+
+        {/* Stats Dashboard */}
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          {[
+            { label: "Total Colleges", value: totalColleges.toLocaleString(), icon: Building2 },
+            { label: "Average Fees", value: `₹${(avgFees / 100000).toFixed(1)}L/yr`, icon: Wallet },
+            { label: "Top Placement", value: `${topPlacement}%`, icon: TrendingUp },
+            { label: "States Covered", value: statesCovered.toLocaleString(), icon: Map },
+          ].map(({ label, value, icon: Icon }) => (
+            <div key={label} className="surface-bento rounded-xl p-4 border border-white/5 flex flex-col items-center justify-center bg-[#121217]">
+              <div className="bg-white/5 p-2 rounded-lg mb-2">
+                <Icon className="h-4 w-4 text-primary" />
+              </div>
+              <p className="text-xl font-bold">{value}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{label}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -152,28 +176,28 @@ export default async function HomePage() {
             </Link>
           )}
 
-          {/* Bottom Right: Exam Calendar (Static for visual display) */}
+          {/* Bottom Right: Exam Calendar (Wired to DB) */}
           <div className="md:col-span-8 surface-bento rounded-2xl p-6 border border-white/5 flex flex-col justify-between bg-[#121217]">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase">Exam Calendar</h3>
+              <h3 className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase">Admission Timeline</h3>
               <Calendar className="h-4 w-4 text-[#c084fc]" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 h-full">
-              {[
-                { name: "JEE ADVANCED", date: "JUN 02", sub: "24 Days Left", color: "text-[#eab308]" },
-                { name: "BITSAT 2024", date: "MAY 20", sub: "Reg. Closing Soon", color: "text-[#22d3ee]" },
-                { name: "CUET-UG", date: "MAY 15", sub: "Phase 1 Starts", color: "text-[#4ade80]" },
-              ].map((exam) => (
-                <div key={exam.name} className="flex flex-col justify-between bg-[#1a1a20] border border-white/5 rounded-xl p-4 hover:bg-white/5 transition-colors cursor-pointer">
-                  <div>
-                    <h4 className={`text-[10px] font-bold tracking-wider mb-1 ${exam.color}`}>{exam.name}</h4>
-                    <p className="text-sm font-bold">{exam.date}</p>
+              {exams.map((exam, i) => {
+                const colors = ["text-[#eab308]", "text-[#22d3ee]", "text-[#4ade80]"];
+                const color = colors[i % colors.length];
+                return (
+                  <div key={exam.id} className="flex flex-col justify-between bg-[#1a1a20] border border-white/5 rounded-xl p-4 hover:bg-white/5 transition-colors cursor-pointer">
+                    <div>
+                      <h4 className={`text-[10px] font-bold tracking-wider mb-1 uppercase ${color}`}>{exam.name}</h4>
+                      <p className="text-sm font-bold">{exam.exam_date || "TBD"}</p>
+                    </div>
+                    <div className="mt-4">
+                      <p className="text-[10px] text-muted-foreground font-medium uppercase">Counselling: {exam.counselling_starts || "TBD"}</p>
+                    </div>
                   </div>
-                  <div className="mt-4">
-                    <p className="text-[10px] text-muted-foreground font-medium">{exam.sub}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

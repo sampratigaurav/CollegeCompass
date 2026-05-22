@@ -6,20 +6,51 @@ import { rateLimit } from "@/lib/rate-limit";
 
 export type AdmissionChance = "High" | "Medium" | "Low";
 
-export function calculateChance(
+export function calculateMatchScore(
   rank: number,
   minRank: number,
-  maxRank: number
-): AdmissionChance {
-  const range = maxRank - minRank;
-  if (range <= 0) return "High";
+  maxRank: number,
+  feesMin: number,
+  state: string,
+  userBudget?: number,
+  userLocation?: string
+): { chance: AdmissionChance; match_score: number } {
+  let score = 0;
+  
+  // Rank Match (40 points)
+  if (rank <= minRank) {
+    score += 40;
+  } else if (rank <= maxRank) {
+    const range = maxRank - minRank;
+    const pos = rank - minRank;
+    score += 40 * (1 - (pos / range));
+  } else {
+    const overflow = rank - maxRank;
+    if (overflow < maxRank * 0.1) score += 10;
+  }
 
-  const position = rank - minRank;
-  const ratio = position / range;
+  // Budget Match (30 points)
+  if (!userBudget) {
+    score += 30;
+  } else {
+    if (feesMin <= userBudget) score += 30;
+    else if (feesMin <= userBudget * 1.2) score += 15;
+  }
 
-  if (ratio <= 0.2) return "High";
-  if (ratio <= 0.6) return "Medium";
-  return "Low";
+  // Location Match (30 points)
+  if (!userLocation) {
+    score += 30;
+  } else {
+    if (state.toLowerCase() === userLocation.toLowerCase()) score += 30;
+  }
+
+  const match_score = Math.round(score);
+  
+  let chance: AdmissionChance = "Low";
+  if (match_score >= 80) chance = "High";
+  else if (match_score >= 50) chance = "Medium";
+
+  return { chance, match_score };
 }
 
 export async function POST(request: NextRequest) {
@@ -37,14 +68,14 @@ export async function POST(request: NextRequest) {
       return errorResponse(parsed.error.issues[0]?.message ?? "Invalid input", 422);
     }
 
-    const { exam, rank } = parsed.data;
+    const { exam, rank, budget, location } = parsed.data;
 
     // Find colleges where this rank falls within the accepted range
     const colleges = await prisma.college.findMany({
       where: {
         exam: { has: exam },
-        min_rank: { not: null, lte: rank },
-        max_rank: { gte: rank },
+        // Instead of hard filtering min_rank/max_rank, we allow slightly above bounds to calculate score
+        min_rank: { not: null },
       },
       select: {
         id: true,
@@ -66,6 +97,9 @@ export async function POST(request: NextRequest) {
         established: true,
         min_rank: true,
         max_rank: true,
+        tags: true,
+        best_for: true,
+        ai_summary: true,
         _count: { select: { reviews: true, courses: true } },
         courses: {
           where: { name: { contains: "B.", mode: "insensitive" } },
@@ -73,25 +107,26 @@ export async function POST(request: NextRequest) {
           select: { name: true, fees: true, duration: true },
         },
       },
-      orderBy: [
-        { nirf_rank: { sort: "asc", nulls: "last" } },
-        { rating: "desc" },
-      ],
     });
 
-    // Annotate each college with admission chance
-    const results = colleges.map((college) => ({
-      ...college,
-      chance: calculateChance(rank, college.min_rank!, college.max_rank!),
-    }));
+    // Annotate each college with admission chance and match score
+    const results = colleges
+      .map((college) => {
+        const { chance, match_score } = calculateMatchScore(
+          rank,
+          college.min_rank!,
+          college.max_rank!,
+          college.fees_min,
+          college.state,
+          budget,
+          location
+        );
+        return { ...college, chance, match_score };
+      })
+      .filter((c) => c.match_score > 0); // Remove zero matches
 
-    // Sort: High > Medium > Low, then by NIRF rank
-    const chanceOrder: Record<AdmissionChance, number> = {
-      High: 0,
-      Medium: 1,
-      Low: 2,
-    };
-    results.sort((a, b) => chanceOrder[a.chance] - chanceOrder[b.chance]);
+    // Sort: Highest Match Score first
+    results.sort((a, b) => b.match_score - a.match_score);
 
     return successResponse({
       results,

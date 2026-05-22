@@ -41,6 +41,8 @@ interface PredictorMeta {
 export function PredictorClient() {
   const [exam, setExam] = useState("JEE Main");
   const [rank, setRank] = useState("");
+  const [budget, setBudget] = useState("");
+  const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<PredictedCollege[] | null>(null);
   const [meta, setMeta] = useState<PredictorMeta | null>(null);
@@ -59,7 +61,12 @@ export function PredictorClient() {
       const res = await fetch("/api/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ exam, rank: parseInt(rank, 10) }),
+        body: JSON.stringify({ 
+          exam, 
+          rank: parseInt(rank, 10),
+          ...(budget && { budget: parseInt(budget, 10) }),
+          ...(location && { location })
+        }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
@@ -77,58 +84,90 @@ export function PredictorClient() {
       {/* Predictor Form */}
       <div className="surface-bento p-6 mb-8 noise-bg">
         <h2 className="text-xl font-bold mb-4 font-heading">Enter Your Details</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1">
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-              Entrance Exam
-            </label>
-            <select
-              id="predictor-exam"
-              value={exam}
-              onChange={(e) => setExam(e.target.value)}
-              className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-            >
-              {EXAMS.map((e) => (
-                <option key={e} value={e}>
-                  {e}
-                </option>
-              ))}
-            </select>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                Entrance Exam
+              </label>
+              <select
+                id="predictor-exam"
+                value={exam}
+                onChange={(e) => setExam(e.target.value)}
+                className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                {EXAMS.map((e) => (
+                  <option key={e} value={e}>
+                    {e}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                Your Rank
+              </label>
+              <Input
+                id="predictor-rank"
+                type="number"
+                placeholder="e.g. 5000"
+                value={rank}
+                onChange={(e) => setRank(e.target.value)}
+                min={1}
+                className="h-11"
+                required
+              />
+            </div>
           </div>
-          <div className="flex-1">
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-              Your Rank
-            </label>
-            <Input
-              id="predictor-rank"
-              type="number"
-              placeholder="e.g. 5000"
-              value={rank}
-              onChange={(e) => setRank(e.target.value)}
-              min={1}
-              className="h-11"
-              required
-            />
-          </div>
-          <div className="flex items-end">
-            <button
-              type="submit"
-              disabled={loading || !rank}
-              id="predictor-submit"
-              className="h-11 px-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 interactive-glow transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2 whitespace-nowrap"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Predicting...
-                </>
-              ) : (
-                <>
-                  <Search className="h-4 w-4" />
-                  Predict Colleges
-                </>
-              )}
-            </button>
+          
+          <div className="flex flex-col sm:flex-row gap-4 items-end">
+            <div className="flex-1 w-full">
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                Max Budget / Year (Optional)
+              </label>
+              <Input
+                id="predictor-budget"
+                type="number"
+                placeholder="e.g. 200000"
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                min={0}
+                className="h-11"
+              />
+            </div>
+            <div className="flex-1 w-full">
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                Preferred State (Optional)
+              </label>
+              <Input
+                id="predictor-location"
+                type="text"
+                placeholder="e.g. Karnataka"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="h-11"
+              />
+            </div>
+            <div className="flex w-full sm:w-auto mt-4 sm:mt-0">
+              <button
+                type="submit"
+                disabled={loading || !rank}
+                id="predictor-submit"
+                className="h-11 w-full px-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 interactive-glow transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Predicting...
+                  </>
+                ) : (
+                  <>
+                    <Search className="h-4 w-4" />
+                    Predict Matches
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -209,12 +248,37 @@ export function PredictorClient() {
                             {college.location}
                           </div>
                         </div>
-                        {/* Chance Badge */}
-                        <div
-                          className={`shrink-0 flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${chance.class}`}
-                        >
-                          <span className={`h-2 w-2 rounded-full ${chance.dot}`} />
-                          {chance.label}
+                        {/* Match Score */}
+                        <div className="shrink-0 flex items-center gap-3">
+                          <div
+                            className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${chance.class}`}
+                          >
+                            <span className={`h-2 w-2 rounded-full ${chance.dot}`} />
+                            {chance.label}
+                          </div>
+                          <div className="relative h-12 w-12 flex items-center justify-center shrink-0">
+                            <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
+                              <path
+                                className="text-muted/30"
+                                strokeWidth="3"
+                                stroke="currentColor"
+                                fill="none"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                              />
+                              <path
+                                className={`${college.match_score >= 80 ? 'text-emerald-500' : college.match_score >= 50 ? 'text-yellow-500' : 'text-red-500'}`}
+                                strokeDasharray={`${college.match_score}, 100`}
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                stroke="currentColor"
+                                fill="none"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                              />
+                            </svg>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="text-[10px] font-bold">{college.match_score}%</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
 

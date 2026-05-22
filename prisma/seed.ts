@@ -78,15 +78,52 @@ async function main() {
   await prisma.review.deleteMany();
   await prisma.course.deleteMany();
   await prisma.college.deleteMany();
+  await prisma.exam.deleteMany();
 
   console.log("🗑️  Cleared existing data");
+
+  // Seed Exams
+  const exams = [
+    { name: "JEE ADVANCED", counselling_starts: "June", registration_ends: "May 7", exam_date: "June 2" },
+    { name: "JEE MAIN", counselling_starts: "July", registration_ends: "March 12", exam_date: "April 15" },
+    { name: "BITSAT 2024", counselling_starts: "July", registration_ends: "May 20", exam_date: "May 25" },
+    { name: "CUET-UG", counselling_starts: "August", registration_ends: "April 10", exam_date: "May 15" },
+    { name: "KCET", counselling_starts: "July", registration_ends: "April 20", exam_date: "June 18" },
+  ];
+  await prisma.exam.createMany({ data: exams });
+  console.log("✅ Seeded Exams");
 
   for (const college of colleges) {
     const { courses, ...collegeData } = college;
 
+    // Generate Tags
+    const tags = [];
+    if (collegeData.nirf_rank && collegeData.nirf_rank <= 20) tags.push("Top Ranked");
+    if (collegeData.fees_max < 300000) tags.push("Affordable");
+    if (collegeData.avg_salary && collegeData.avg_salary >= 1500000) tags.push("Best Placements");
+    if (collegeData.type === "GOVERNMENT") tags.push("Govt. Funded");
+    if (collegeData.placement_percentage >= 95) tags.push("High Placement %");
+
+    // Generate Best For
+    const best_for = [];
+    if (collegeData.avg_salary && collegeData.avg_salary >= 1200000) best_for.push("Placements");
+    if (collegeData.nirf_rank && collegeData.nirf_rank <= 50) best_for.push("Research");
+    if (["Mumbai", "Delhi", "Bengaluru", "Chennai", "Hyderabad"].includes(collegeData.city)) best_for.push("Startup Culture");
+    if (best_for.length === 0) best_for.push("Academic Excellence");
+
+    // Generate AI Summary
+    const avgSalaryStr = collegeData.avg_salary ? `₹${(collegeData.avg_salary / 100000).toFixed(1)} LPA` : "highly competitive packages";
+    const rankStr = collegeData.nirf_rank ? `a NIRF rank of ${collegeData.nirf_rank}` : "strong national recognition";
+    const ai_summary = `**AI Summary**: ${collegeData.name} is an exceptional ${collegeData.type.toLowerCase()} institution located in ${collegeData.city}. It is best suited for students focused on ${best_for.join(', ')}. With an average placement package of ${avgSalaryStr} and ${rankStr}, it represents a top-tier choice for ambitious engineering aspirants.`;
+
     // Create college
     const created = await prisma.college.create({
-      data: collegeData,
+      data: {
+        ...collegeData,
+        tags,
+        best_for,
+        ai_summary,
+      },
     });
 
     // Create courses
@@ -109,11 +146,13 @@ async function main() {
   const totalColleges = await prisma.college.count();
   const totalCourses = await prisma.course.count();
   const totalReviews = await prisma.review.count();
+  const totalExams = await prisma.exam.count();
 
   console.log(`\n🎉 Seed complete!`);
   console.log(`   Colleges: ${totalColleges}`);
   console.log(`   Courses:  ${totalCourses}`);
   console.log(`   Reviews:  ${totalReviews}`);
+  console.log(`   Exams:    ${totalExams}`);
 }
 
 main()

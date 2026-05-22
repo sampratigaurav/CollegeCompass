@@ -69,6 +69,17 @@ export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCa
           <span className="truncate">{college.location}</span>
         </div>
 
+        {/* Tags */}
+        {college.tags && college.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-4">
+            {college.tags.slice(0, 3).map((tag) => (
+              <span key={tag} className="text-[9px] font-bold uppercase tracking-wider bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-muted-foreground">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-2 mb-3">
           <div className="rounded-lg bg-muted/60 px-2 py-1.5 text-center">

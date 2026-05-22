@@ -18,6 +18,9 @@ export interface CollegeCard {
   accreditation: string | null;
   exam: string[];
   established: number | null;
+  tags: string[];
+  best_for: string[];
+  ai_summary: string | null;
   _count: { reviews: number; courses: number };
 }
 
@@ -56,6 +59,7 @@ export interface PredictedCollege extends CollegeCard {
   min_rank: number | null;
   max_rank: number | null;
   chance: AdmissionChance;
+  match_score: number;
   courses?: Array<{ name: string; fees: number; duration: string }>;
 }
 

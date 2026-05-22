@@ -38,6 +38,8 @@ export type CompareBody = z.infer<typeof CompareBodySchema>;
 export const PredictBodySchema = z.object({
   exam: z.string().min(1, "Exam name is required"),
   rank: z.number().int().positive("Rank must be a positive integer"),
+  budget: z.number().int().positive().optional(),
+  location: z.string().optional(),
 });
 
 export type PredictBody = z.infer<typeof PredictBodySchema>;

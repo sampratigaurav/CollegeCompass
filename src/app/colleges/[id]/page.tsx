@@ -143,8 +143,25 @@ export default async function CollegeDetailPage({
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        {/* AI Summary Banner */}
+        {college.ai_summary && (
+          <div className="relative surface-bento p-6 rounded-2xl mb-8 -mt-4 z-10 border-primary/20 bg-primary/5 shadow-[0_0_30px_rgba(192,132,252,0.1)]">
+            <div className="flex items-start gap-4">
+              <div className="bg-primary/20 p-2 rounded-full shrink-0">
+                <Star className="h-5 w-5 text-primary fill-primary/30" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-primary tracking-widest uppercase mb-2">AI College Summary</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {college.ai_summary.replace("**AI Summary**: ", "")}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Stats Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 -mt-4 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
             {
               label: "Rating",
@@ -205,7 +222,21 @@ export default async function CollegeDetailPage({
               </TabsList>
 
               {/* Overview Tab */}
-              <TabsContent value="overview" className="space-y-6">
+              <TabsContent value="overview" className="space-y-8">
+                {college.best_for.length > 0 && (
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4">Best For</h2>
+                    <div className="flex flex-wrap gap-2">
+                      {college.best_for.map(tag => (
+                        <div key={tag} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          {tag}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
                 <div>
                   <h2 className="text-lg font-semibold mb-3">About</h2>
                   <p className="text-muted-foreground leading-relaxed">{college.description}</p>

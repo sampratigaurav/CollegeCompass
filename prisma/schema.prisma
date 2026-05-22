@@ -32,6 +32,11 @@ model College {
   exam                 String[]
   accreditation        String?
 
+  // New Features
+  ai_summary           String?     @db.Text
+  tags                 String[]
+  best_for             String[]
+
   courses   Course[]
   reviews   Review[]
 
@@ -45,6 +50,17 @@ model College {
   @@index([fees_min])
   @@index([placement_percentage])
   @@index([slug])
+}
+
+model Exam {
+  id                 String   @id @default(cuid())
+  name               String   @unique
+  counselling_starts String?
+  registration_ends  String?
+  exam_date          String?
+  website            String?
+  
+  @@index([name])
 }
 
 model Course {
