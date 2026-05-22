@@ -33,8 +33,7 @@ export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCa
     <motion.div 
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="group overflow-hidden bg-[#09090b] border border-white/5 rounded-2xl hover:border-white/15 transition-colors relative"
-      style={{ boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.02)" }}
+      className="group overflow-hidden bg-card border border-border rounded-2xl hover:border-foreground/15 transition-colors relative shadow-subtle hover:shadow-elevated"
     >
       {/* Image */}
       <div className="relative h-44 overflow-hidden bg-muted">
@@ -78,7 +77,7 @@ export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCa
         {college.tags && college.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
             {college.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="text-[9px] font-bold uppercase tracking-wider bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-muted-foreground">
+              <span key={tag} className="text-[9px] font-bold uppercase tracking-wider bg-muted border border-border rounded px-1.5 py-0.5 text-muted-foreground">
                 {tag}
               </span>
             ))}
