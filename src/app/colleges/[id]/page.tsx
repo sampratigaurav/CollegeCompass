@@ -11,16 +11,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { CollegeDetail } from "@/types";
 
+import { prisma } from "@/lib/db";
+
 async function getCollege(id: string): Promise<CollegeDetail | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/colleges/${id}`, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
+    const college = await prisma.college.findFirst({
+      where: { OR: [{ id }, { slug: id }] },
+      include: {
+        courses: { orderBy: { fees: "asc" } },
+        reviews: {
+          orderBy: { createdAt: "desc" },
+          take: 20,
+        },
+        _count: { select: { reviews: true, courses: true } },
+      },
     });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.success ? json.data : null;
-  } catch {
+    return college as unknown as CollegeDetail;
+  } catch (error) {
+    console.error("[getCollege Server]", error);
     return null;
   }
 }
