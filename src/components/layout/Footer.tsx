@@ -3,7 +3,7 @@ import { Activity, Database, GitBranch } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/5 bg-[#09090b]">
+    <footer className="border-t border-border bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           
@@ -20,9 +20,9 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-6 text-[11px] font-medium text-muted-foreground uppercase tracking-widest">
-            <Link href="/colleges" className="hover:text-white transition-colors">Directory</Link>
-            <Link href="/predictor" className="hover:text-white transition-colors">Predictor</Link>
-            <span className="text-white/20">|</span>
+            <Link href="/colleges" className="hover:text-foreground transition-colors">Directory</Link>
+            <Link href="/predictor" className="hover:text-foreground transition-colors">Predictor</Link>
+            <span className="text-muted-foreground/30">|</span>
             <span>NIRF 2025 Data Source</span>
             <div className="hidden md:flex items-center gap-1.5 ml-2">
               <GitBranch className="h-3 w-3" /> v2.4.1

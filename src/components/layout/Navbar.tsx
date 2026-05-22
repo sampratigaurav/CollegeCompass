@@ -5,12 +5,12 @@ import { usePathname } from "next/navigation";
 import { GraduationCap, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navLinks = [
   { href: "/", label: "Explore" },
   { href: "/compare", label: "Compare" },
   { href: "/predictor", label: "Predictor" },
-  { href: "/saved", label: "Saved" },
 ];
 
 export function Navbar() {
@@ -39,7 +39,7 @@ export function Navbar() {
                   "px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-200",
                   pathname === href
                     ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
                 )}
               >
                 {label}
@@ -47,17 +47,17 @@ export function Navbar() {
             ))}
           </nav>
 
-          {/* CTA */}
-          {pathname !== "/" && (
-            <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
+            {pathname !== "/" && (
               <Link
                 href="/predictor"
-                className="inline-flex items-center gap-2 rounded-md bg-white text-black px-4 py-1.5 text-[13px] font-semibold shadow-sm transition-all hover:bg-white/90 active:scale-[0.98] hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+                className="inline-flex items-center gap-2 rounded-md bg-foreground text-background px-4 py-1.5 text-[13px] font-semibold shadow-sm transition-all hover:bg-foreground/90 active:scale-[0.98]"
               >
                 Try Predictor
               </Link>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Mobile Menu Button */}
           <button

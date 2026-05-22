@@ -100,7 +100,7 @@ export function SearchBar() {
           ref={inputRef}
           type="text" 
           placeholder="Search IITs, NITs, B-Schools..." 
-          className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-muted-foreground text-sm ml-3 w-full"
+          className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground text-sm ml-3 w-full"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -120,7 +120,7 @@ export function SearchBar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 5, scale: 0.98 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full left-0 right-0 mt-3 bg-[#09090b] border border-white/10 rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.8)] overflow-hidden z-50"
+            className="absolute top-full left-0 right-0 mt-3 bg-popover border border-border rounded-xl shadow-elevated overflow-hidden z-50"
           >
             {debouncedQuery.length < 2 ? (
               // Trending State
@@ -134,12 +134,12 @@ export function SearchBar() {
                     key={item.slug}
                     href={`/colleges/${item.slug}`}
                     onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${selectedIndex === idx ? "bg-white/10" : "hover:bg-white/5"}`}
+                    className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${selectedIndex === idx ? "bg-muted" : "hover:bg-muted/50"}`}
                   >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 border border-white/10">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted border border-border">
                       <Sparkles className="h-4 w-4 text-primary" />
                     </div>
-                    <span className="text-sm font-medium text-white">{item.name}</span>
+                    <span className="text-sm font-medium text-foreground">{item.name}</span>
                   </Link>
                 ))}
               </div>
@@ -151,16 +151,16 @@ export function SearchBar() {
                     key={suggestion.id}
                     href={`/colleges/${suggestion.slug}`}
                     onClick={() => setIsOpen(false)}
-                    className={`flex items-center justify-between p-3 rounded-lg transition-colors ${selectedIndex === idx ? "bg-white/10" : "hover:bg-white/5"}`}
+                    className={`flex items-center justify-between p-3 rounded-lg transition-colors ${selectedIndex === idx ? "bg-muted" : "hover:bg-muted/50"}`}
                   >
                     <div>
-                      <p className="text-sm font-semibold text-white">{suggestion.name}</p>
+                      <p className="text-sm font-semibold text-foreground">{suggestion.name}</p>
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
                         <MapPin className="h-3 w-3" />
                         {suggestion.location}
                       </div>
                     </div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider bg-white/5 px-2 py-1 rounded text-muted-foreground shrink-0 border border-white/10">
+                    <span className="text-[9px] font-bold uppercase tracking-wider bg-muted px-2 py-1 rounded text-muted-foreground shrink-0 border border-border">
                       {suggestion.type}
                     </span>
                   </Link>

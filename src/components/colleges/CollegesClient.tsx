@@ -165,7 +165,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortOption)}
-            className="h-10 w-full appearance-none rounded-lg border border-white/10 bg-white/5 px-4 pr-10 text-sm text-white font-medium hover:bg-white/10 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors"
+            className="h-10 w-full appearance-none rounded-lg border border-border bg-card px-4 pr-10 text-sm text-foreground font-medium hover:bg-muted focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors"
             id="sort-select"
           >
             {SORT_OPTIONS.map((opt) => (
@@ -180,7 +180,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
         {/* Filter Toggle */}
         <button
           onClick={() => setFiltersOpen(!filtersOpen)}
-          className={`inline-flex items-center gap-2 h-10 rounded-lg border px-4 text-sm font-semibold transition-all relative ${filtersOpen ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-white/5 border-white/10 text-white hover:bg-white/10'}`}
+          className={`inline-flex items-center gap-2 h-10 rounded-lg border px-4 text-sm font-semibold transition-all relative ${filtersOpen ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-foreground hover:bg-muted'}`}
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
@@ -201,14 +201,14 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
             exit={{ opacity: 0, height: 0, marginTop: 0 }}
             className="overflow-hidden"
           >
-            <div className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md p-5 mb-6 shadow-2xl grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="rounded-2xl border border-border bg-card p-5 mb-6 shadow-elevated grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div>
                 <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-2 block">State</label>
                 <div className="relative">
                   <select
                     value={state}
                     onChange={(e) => setState(e.target.value === "All States" ? "" : e.target.value)}
-                    className="w-full h-10 appearance-none rounded-lg border border-white/10 bg-white/5 px-3 pr-10 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors hover:bg-white/10"
+                    className="w-full h-10 appearance-none rounded-lg border border-border bg-background px-3 pr-10 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors hover:bg-muted"
                   >
                     {STATES.map((s) => (
                       <option key={s} value={s === "All States" ? "" : s}>
@@ -225,7 +225,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
                   <select
                     value={exam}
                     onChange={(e) => setExam(e.target.value === "All Exams" ? "" : e.target.value)}
-                    className="w-full h-10 appearance-none rounded-lg border border-white/10 bg-white/5 px-3 pr-10 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors hover:bg-white/10"
+                    className="w-full h-10 appearance-none rounded-lg border border-border bg-background px-3 pr-10 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors hover:bg-muted"
                   >
                     {EXAMS.map((e) => (
                       <option key={e} value={e === "All Exams" ? "" : e}>
@@ -242,7 +242,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value === "All Types" ? "" : e.target.value)}
-                    className="w-full h-10 appearance-none rounded-lg border border-white/10 bg-white/5 px-3 pr-10 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors hover:bg-white/10"
+                    className="w-full h-10 appearance-none rounded-lg border border-border bg-background px-3 pr-10 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors hover:bg-muted"
                   >
                     {TYPES.map((t) => (
                       <option key={t} value={t === "All Types" ? "" : t}>

@@ -58,7 +58,7 @@ function CompareRow({
   }
 
   return (
-    <tr className="border-b border-white/5 bg-[#111113] hover:bg-white/5 transition-colors">
+    <tr className="border-b border-border bg-card hover:bg-muted transition-colors">
       <td className="py-4 px-6 text-[13px] text-muted-foreground whitespace-nowrap">
         {label}
       </td>
@@ -66,7 +66,7 @@ function CompareRow({
         <td
           key={i}
           className={`py-4 px-6 text-[13px] font-medium text-center ${
-            i === winnerIdx ? "text-white" : "text-muted-foreground"
+            i === winnerIdx ? "text-foreground" : "text-muted-foreground"
           }`}
         >
           {val}
@@ -167,20 +167,20 @@ function CompareContent() {
           <div className="flex flex-col gap-4 mt-4">
             <Link
               href="/colleges"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white text-black px-6 py-2.5 text-sm font-semibold hover:bg-white/90 shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-transform active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground px-6 py-2.5 text-sm font-semibold hover:bg-primary/90 shadow-elevated transition-transform active:scale-[0.98]"
             >
               <Search className="h-4 w-4" />
               Browse Colleges
             </Link>
             
-            <div className="mt-8 text-left border-t border-white/5 pt-8">
+            <div className="mt-8 text-left border-t border-border pt-8">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Trending Comparisons</p>
               <div className="flex flex-col gap-2">
-                <Link href="/compare?ids=indian-institute-of-technology-madras,indian-institute-of-technology-delhi" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10">
+                <Link href="/compare?ids=indian-institute-of-technology-madras,indian-institute-of-technology-delhi" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-muted border border-border rounded-lg p-3 hover:bg-muted/80">
                   <span>IIT Madras vs IIT Delhi</span>
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </Link>
-                <Link href="/compare?ids=indian-institute-of-science,indian-institute-of-technology-bombay" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10">
+                <Link href="/compare?ids=indian-institute-of-science,indian-institute-of-technology-bombay" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-muted border border-border rounded-lg p-3 hover:bg-muted/80">
                   <span>IISc Bangalore vs IIT Bombay</span>
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </Link>
@@ -212,10 +212,10 @@ function CompareContent() {
   }
 
   return (
-    <div className="overflow-x-auto bg-[#111113] border border-white/5 rounded-2xl shadow-xl">
+    <div className="overflow-x-auto bg-card border border-border rounded-2xl shadow-elevated">
       <table className="w-full min-w-[640px] border-collapse">
         <thead>
-          <tr className="border-b border-white/5 bg-[#09090b] sticky top-0 z-20">
+          <tr className="border-b border-border bg-background sticky top-0 z-20">
             <th className="py-5 px-6 text-left text-[11px] font-bold text-muted-foreground uppercase tracking-wider w-40">
               Metric
             </th>
@@ -224,12 +224,12 @@ function CompareContent() {
                 <div className="relative mx-auto max-w-[200px]">
                   <button
                     onClick={() => removeCollege(college.slug)}
-                    className="absolute -top-2 -right-2 z-10 h-6 w-6 rounded-full bg-[#1a1a20] border border-white/10 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 flex items-center justify-center transition-colors shadow-lg"
+                    className="absolute -top-2 -right-2 z-10 h-6 w-6 rounded-full bg-muted border border-border hover:bg-red-500/20 hover:text-red-600 dark:hover:text-red-400 hover:border-red-500/30 flex items-center justify-center transition-colors shadow-lg"
                     title="Remove"
                   >
                     <X className="h-3 w-3" />
                   </button>
-                  <div className="relative h-24 w-full rounded-xl overflow-hidden mb-3 border border-white/5">
+                  <div className="relative h-24 w-full rounded-xl overflow-hidden mb-3 border border-border">
                     <Image
                       src={college.image_url || "/images/fallback-college.jpg"}
                       alt={college.name}
@@ -237,11 +237,11 @@ function CompareContent() {
                       className="object-cover"
                       sizes="200px"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
                   </div>
                   <Link
                     href={`/colleges/${college.slug}`}
-                    className="text-sm font-bold leading-tight text-white hover:text-primary transition-colors line-clamp-2 block"
+                    className="text-sm font-bold leading-tight text-foreground hover:text-primary transition-colors line-clamp-2 block"
                   >
                     {college.name}
                   </Link>
@@ -251,7 +251,7 @@ function CompareContent() {
             ))}
           </tr>
         </thead>
-        <tbody className="bg-[#111113]">
+        <tbody className="bg-card">
           <CompareRow
             label="NIRF Rank"
             values={colleges.map((c) => c.nirf_rank)}
@@ -300,7 +300,7 @@ function CompareContent() {
             label="Established"
             values={colleges.map((c) => c.established ?? "N/A")}
           />
-          <tr className="border-b border-white/5 bg-[#111113]">
+          <tr className="border-b border-border bg-card">
             <td className="py-4 px-6 text-[13px] text-muted-foreground">Exams</td>
             {colleges.map((college) => (
               <td key={college.id} className="py-3 px-4 text-center">
@@ -314,7 +314,7 @@ function CompareContent() {
               </td>
             ))}
           </tr>
-          <tr className="bg-[#111113]">
+          <tr className="bg-card">
             <td className="py-4 px-6 text-[13px] text-muted-foreground">Courses</td>
             {colleges.map((college) => (
               <td key={college.id} className="py-4 px-4 text-center text-xs text-muted-foreground">

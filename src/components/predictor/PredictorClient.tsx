@@ -83,7 +83,7 @@ export function PredictorClient() {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Predictor Form */}
-      <div className="bg-[#111113] border border-white/5 rounded-2xl p-6 mb-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-card border border-border rounded-2xl p-6 mb-8 shadow-elevated relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(124,58,237,0.05),transparent_50%)] pointer-events-none" />
         <h2 className="text-xl font-bold mb-6 font-heading relative z-10 flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary" />
@@ -99,10 +99,10 @@ export function PredictorClient() {
                 id="predictor-exam"
                 value={exam}
                 onChange={(e) => setExam(e.target.value)}
-                className="w-full h-11 rounded-lg border border-white/10 bg-black/50 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all text-white"
+                className="w-full h-11 rounded-lg border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all text-foreground"
               >
                 {EXAMS.map((e) => (
-                  <option key={e} value={e} className="bg-[#111113]">
+                  <option key={e} value={e} className="bg-background text-foreground">
                     {e}
                   </option>
                 ))}
@@ -119,7 +119,7 @@ export function PredictorClient() {
                 value={rank}
                 onChange={(e) => setRank(e.target.value)}
                 min={1}
-                className="h-11 bg-black/50 border-white/10 focus-visible:ring-1 focus-visible:ring-primary/50 text-white"
+                className="h-11 bg-background border-border focus-visible:ring-1 focus-visible:ring-primary/50 text-foreground"
                 required
               />
             </div>
@@ -137,7 +137,7 @@ export function PredictorClient() {
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
                 min={0}
-                className="h-11 bg-black/50 border-white/10 focus-visible:ring-1 focus-visible:ring-primary/50 text-white"
+                className="h-11 bg-background border-border focus-visible:ring-1 focus-visible:ring-primary/50 text-foreground"
               />
             </div>
             <div className="flex-1 w-full">
@@ -150,7 +150,7 @@ export function PredictorClient() {
                 placeholder="e.g. Karnataka"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="h-11 bg-black/50 border-white/10 focus-visible:ring-1 focus-visible:ring-primary/50 text-white"
+                className="h-11 bg-background border-border focus-visible:ring-1 focus-visible:ring-primary/50 text-foreground"
               />
             </div>
             <div className="flex w-full sm:w-auto mt-4 sm:mt-0">
@@ -158,7 +158,7 @@ export function PredictorClient() {
                 type="submit"
                 disabled={loading || !rank}
                 id="predictor-submit"
-                className="h-11 w-full px-8 rounded-lg bg-white text-black font-semibold text-[13px] hover:bg-white/90 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                className="h-11 w-full px-8 rounded-lg bg-primary text-primary-foreground font-semibold text-[13px] hover:bg-primary/90 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 whitespace-nowrap shadow-elevated"
               >
                 {loading ? (
                   <>
@@ -232,7 +232,7 @@ export function PredictorClient() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.05 }}
                     key={college.id}
-                    className="flex flex-col sm:flex-row gap-5 bg-[#09090b] border border-white/5 rounded-xl p-5 hover:border-white/15 hover:bg-white/[0.02] transition-colors group"
+                    className="flex flex-col sm:flex-row gap-5 bg-card border border-border shadow-subtle rounded-xl p-5 hover:border-foreground/15 hover:bg-muted transition-colors group"
                   >
                     {/* Image */}
                     <div className="relative h-28 sm:h-auto sm:w-36 rounded-lg overflow-hidden bg-muted shrink-0">
@@ -333,7 +333,7 @@ export function PredictorClient() {
                     <div className="flex sm:flex-col gap-2 items-center sm:items-end justify-end shrink-0">
                       <Link
                         href={`/colleges/${college.slug}`}
-                        className="rounded-lg bg-white/5 text-white px-5 py-2 text-xs font-bold hover:bg-white/10 transition-colors active:scale-[0.98] whitespace-nowrap"
+                        className="rounded-lg bg-muted text-foreground px-5 py-2 text-xs font-bold hover:bg-muted/80 transition-colors active:scale-[0.98] whitespace-nowrap"
                       >
                         View Details
                       </Link>
