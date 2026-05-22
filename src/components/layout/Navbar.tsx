@@ -18,9 +18,9 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-14 items-center justify-between">
           {/* Logo */}
           <Link
             href="/"
@@ -36,10 +36,10 @@ export function Navbar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                  "px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-200",
                   pathname === href
-                    ? "text-primary border-b-2 border-primary rounded-none"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
                 )}
               >
                 {label}
@@ -48,14 +48,16 @@ export function Navbar() {
           </nav>
 
           {/* CTA */}
-          <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/predictor"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:bg-primary/90 hover:shadow-md active:scale-[0.98] interactive-glow"
-            >
-              Get Started
-            </Link>
-          </div>
+          {pathname !== "/" && (
+            <div className="hidden md:flex items-center gap-3">
+              <Link
+                href="/predictor"
+                className="inline-flex items-center gap-2 rounded-md bg-white text-black px-4 py-1.5 text-[13px] font-semibold shadow-sm transition-all hover:bg-white/90 active:scale-[0.98] hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+              >
+                Try Predictor
+              </Link>
+            </div>
+          )}
 
           {/* Mobile Menu Button */}
           <button

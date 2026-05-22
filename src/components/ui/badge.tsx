@@ -9,19 +9,19 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        default: "bg-white text-black border-transparent hover:bg-white/90 shadow-[0_0_10px_rgba(255,255,255,0.1)]",
         secondary:
-          "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
+          "bg-white/5 text-white border-white/10 hover:bg-white/10",
         destructive:
-          "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
+          "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20",
         outline:
-          "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
+          "border-white/20 text-white hover:bg-white/5",
         ghost:
-          "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
+          "hover:bg-white/5 text-muted-foreground hover:text-white",
         link: "text-primary underline-offset-4 hover:underline",
-        glass: "bg-background/40 backdrop-blur-md border-white/10 text-foreground",
-        "neon-primary": "bg-primary/10 border-primary/50 text-primary neon-glow-primary",
-        "neon-secondary": "bg-secondary/10 border-secondary/50 text-secondary neon-glow-secondary",
+        glass: "bg-black/40 backdrop-blur-md border-white/10 text-white",
+        "neon-primary": "bg-primary/10 border-primary/30 text-primary shadow-[0_0_10px_rgba(124,58,237,0.2)]",
+        "neon-secondary": "bg-secondary/10 border-secondary/30 text-secondary shadow-[0_0_10px_rgba(236,72,153,0.2)]",
       },
     },
     defaultVariants: {

@@ -83,32 +83,32 @@
 }
 
 .dark {
-  --background: #090a0f;
-  --foreground: #e3e1e9;
-  --card: #12131c;
-  --card-foreground: #e3e1e9;
-  --popover: #1e202e;
-  --popover-foreground: #e3e1e9;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #09090b;
+  --card-foreground: #fafafa;
+  --popover: #09090b;
+  --popover-foreground: #fafafa;
   --primary: #7c3aed;
   --primary-foreground: #ffffff;
-  --secondary: #06b6d4;
-  --secondary-foreground: #090a0f;
-  --muted: #1e202e;
-  --muted-foreground: #94a3b8;
-  --accent: #1e202e;
-  --accent-foreground: #e3e1e9;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #334155;
-  --input: #1e202e;
+  --border: #27272a;
+  --input: #27272a;
   --ring: #7c3aed;
-  --sidebar: #12131c;
-  --sidebar-foreground: #e3e1e9;
+  --sidebar: #09090b;
+  --sidebar-foreground: #fafafa;
   --sidebar-primary: #7c3aed;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1e202e;
-  --sidebar-accent-foreground: #e3e1e9;
-  --sidebar-border: #334155;
+  --sidebar-accent: #27272a;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #27272a;
   --sidebar-ring: #7c3aed;
 }
 
@@ -116,32 +116,39 @@
   .surface-bento {
     background-color: var(--card);
     border: 1px solid var(--border);
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
   
   .surface-elevated {
     background-color: var(--popover);
     border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
   
   .glass-panel {
-    background-color: rgba(18, 19, 28, 0.7);
-    backdrop-filter: blur(12px);
+    background-color: rgba(9, 9, 11, 0.7);
+    backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.05);
   }
   
+  /* Restrict glows to interactions or ultra-subtle states */
   .neon-glow-primary {
-    box-shadow: 0 0 15px -3px rgba(124, 58, 237, 0.4);
+    transition: box-shadow 0.3s ease;
   }
   
-  .neon-glow-secondary {
-    box-shadow: 0 0 15px -3px rgba(6, 182, 212, 0.4);
+  .neon-glow-primary:hover {
+    box-shadow: 0 0 20px -5px rgba(124, 58, 237, 0.3);
   }
   
+  .interactive-glow {
+    transition: all 0.3s ease;
+  }
+
   .interactive-glow:hover, .interactive-glow:focus-visible {
-    box-shadow: 0 0 15px -3px rgba(124, 58, 237, 0.4);
-    border-color: var(--primary);
+    box-shadow: 0 0 15px -3px rgba(124, 58, 237, 0.3);
+    border-color: rgba(124, 58, 237, 0.5);
   }
   
   .noise-bg {
@@ -154,29 +161,32 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.02;
+    opacity: 0.015;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
   
   .gradient-border-hover {
     position: relative;
     background-clip: padding-box;
-    border: 1px solid transparent;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s ease;
   }
   
-  .gradient-border-hover::before {
-    content: '';
+  .gradient-border-hover:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  /* New Cinematic Hero Gradients */
+  .hero-radial-glow {
     position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15), transparent 70%);
+    pointer-events: none;
     z-index: -1;
-    margin: -1px;
-    border-radius: inherit;
-    background: var(--border);
-    transition: background 0.3s ease;
-  }
-  
-  .gradient-border-hover:hover::before {
-    background: linear-gradient(to bottom right, var(--primary), var(--secondary));
   }
 }
 
@@ -205,6 +215,6 @@
     @apply bg-background text-foreground font-sans;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading tracking-tight;
+    @apply font-heading tracking-tight text-white;
   }
 }

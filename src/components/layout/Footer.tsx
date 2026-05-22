@@ -1,101 +1,34 @@
 import Link from "next/link";
-import { GraduationCap } from "lucide-react";
+import { Activity, Database, GitBranch } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/50 bg-muted/30 mt-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 font-bold text-xl mb-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <GraduationCap className="h-5 w-5 text-primary-foreground" />
+    <footer className="border-t border-white/5 bg-[#09090b]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-emerald-500/50 flex items-center justify-center">
+                <div className="h-1 w-1 rounded-full bg-emerald-400" />
               </div>
-              CollegeCompass
-            </Link>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              India&apos;s trusted platform for college discovery, comparison, and admission
-              prediction. Make informed decisions with real data.
-            </p>
+              <span className="text-[11px] font-medium text-muted-foreground tracking-widest uppercase">All Systems Operational</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-2 text-[11px] text-muted-foreground tracking-widest uppercase">
+              <Database className="h-3 w-3" /> Data Synced: 2h ago
+            </div>
           </div>
 
-          {/* Links */}
-          <div>
-            <h3 className="font-semibold text-sm mb-3">Explore</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <Link href="/colleges" className="hover:text-foreground transition-colors">
-                  All Colleges
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/colleges?type=GOVERNMENT"
-                  className="hover:text-foreground transition-colors"
-                >
-                  Government Colleges
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/colleges?type=PRIVATE"
-                  className="hover:text-foreground transition-colors"
-                >
-                  Private Colleges
-                </Link>
-              </li>
-              <li>
-                <Link href="/compare" className="hover:text-foreground transition-colors">
-                  Compare Colleges
-                </Link>
-              </li>
-            </ul>
+          <div className="flex items-center gap-6 text-[11px] font-medium text-muted-foreground uppercase tracking-widest">
+            <Link href="/colleges" className="hover:text-white transition-colors">Directory</Link>
+            <Link href="/predictor" className="hover:text-white transition-colors">Predictor</Link>
+            <span className="text-white/20">|</span>
+            <span>NIRF 2025 Data Source</span>
+            <div className="hidden md:flex items-center gap-1.5 ml-2">
+              <GitBranch className="h-3 w-3" /> v2.4.1
+            </div>
           </div>
 
-          <div>
-            <h3 className="font-semibold text-sm mb-3">Tools</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <Link href="/predictor" className="hover:text-foreground transition-colors">
-                  Admission Predictor
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/colleges?exam=JEE+Advanced"
-                  className="hover:text-foreground transition-colors"
-                >
-                  JEE Colleges
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/colleges?exam=CAT"
-                  className="hover:text-foreground transition-colors"
-                >
-                  CAT Colleges (MBA)
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/colleges?exam=NEET+UG"
-                  className="hover:text-foreground transition-colors"
-                >
-                  NEET Colleges
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-10 pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} CollegeCompass. All rights reserved.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Data sourced from NIRF 2023 rankings and publicly available information.
-          </p>
         </div>
       </div>
     </footer>

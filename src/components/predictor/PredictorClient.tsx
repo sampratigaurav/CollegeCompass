@@ -3,11 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, Star, TrendingUp, Trophy, MapPin, Loader2 } from "lucide-react";
+import { Search, Star, TrendingUp, Trophy, MapPin, Loader2, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { EmptyState, ErrorState } from "@/components/shared/EmptyState";
 import { Badge } from "@/components/ui/badge";
 import { PredictedCollege } from "@/types";
+import { motion } from "framer-motion";
 
 const EXAMS = ["JEE Advanced", "JEE Main", "NEET UG", "CAT", "CLAT"];
 
@@ -82,9 +83,13 @@ export function PredictorClient() {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Predictor Form */}
-      <div className="surface-bento p-6 mb-8 noise-bg">
-        <h2 className="text-xl font-bold mb-4 font-heading">Enter Your Details</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div className="bg-[#111113] border border-white/5 rounded-2xl p-6 mb-8 shadow-2xl relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(124,58,237,0.05),transparent_50%)] pointer-events-none" />
+        <h2 className="text-xl font-bold mb-6 font-heading relative z-10 flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-primary" />
+          AI Predictor
+        </h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 relative z-10">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
@@ -94,10 +99,10 @@ export function PredictorClient() {
                 id="predictor-exam"
                 value={exam}
                 onChange={(e) => setExam(e.target.value)}
-                className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full h-11 rounded-lg border border-white/10 bg-black/50 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all text-white"
               >
                 {EXAMS.map((e) => (
-                  <option key={e} value={e}>
+                  <option key={e} value={e} className="bg-[#111113]">
                     {e}
                   </option>
                 ))}
@@ -114,7 +119,7 @@ export function PredictorClient() {
                 value={rank}
                 onChange={(e) => setRank(e.target.value)}
                 min={1}
-                className="h-11"
+                className="h-11 bg-black/50 border-white/10 focus-visible:ring-1 focus-visible:ring-primary/50 text-white"
                 required
               />
             </div>
@@ -132,7 +137,7 @@ export function PredictorClient() {
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
                 min={0}
-                className="h-11"
+                className="h-11 bg-black/50 border-white/10 focus-visible:ring-1 focus-visible:ring-primary/50 text-white"
               />
             </div>
             <div className="flex-1 w-full">
@@ -145,7 +150,7 @@ export function PredictorClient() {
                 placeholder="e.g. Karnataka"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="h-11"
+                className="h-11 bg-black/50 border-white/10 focus-visible:ring-1 focus-visible:ring-primary/50 text-white"
               />
             </div>
             <div className="flex w-full sm:w-auto mt-4 sm:mt-0">
@@ -153,7 +158,7 @@ export function PredictorClient() {
                 type="submit"
                 disabled={loading || !rank}
                 id="predictor-submit"
-                className="h-11 w-full px-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 interactive-glow transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 whitespace-nowrap"
+                className="h-11 w-full px-8 rounded-lg bg-white text-black font-semibold text-[13px] hover:bg-white/90 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_15px_rgba(255,255,255,0.1)]"
               >
                 {loading ? (
                   <>
@@ -214,13 +219,20 @@ export function PredictorClient() {
               description={`No colleges accept ${exam} with a rank around ${Number(rank).toLocaleString()}. Try a different exam or rank.`}
             />
           ) : (
-            <div className="space-y-4">
-              {results.map((college) => {
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-3"
+            >
+              {results.map((college, idx) => {
                 const chance = chanceMeta[college.chance];
                 return (
-                  <div
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
                     key={college.id}
-                    className="flex flex-col sm:flex-row gap-5 surface-bento p-5 gradient-border-hover transition-transform hover:-translate-y-1"
+                    className="flex flex-col sm:flex-row gap-5 bg-[#09090b] border border-white/5 rounded-xl p-5 hover:border-white/15 hover:bg-white/[0.02] transition-colors group"
                   >
                     {/* Image */}
                     <div className="relative h-28 sm:h-auto sm:w-36 rounded-lg overflow-hidden bg-muted shrink-0">
@@ -321,7 +333,7 @@ export function PredictorClient() {
                     <div className="flex sm:flex-col gap-2 items-center sm:items-end justify-end shrink-0">
                       <Link
                         href={`/colleges/${college.slug}`}
-                        className="rounded-full bg-primary/10 text-primary px-5 py-2 text-xs font-bold hover:bg-primary/20 interactive-glow transition-transform active:scale-[0.98] whitespace-nowrap"
+                        className="rounded-lg bg-white/5 text-white px-5 py-2 text-xs font-bold hover:bg-white/10 transition-colors active:scale-[0.98] whitespace-nowrap"
                       >
                         View Details
                       </Link>
@@ -332,10 +344,10 @@ export function PredictorClient() {
                         Compare
                       </Link>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
           )}
         </>
       )}

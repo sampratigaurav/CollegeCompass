@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Star, TrendingUp, Trophy, BookOpen } from "lucide-react";
+import { MapPin, Star, TrendingUp, Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { CollegeCard as CollegeCardType } from "@/types";
+import { motion } from "framer-motion";
 
 interface CollegeCardProps {
   college: CollegeCardType;
@@ -30,7 +30,12 @@ const typeColors: Record<string, string> = {
 
 export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCardProps) {
   return (
-    <Card className="group overflow-hidden surface-bento border border-border/60 hover:border-primary/40 hover:shadow-lg transition-transform duration-300 hover:-translate-y-1">
+    <motion.div 
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="group overflow-hidden bg-[#09090b] border border-white/5 rounded-2xl hover:border-white/15 transition-colors relative"
+      style={{ boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.02)" }}
+    >
       {/* Image */}
       <div className="relative h-44 overflow-hidden bg-muted">
         <Image
@@ -55,7 +60,7 @@ export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCa
         </div>
       </div>
 
-      <CardContent className="p-4">
+      <div className="p-4">
         {/* College Name */}
         <Link href={`/colleges/${college.slug}`}>
           <h3 className="font-semibold text-base leading-tight mb-1.5 line-clamp-2 hover:text-primary transition-colors">
@@ -145,7 +150,7 @@ export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCa
             </button>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 }

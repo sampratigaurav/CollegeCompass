@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Search, SlidersHorizontal, X, ArrowUpDown } from "lucide-react";
+import { Search, SlidersHorizontal, X, ArrowUpDown, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
 import { CollegeCard } from "@/components/colleges/CollegeCard";
@@ -160,12 +161,11 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
         </div>
 
         {/* Sort */}
-        <div className="flex items-center gap-2">
-          <ArrowUpDown className="h-4 w-4 text-muted-foreground shrink-0" />
+        <div className="relative">
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortOption)}
-            className="h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="h-10 w-full appearance-none rounded-lg border border-white/10 bg-white/5 px-4 pr-10 text-sm text-white font-medium hover:bg-white/10 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors"
             id="sort-select"
           >
             {SORT_OPTIONS.map((opt) => (
@@ -174,12 +174,13 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
               </option>
             ))}
           </select>
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         </div>
 
         {/* Filter Toggle */}
         <button
           onClick={() => setFiltersOpen(!filtersOpen)}
-          className="inline-flex items-center gap-2 h-10 rounded-md border border-input bg-background px-3 text-sm hover:bg-muted transition-colors relative"
+          className={`inline-flex items-center gap-2 h-10 rounded-lg border px-4 text-sm font-semibold transition-all relative ${filtersOpen ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-white/5 border-white/10 text-white hover:bg-white/10'}`}
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
@@ -192,61 +193,79 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
       </div>
 
       {/* Filter Panel */}
-      {filtersOpen && (
-        <div className="rounded-xl border border-border bg-muted/30 p-4 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">State</label>
-            <select
-              value={state}
-              onChange={(e) => setState(e.target.value === "All States" ? "" : e.target.value)}
-              className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
-            >
-              {STATES.map((s) => (
-                <option key={s} value={s === "All States" ? "" : s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Exam</label>
-            <select
-              value={exam}
-              onChange={(e) => setExam(e.target.value === "All Exams" ? "" : e.target.value)}
-              className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
-            >
-              {EXAMS.map((e) => (
-                <option key={e} value={e === "All Exams" ? "" : e}>
-                  {e}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Type</label>
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value === "All Types" ? "" : e.target.value)}
-              className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
-            >
-              {TYPES.map((t) => (
-                <option key={t} value={t === "All Types" ? "" : t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
-          {activeFilters > 0 && (
-            <button
-              onClick={clearFilters}
-              className="sm:col-span-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <X className="h-3.5 w-3.5" />
-              Clear all filters
-            </button>
-          )}
-        </div>
-      )}
+      <AnimatePresence>
+        {filtersOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: "auto", marginTop: 16 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md p-5 mb-6 shadow-2xl grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <div>
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-2 block">State</label>
+                <div className="relative">
+                  <select
+                    value={state}
+                    onChange={(e) => setState(e.target.value === "All States" ? "" : e.target.value)}
+                    className="w-full h-10 appearance-none rounded-lg border border-white/10 bg-white/5 px-3 pr-10 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors hover:bg-white/10"
+                  >
+                    {STATES.map((s) => (
+                      <option key={s} value={s === "All States" ? "" : s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                </div>
+              </div>
+              <div>
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Exam</label>
+                <div className="relative">
+                  <select
+                    value={exam}
+                    onChange={(e) => setExam(e.target.value === "All Exams" ? "" : e.target.value)}
+                    className="w-full h-10 appearance-none rounded-lg border border-white/10 bg-white/5 px-3 pr-10 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors hover:bg-white/10"
+                  >
+                    {EXAMS.map((e) => (
+                      <option key={e} value={e === "All Exams" ? "" : e}>
+                        {e}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                </div>
+              </div>
+              <div>
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Type</label>
+                <div className="relative">
+                  <select
+                    value={type}
+                    onChange={(e) => setType(e.target.value === "All Types" ? "" : e.target.value)}
+                    className="w-full h-10 appearance-none rounded-lg border border-white/10 bg-white/5 px-3 pr-10 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors hover:bg-white/10"
+                  >
+                    {TYPES.map((t) => (
+                      <option key={t} value={t === "All Types" ? "" : t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                </div>
+              </div>
+              {activeFilters > 0 && (
+                <button
+                  onClick={clearFilters}
+                  className="sm:col-span-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                  Clear all filters
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Results count */}
       {!loading && !error && (
@@ -283,7 +302,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
         />
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {colleges.map((college) => (
               <CollegeCard
                 key={college.id}

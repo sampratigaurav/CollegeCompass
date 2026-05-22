@@ -29,7 +29,9 @@ function Winner({
   bestIndex: number;
 }) {
   return (
-    <span className="ml-1 text-emerald-600 text-xs font-medium">✓ Best</span>
+    <span className="ml-2 inline-flex items-center rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-bold text-emerald-400">
+      WINNER
+    </span>
   );
 }
 
@@ -56,19 +58,19 @@ function CompareRow({
   }
 
   return (
-    <tr className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-      <td className="py-3 px-4 text-sm font-medium text-muted-foreground whitespace-nowrap">
+    <tr className="border-b border-white/5 bg-[#111113] hover:bg-white/5 transition-colors">
+      <td className="py-4 px-6 text-[13px] text-muted-foreground whitespace-nowrap">
         {label}
       </td>
       {formatted.map((val, i) => (
         <td
           key={i}
-          className={`py-3 px-4 text-sm font-medium text-center ${
-            i === winnerIdx ? "text-emerald-600" : ""
+          className={`py-4 px-6 text-[13px] font-medium text-center ${
+            i === winnerIdx ? "text-white" : "text-muted-foreground"
           }`}
         >
           {val}
-          {i === winnerIdx && <span className="ml-1 text-xs">✓</span>}
+          {i === winnerIdx && <Winner values={[]} bestIndex={i} />}
         </td>
       ))}
     </tr>
@@ -160,15 +162,31 @@ function CompareContent() {
       <EmptyState
         icon="compare"
         title="No colleges selected"
-        description="Go to the college listing page and select 2–3 colleges to compare side-by-side."
+        description="Select 2–3 colleges to compare side-by-side. Or try a trending comparison below."
         action={
-          <Link
-            href="/colleges"
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90 interactive-glow transition-transform active:scale-[0.98]"
-          >
-            <Search className="h-4 w-4" />
-            Browse Colleges
-          </Link>
+          <div className="flex flex-col gap-4 mt-4">
+            <Link
+              href="/colleges"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white text-black px-6 py-2.5 text-sm font-semibold hover:bg-white/90 shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-transform active:scale-[0.98]"
+            >
+              <Search className="h-4 w-4" />
+              Browse Colleges
+            </Link>
+            
+            <div className="mt-8 text-left border-t border-white/5 pt-8">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Trending Comparisons</p>
+              <div className="flex flex-col gap-2">
+                <Link href="/compare?ids=indian-institute-of-technology-madras,indian-institute-of-technology-delhi" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10">
+                  <span>IIT Madras vs IIT Delhi</span>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </Link>
+                <Link href="/compare?ids=indian-institute-of-science,indian-institute-of-technology-bombay" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10">
+                  <span>IISc Bangalore vs IIT Bombay</span>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </Link>
+              </div>
+            </div>
+          </div>
         }
       />
     );
@@ -194,46 +212,46 @@ function CompareContent() {
   }
 
   return (
-    <div className="overflow-x-auto surface-bento">
+    <div className="overflow-x-auto bg-[#111113] border border-white/5 rounded-2xl shadow-xl">
       <table className="w-full min-w-[640px] border-collapse">
         <thead>
-          <tr className="border-b border-border/50 bg-background sticky top-0 z-20 shadow-sm">
-            <th className="py-4 px-4 text-left text-sm font-semibold text-muted-foreground w-40">
+          <tr className="border-b border-white/5 bg-[#09090b] sticky top-0 z-20">
+            <th className="py-5 px-6 text-left text-[11px] font-bold text-muted-foreground uppercase tracking-wider w-40">
               Metric
             </th>
             {colleges.map((college) => (
-              <th key={college.id} className="py-4 px-4 text-center min-w-[180px]">
-                <div className="relative mx-auto">
+              <th key={college.id} className="py-5 px-6 text-center min-w-[180px]">
+                <div className="relative mx-auto max-w-[200px]">
                   <button
                     onClick={() => removeCollege(college.slug)}
-                    className="absolute -top-1 -right-1 z-10 h-5 w-5 rounded-full bg-muted hover:bg-destructive hover:text-white flex items-center justify-center transition-colors"
+                    className="absolute -top-2 -right-2 z-10 h-6 w-6 rounded-full bg-[#1a1a20] border border-white/10 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 flex items-center justify-center transition-colors shadow-lg"
                     title="Remove"
                   >
                     <X className="h-3 w-3" />
                   </button>
-                  <div className="relative h-20 w-full rounded-xl overflow-hidden mb-2">
+                  <div className="relative h-24 w-full rounded-xl overflow-hidden mb-3 border border-white/5">
                     <Image
                       src={college.image_url || "/images/fallback-college.jpg"}
                       alt={college.name}
                       fill
                       className="object-cover"
-                      sizes="180px"
+                      sizes="200px"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] to-transparent" />
                   </div>
                   <Link
                     href={`/colleges/${college.slug}`}
-                    className="text-sm font-semibold leading-tight hover:text-primary transition-colors line-clamp-2 block"
+                    className="text-sm font-bold leading-tight text-white hover:text-primary transition-colors line-clamp-2 block"
                   >
                     {college.name}
                   </Link>
-                  <p className="text-xs text-muted-foreground mt-0.5">{college.city}</p>
+                  <p className="text-[11px] text-muted-foreground mt-1 font-medium">{college.city}</p>
                 </div>
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-[#111113]">
           <CompareRow
             label="NIRF Rank"
             values={colleges.map((c) => c.nirf_rank)}
@@ -282,8 +300,8 @@ function CompareContent() {
             label="Established"
             values={colleges.map((c) => c.established ?? "N/A")}
           />
-          <tr className="border-b border-border/50">
-            <td className="py-3 px-4 text-sm font-medium text-muted-foreground">Exams</td>
+          <tr className="border-b border-white/5 bg-[#111113]">
+            <td className="py-4 px-6 text-[13px] text-muted-foreground">Exams</td>
             {colleges.map((college) => (
               <td key={college.id} className="py-3 px-4 text-center">
                 <div className="flex flex-wrap gap-1 justify-center">
@@ -296,8 +314,8 @@ function CompareContent() {
               </td>
             ))}
           </tr>
-          <tr>
-            <td className="py-4 px-4 text-sm font-medium text-muted-foreground">Courses</td>
+          <tr className="bg-[#111113]">
+            <td className="py-4 px-6 text-[13px] text-muted-foreground">Courses</td>
             {colleges.map((college) => (
               <td key={college.id} className="py-4 px-4 text-center text-xs text-muted-foreground">
                 {college._count.courses} courses
