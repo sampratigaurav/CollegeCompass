@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model College {
+  id                   String      @id @default(cuid())
+  name                 String
+  slug                 String      @unique
+  location             String
+  state                String
+  city                 String
+  fees_min             Int
+  fees_max             Int
+  rating               Float
+  nirf_rank            Int?
+  placement_percentage Float
+  avg_salary           Int?
+  description          String      @db.Text
+  image_url            String?
+  website              String?
+  established          Int?
+  type                 CollegeType
+  min_rank             Int?
+  max_rank             Int?
+  exam                 String[]
+  accreditation        String?
+
+  courses   Course[]
+  reviews   Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([state])
+  @@index([city])
+  @@index([nirf_rank])
+  @@index([rating])
+  @@index([fees_min])
+  @@index([placement_percentage])
+  @@index([slug])
+}
+
+model Course {
+  id        String  @id @default(cuid())
+  name      String
+  duration  String
+  fees      Int
+  seats     Int?
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  collegeId String
+
+  @@index([collegeId])
+  @@index([name])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  author    String
+  rating    Float
+  comment   String   @db.Text
+  batch     String?
+  verified  Boolean  @default(false)
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  collegeId String
+  createdAt DateTime @default(now())
+
+  @@index([collegeId])
+}
+
+enum CollegeType {
+  GOVERNMENT
+  PRIVATE
+  DEEMED
+  AUTONOMOUS
+}
