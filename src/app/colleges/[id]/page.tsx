@@ -107,7 +107,7 @@ export default async function CollegeDetailPage({
         <div className="absolute top-4 left-4">
           <Link
             href="/colleges"
-            className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 px-3 py-1.5 text-sm text-white hover:bg-white/30 transition-colors"
+            className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20 transition-transform active:scale-[0.98]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
@@ -169,7 +169,7 @@ export default async function CollegeDetailPage({
           ].map(({ label, value, icon: Icon, sub, color }) => (
             <div
               key={label}
-              className="rounded-xl border border-border bg-card p-4 shadow-sm"
+              className="surface-bento p-5"
             >
               <div className={`flex items-center gap-2 mb-1 ${color}`}>
                 <Icon className="h-4 w-4" />
@@ -233,10 +233,10 @@ export default async function CollegeDetailPage({
                     college.courses.map((course) => (
                       <div
                         key={course.id}
-                        className="flex items-center justify-between rounded-xl border border-border px-4 py-3.5 hover:bg-muted/40 transition-colors"
+                        className="flex items-center justify-between surface-bento px-5 py-4 gradient-border-hover transition-transform hover:-translate-y-0.5"
                       >
                         <div>
-                          <p className="font-medium text-sm">{course.name}</p>
+                          <p className="font-semibold text-sm">{course.name}</p>
                           <p className="text-xs text-muted-foreground mt-0.5">
                             {course.duration}
                             {course.seats ? ` · ${course.seats} seats` : ""}
@@ -280,7 +280,7 @@ export default async function CollegeDetailPage({
                   ].map(({ label, value, icon: Icon, color }) => (
                     <div
                       key={label}
-                      className={`rounded-xl p-4 ${color.split(" ")[0]}`}
+                      className={`surface-bento p-5`}
                     >
                       <Icon className={`h-6 w-6 mb-2 ${color.split(" ")[1]}`} />
                       <p className="text-2xl font-bold">{value}</p>
@@ -317,7 +317,7 @@ export default async function CollegeDetailPage({
                     {college.reviews.map((review) => (
                       <div
                         key={review.id}
-                        className="rounded-xl border border-border p-4 hover:bg-muted/30 transition-colors"
+                        className="surface-bento p-5"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div>
@@ -357,18 +357,18 @@ export default async function CollegeDetailPage({
           {/* Sidebar */}
           <div className="space-y-5">
             {/* Quick Actions */}
-            <div className="rounded-xl border border-border p-5 space-y-3">
-              <h3 className="font-semibold">Quick Actions</h3>
+            <div className="surface-bento p-6 space-y-4">
+              <h3 className="font-bold text-lg font-heading">Quick Actions</h3>
               <Link
                 href={`/compare?ids=${college.slug}`}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-medium hover:bg-muted transition-colors"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-bold hover:bg-muted transition-transform active:scale-[0.98]"
               >
                 Compare with others
               </Link>
               {college.min_rank && (
                 <Link
                   href={`/predictor?exam=${encodeURIComponent(college.exam[0] ?? "")}`}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary/10 text-primary px-4 py-2.5 text-sm font-medium hover:bg-primary/20 transition-colors"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-primary/10 text-primary px-5 py-3 text-sm font-bold hover:bg-primary/20 transition-transform active:scale-[0.98] interactive-glow"
                 >
                   Check My Chances
                 </Link>
@@ -378,7 +378,7 @@ export default async function CollegeDetailPage({
                   href={college.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-medium hover:bg-muted transition-colors text-muted-foreground"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-bold hover:bg-muted transition-transform active:scale-[0.98] text-muted-foreground"
                 >
                   <Globe className="h-4 w-4" />
                   Official Website
@@ -388,8 +388,8 @@ export default async function CollegeDetailPage({
 
             {/* Admission Info */}
             {(college.min_rank || college.max_rank) && (
-              <div className="rounded-xl border border-border p-5">
-                <h3 className="font-semibold mb-3">Admission Range</h3>
+              <div className="surface-bento p-6 mt-6">
+                <h3 className="font-bold text-lg font-heading mb-4">Admission Range</h3>
                 <div className="space-y-2 text-sm">
                   {college.min_rank && (
                     <div className="flex justify-between">

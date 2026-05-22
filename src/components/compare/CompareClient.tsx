@@ -77,10 +77,10 @@ function CompareRow({
 
 function CompareTableSkeleton({ count }: { count: number }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-border">
+    <div className="overflow-x-auto surface-bento">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-border bg-muted/30">
+          <tr className="border-b border-border/50 bg-muted/20 sticky top-0 z-20">
             <th className="py-4 px-4 text-left text-sm font-semibold text-muted-foreground w-40">
               Metric
             </th>
@@ -164,7 +164,7 @@ function CompareContent() {
         action={
           <Link
             href="/colleges"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90 interactive-glow transition-transform active:scale-[0.98]"
           >
             <Search className="h-4 w-4" />
             Browse Colleges
@@ -185,7 +185,7 @@ function CompareContent() {
         title="Not enough colleges"
         description="Select at least 2 colleges to compare. Some IDs may be invalid."
         action={
-          <Link href="/colleges" className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted">
+          <Link href="/colleges" className="rounded-full border border-border px-5 py-3 text-sm font-bold hover:bg-muted transition-transform active:scale-[0.98]">
             Browse Colleges
           </Link>
         }
@@ -194,10 +194,10 @@ function CompareContent() {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border shadow-sm">
-      <table className="w-full min-w-[640px]">
+    <div className="overflow-x-auto surface-bento">
+      <table className="w-full min-w-[640px] border-collapse">
         <thead>
-          <tr className="border-b border-border bg-muted/20">
+          <tr className="border-b border-border/50 bg-background sticky top-0 z-20 shadow-sm">
             <th className="py-4 px-4 text-left text-sm font-semibold text-muted-foreground w-40">
               Metric
             </th>

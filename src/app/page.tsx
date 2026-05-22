@@ -42,10 +42,10 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-background">
+      <section className="relative overflow-hidden bg-background noise-bg">
         <div className="absolute inset-0 bg-grid-white/[0.02] pointer-events-none" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-24 text-center relative">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm text-primary mb-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-24 text-center relative z-10">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm text-primary mb-8 neon-glow-primary">
             <Trophy className="h-3.5 w-3.5" />
             Based on NIRF 2023 Rankings
           </div>
@@ -60,11 +60,11 @@ export default function HomePage() {
             IITs, NITs, IIMs, and more. Real data. Zero guesswork.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
             <Link
               href="/colleges"
               id="hero-explore-btn"
-              className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-base font-semibold text-primary-foreground shadow-lg hover:bg-primary/90 hover:shadow-primary/25 transition-all"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground hover:bg-primary/90 interactive-glow transition-transform active:scale-[0.98]"
             >
               <Search className="h-5 w-5" />
               Explore Colleges
@@ -72,7 +72,7 @@ export default function HomePage() {
             <Link
               href="/predictor"
               id="hero-predictor-btn"
-              className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3.5 text-base font-semibold hover:bg-muted transition-colors"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-8 py-4 text-base font-semibold hover:bg-muted interactive-glow transition-transform active:scale-[0.98]"
             >
               <Zap className="h-5 w-5" />
               Predict My Chances
@@ -113,7 +113,7 @@ export default function HomePage() {
           {features.map(({ icon: Icon, title, description, href, cta, color }) => (
             <div
               key={title}
-              className="group rounded-2xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/30 transition-all duration-300"
+              className="group surface-bento p-8 gradient-border-hover transition-transform hover:-translate-y-1"
             >
               <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl mb-4 ${color}`}>
                 <Icon className="h-6 w-6" />
@@ -135,15 +135,16 @@ export default function HomePage() {
       </section>
 
       {/* CTA Banner */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="rounded-2xl bg-primary/5 border border-primary/20 px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold mb-3">Ready to find your college?</h2>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="surface-bento gradient-border-hover px-8 py-16 text-center noise-bg relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
+          <h2 className="text-3xl font-bold mb-4 relative z-10">Ready to find your college?</h2>
+          <p className="text-muted-foreground mb-8 max-w-md mx-auto relative z-10">
             Join thousands of students who use CollegeCompass to make smarter admission decisions.
           </p>
           <Link
             href="/predictor"
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90 interactive-glow transition-transform active:scale-[0.98] relative z-10"
           >
             <Zap className="h-4 w-4" />
             Start Predicting — It's Free

@@ -14,18 +14,18 @@ const EXAMS = ["JEE Advanced", "JEE Main", "NEET UG", "CAT", "CLAT"];
 const chanceMeta = {
   High: {
     label: "High Chance",
-    class: "bg-emerald-100 text-emerald-700 border-emerald-200",
-    dot: "bg-emerald-500",
+    class: "bg-emerald-900/20 text-emerald-400 border-emerald-500/30 backdrop-blur-sm",
+    dot: "bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.8)]",
   },
   Medium: {
     label: "Medium Chance",
-    class: "bg-yellow-100 text-yellow-700 border-yellow-200",
-    dot: "bg-yellow-500",
+    class: "bg-amber-900/20 text-amber-400 border-amber-500/30 backdrop-blur-sm",
+    dot: "bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]",
   },
   Low: {
     label: "Low Chance",
-    class: "bg-red-100 text-red-700 border-red-200",
-    dot: "bg-red-500",
+    class: "bg-red-900/20 text-red-400 border-red-500/30 backdrop-blur-sm",
+    dot: "bg-red-400 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
   },
 };
 
@@ -75,8 +75,8 @@ export function PredictorClient() {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Predictor Form */}
-      <div className="rounded-2xl border border-border bg-card shadow-sm p-6 mb-8">
-        <h2 className="text-lg font-semibold mb-4">Enter Your Details</h2>
+      <div className="surface-bento p-6 mb-8 noise-bg">
+        <h2 className="text-xl font-bold mb-4 font-heading">Enter Your Details</h2>
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
@@ -115,7 +115,7 @@ export function PredictorClient() {
               type="submit"
               disabled={loading || !rank}
               id="predictor-submit"
-              className="h-11 px-6 rounded-md bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors inline-flex items-center gap-2 whitespace-nowrap"
+              className="h-11 px-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 interactive-glow transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2 whitespace-nowrap"
             >
               {loading ? (
                 <>
@@ -181,7 +181,7 @@ export function PredictorClient() {
                 return (
                   <div
                     key={college.id}
-                    className="flex flex-col sm:flex-row gap-4 rounded-xl border border-border bg-card p-4 hover:shadow-sm transition-shadow"
+                    className="flex flex-col sm:flex-row gap-5 surface-bento p-5 gradient-border-hover transition-transform hover:-translate-y-1"
                   >
                     {/* Image */}
                     <div className="relative h-28 sm:h-auto sm:w-36 rounded-lg overflow-hidden bg-muted shrink-0">
@@ -257,13 +257,13 @@ export function PredictorClient() {
                     <div className="flex sm:flex-col gap-2 items-center sm:items-end justify-end shrink-0">
                       <Link
                         href={`/colleges/${college.slug}`}
-                        className="rounded-lg bg-primary/10 text-primary px-4 py-2 text-xs font-semibold hover:bg-primary/20 transition-colors whitespace-nowrap"
+                        className="rounded-full bg-primary/10 text-primary px-5 py-2 text-xs font-bold hover:bg-primary/20 interactive-glow transition-transform active:scale-[0.98] whitespace-nowrap"
                       >
                         View Details
                       </Link>
                       <Link
                         href={`/compare?ids=${college.slug}`}
-                        className="rounded-lg border border-border px-4 py-2 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors whitespace-nowrap"
+                        className="rounded-full border border-border px-5 py-2 text-xs font-bold text-muted-foreground hover:bg-muted transition-transform active:scale-[0.98] whitespace-nowrap"
                       >
                         Compare
                       </Link>
