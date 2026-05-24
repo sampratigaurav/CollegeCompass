@@ -128,54 +128,70 @@ export function HomePageClientView({ initialData }: HomePageProps) {
         </div>
       </section>
 
-      {/* SECTION 2: PERSONALIZED PREDICTIONS (Utility Focused) */}
+      {/* SECTION 2: SPOTLIGHT & HISTORY */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-medium">Admission Predictor</h2>
-            <p className="text-sm text-muted-foreground">Historical cutoff analysis and probability scoring.</p>
+            <h2 className="text-lg font-medium">Institution Spotlight</h2>
+            <p className="text-sm text-muted-foreground">Discover top-ranked colleges based on our AI analysis.</p>
           </div>
-          <Link href="/predictor" className="text-[11px] font-bold text-muted-foreground hover:text-foreground uppercase tracking-wider transition-colors flex items-center gap-1">
-            Open Predictor <ChevronRight className="h-3 w-3" />
+          <Link href={`/colleges/${initialData.featured.slug}`} className="text-[11px] font-bold text-muted-foreground hover:text-foreground uppercase tracking-wider transition-colors flex items-center gap-1">
+            View Details <ChevronRight className="h-3 w-3" />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Sample Prediction Box */}
-          <div className="md:col-span-2 bg-card rounded-xl border border-border shadow-subtle p-6 flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden group hover:border-foreground/10 transition-colors">
+          {/* Featured College Card */}
+          <Link href={`/colleges/${initialData.featured.slug}`} className="md:col-span-2 bg-card rounded-xl border border-border shadow-subtle flex flex-col md:flex-row items-stretch relative overflow-hidden group hover:border-foreground/10 hover:shadow-elevated transition-all">
             
-            <div className="relative h-28 w-28 shrink-0">
-              <svg viewBox="0 0 100 100" className="transform -rotate-90 w-full h-full">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" className="text-muted/20" strokeWidth="8" />
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#34d399" strokeWidth="8" strokeDasharray="283" strokeDashoffset="42" className="transition-all duration-1000 ease-out" />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-foreground">85%</span>
-                <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest">Match</span>
+            {/* Image Side */}
+            <div className="relative w-full md:w-2/5 h-48 md:h-auto shrink-0 overflow-hidden">
+              {initialData.featured.image_url ? (
+                <Image 
+                  src={initialData.featured.image_url} 
+                  alt={initialData.featured.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-muted flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
+                  <Building2 className="h-8 w-8 text-muted-foreground" />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent md:bg-gradient-to-r md:from-black/40 md:to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 md:bottom-auto md:top-4 z-10">
+                <span className="bg-emerald-500 text-white text-[9px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider">
+                  Featured
+                </span>
               </div>
             </div>
 
-            <div className="flex-1 w-full space-y-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="bg-emerald-500/10 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">High Confidence</span>
-                  <span className="text-xs text-muted-foreground">Based on 2025 cutoffs</span>
-                </div>
-                <h3 className="text-lg font-medium text-foreground">NIT Trichy — Computer Science</h3>
-              </div>
+            {/* Content Side */}
+            <div className="flex-1 p-6 flex flex-col justify-center">
+              <h3 className="text-xl font-medium text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                {initialData.featured.name}
+              </h3>
               
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-muted rounded-lg p-3 border border-border">
-                  <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-1">Required Rank</p>
-                  <p className="text-sm font-medium text-foreground">AIR 700 - 1500</p>
+              <p className="text-xs text-muted-foreground line-clamp-3 mb-6 leading-relaxed">
+                {initialData.featured.ai_summary?.replace('**AI Summary**: ', '') || initialData.featured.description}
+              </p>
+              
+              <div className="grid grid-cols-2 gap-4 mt-auto">
+                <div className="bg-muted/50 rounded-lg p-3 border border-border/50 group-hover:bg-muted transition-colors">
+                  <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-1">Median Salary</p>
+                  <p className="text-sm font-medium text-emerald-500 dark:text-emerald-400">
+                    {formatLPA(initialData.featured.avg_salary)}
+                  </p>
                 </div>
-                <div className="bg-muted rounded-lg p-3 border border-border">
-                  <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-1">Category</p>
-                  <p className="text-sm font-medium text-foreground">General / OS</p>
+                <div className="bg-muted/50 rounded-lg p-3 border border-border/50 group-hover:bg-muted transition-colors">
+                  <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-1">NIRF Rank</p>
+                  <p className="text-sm font-medium text-foreground">
+                    #{initialData.featured.nirf_rank || "N/A"}
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* User Memory: Viewed Colleges or Recommendations */}
           <div className="bg-card shadow-subtle rounded-xl border border-border p-6">
