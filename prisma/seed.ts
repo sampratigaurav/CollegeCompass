@@ -209,7 +209,17 @@ async function main() {
     const rankStr = collegeData.nirf_rank ? `a NIRF rank of ${collegeData.nirf_rank}` : "strong national recognition";
     const ai_summary = `**AI Summary**: ${collegeData.name} is an exceptional ${collegeData.type.toLowerCase()} institution located in ${collegeData.city}. It is best suited for students focused on ${best_for.join(', ')}. With an average placement package of ${avgSalaryStr} and ${rankStr}, it represents a top-tier choice for ambitious aspirants.`;
 
-    // Create college
+    // Create synthetic reviews (without collegeId since it's nested)
+    const rawReviews = generateReviews("dummy", collegeData.rating);
+    const formattedReviews = rawReviews.map((r) => ({
+      author: r.author,
+      rating: Math.max(1, Math.min(5, parseFloat(r.rating.toFixed(1)))),
+      comment: r.comment,
+      batch: r.batch,
+      verified: r.verified
+    }));
+
+    // Create college with nested courses and reviews
     const created = await prisma.college.create({
       data: {
         ...collegeData,
@@ -217,21 +227,18 @@ async function main() {
         best_for,
         streams,
         ai_summary,
+        courses: {
+          create: courses.map((c: any) => ({
+            name: c.name,
+            duration: c.duration,
+            fees: c.fees,
+            seats: c.seats
+          }))
+        },
+        reviews: {
+          create: formattedReviews
+        }
       },
-    });
-
-    // Create courses
-    await prisma.course.createMany({
-      data: courses.map((c: any) => ({ ...c, collegeId: created.id })),
-    });
-
-    // Create synthetic reviews
-    const reviews = generateReviews(created.id, created.rating);
-    await prisma.review.createMany({
-      data: reviews.map((r) => ({
-        ...r,
-        rating: Math.max(1, Math.min(5, parseFloat(r.rating.toFixed(1)))),
-      })),
     });
 
     console.log(`✅ Seeded: ${created.name}`);
