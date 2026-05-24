@@ -15,6 +15,11 @@ import { FallbackImage } from "@/components/shared/FallbackImage";
 import { InvestmentOutlook } from "@/components/college/InvestmentOutlook";
 import { useState, useEffect } from "react";
 import { useUserMemory } from "@/hooks/useUserMemory";
+import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
+
+const PlacementChart = dynamic(() => import("@/components/colleges/PlacementChart"), { ssr: false });
+const ReviewModal = dynamic(() => import("@/components/colleges/ReviewModal"), { ssr: false });
 
 function formatSalary(sal: number | null): string {
   if (!sal) return "N/A";
@@ -66,6 +71,8 @@ export function CollegeDetailClientView({
 }) {
   const [imgError, setImgError] = useState(!college.image_url);
   const [aboutExpanded, setAboutExpanded] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const { data: session } = useSession();
 
   const { addRecentCollege, logActivity, toggleSavedCollege, savedColleges } = useUserMemory();
   const isSaved = savedColleges.some(c => c.id === college.id);
@@ -143,6 +150,19 @@ export function CollegeDetailClientView({
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
+          {/* Mocked Campus Gallery Carousel */}
+          {college.image_url && (
+            <motion.div variants={fadeIn} className="mb-8 overflow-hidden rounded-2xl bg-muted/30 border border-border">
+              <div className="flex gap-2 overflow-x-auto p-2 scrollbar-hide snap-x">
+                {[college.image_url, "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop", "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=800&auto=format&fit=crop", "https://images.unsplash.com/photo-1519452285856-4c7490ac9a34?q=80&w=800&auto=format&fit=crop"].map((url, i) => (
+                  <div key={i} className="relative h-40 w-64 shrink-0 snap-center rounded-xl overflow-hidden shadow-subtle border border-border/50">
+                    <Image src={url} alt="Campus view" fill className="object-cover" sizes="256px" />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
           {/* AI Summary Banner */}
           {college.ai_summary && (
             <motion.div variants={fadeIn} className="relative bg-card p-6 rounded-2xl mb-8 -mt-6 z-30 border border-primary/20 shadow-elevated overflow-hidden">
@@ -357,7 +377,12 @@ export function CollegeDetailClientView({
                     </div>
                   </div>
                   
-                  <div className="rounded-2xl border border-border bg-card shadow-subtle p-6">
+                  <div className="rounded-2xl border border-border bg-card shadow-subtle p-6 mt-4">
+                    <h3 className="font-bold text-sm text-foreground mb-4">Historical Salary Trends</h3>
+                    <PlacementChart avgSalary={college.avg_salary} />
+                  </div>
+                  
+                  <div className="rounded-2xl border border-border bg-card shadow-subtle p-6 mt-4">
                     <h3 className="font-bold text-sm text-foreground mb-4">Top Recruiters</h3>
                     <div className="flex flex-wrap gap-2">
                       {["Google", "Microsoft", "Amazon", "Goldman Sachs", "McKinsey", "Deloitte", "Infosys", "TCS", "Wipro", "Flipkart"].map((co) => (
@@ -380,6 +405,21 @@ export function CollegeDetailClientView({
                       <span className="text-3xl font-bold text-foreground font-heading">{avgReviewRating.toFixed(1)}</span>
                       <StarRating rating={avgReviewRating} />
                     </div>
+                  </div>
+
+                  <div className="flex justify-end mb-4">
+                    {session ? (
+                      <button
+                        onClick={() => setIsReviewModalOpen(true)}
+                        className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold shadow-elevated hover:bg-primary/90 transition-transform active:scale-[0.98]"
+                      >
+                        Add Your Review
+                      </button>
+                    ) : (
+                      <p className="text-xs text-muted-foreground font-medium bg-muted px-3 py-1.5 rounded-lg border border-border">
+                        Please <Link href="/login" className="text-primary hover:underline">log in</Link> to write a review.
+                      </p>
+                    )}
                   </div>
 
                   {college.reviews.length === 0 ? (
@@ -534,6 +574,14 @@ export function CollegeDetailClientView({
           </a>
         )}
       </div>
+
+      {isReviewModalOpen && (
+        <ReviewModal
+          collegeId={college.id}
+          collegeName={college.name}
+          onClose={() => setIsReviewModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

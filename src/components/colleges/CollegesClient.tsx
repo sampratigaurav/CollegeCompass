@@ -11,11 +11,13 @@ import { CollegeGridSkeleton } from "@/components/colleges/CollegeSkeleton";
 import { EmptyState, ErrorState } from "@/components/shared/EmptyState";
 import { CollegeCard as CollegeCardType, SortOption } from "@/types";
 import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
 
-const SORT_OPTIONS: { value: SortOption; label: string; order: "asc" | "desc" }[] = [
+const SORT_OPTIONS: { value: SortOption | "roi"; label: string; order: "asc" | "desc" }[] = [
   { value: "nirf_rank", label: "Best NIRF Rank", order: "asc" },
+  { value: "placement_percentage", label: "Highest Placement %", order: "desc" },
+  { value: "roi", label: "Best ROI", order: "desc" },
   { value: "rating", label: "Highest Rated", order: "desc" },
-  { value: "placement_percentage", label: "Best Placements", order: "desc" },
   { value: "fees_min", label: "Lowest Fees", order: "asc" },
   { value: "name", label: "A – Z", order: "asc" },
 ];
@@ -54,8 +56,12 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
   const [exam, setExam] = useState(searchParams.get("exam") ?? "");
   const [type, setType] = useState(searchParams.get("type") ?? "");
   const [stream, setStream] = useState(searchParams.get("stream") ?? "");
-  const [sort, setSort] = useState<SortOption>(
-    (searchParams.get("sort") as SortOption) ?? "nirf_rank"
+  const [feesRange, setFeesRange] = useState<number[]>([
+    parseInt(searchParams.get("fees_min") ?? "0"),
+    parseInt(searchParams.get("fees_max") ?? "5000000")
+  ]);
+  const [sort, setSort] = useState<SortOption | "roi">(
+    (searchParams.get("sort") as SortOption | "roi") ?? "nirf_rank"
   );
   const [page, setPage] = useState(1);
 
@@ -70,6 +76,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
   const observerTarget = useRef<HTMLDivElement>(null);
 
   const debouncedSearch = useDebounce(search, 350);
+  const debouncedFeesRange = useDebounce(feesRange, 500);
 
   // Sync state to URL
   const syncToUrl = useCallback(
@@ -96,6 +103,11 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
     if (exam) params.set("exam", exam);
     if (type) params.set("type", type);
     if (stream) params.set("stream", stream);
+    
+    // Default max is 5000000 (50L), if user changes we send it
+    if (debouncedFeesRange[0] > 0) params.set("fees_min", String(debouncedFeesRange[0]));
+    if (debouncedFeesRange[1] < 5000000) params.set("fees_max", String(debouncedFeesRange[1]));
+    
     params.set("sort", sort);
     params.set("order", sortOpt?.order ?? "asc");
     params.set("page", String(page));
@@ -124,7 +136,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [debouncedSearch, state, exam, type, stream, sort, page, groupByStream]);
+  }, [debouncedSearch, state, exam, type, stream, sort, page, groupByStream, debouncedFeesRange]);
 
   useEffect(() => {
     fetchColleges();
@@ -140,9 +152,11 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
       type,
       stream,
       sort,
+      fees_min: debouncedFeesRange[0],
+      fees_max: debouncedFeesRange[1],
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, state, exam, type, stream, sort, groupByStream]);
+  }, [debouncedSearch, state, exam, type, stream, sort, groupByStream, debouncedFeesRange]);
 
   // Infinite scroll observer
   useEffect(() => {
@@ -163,11 +177,12 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
     };
   }, [loadingMore, loading, pagination.page, pagination.totalPages]);
 
-  const activeFilters = [state, exam, type].filter(Boolean).length;
+  const activeFilters = [state, exam, type].filter(Boolean).length + (debouncedFeesRange[0] > 0 || debouncedFeesRange[1] < 5000000 ? 1 : 0);
   const clearFilters = () => {
     setState("");
     setExam("");
     setType("");
+    setFeesRange([0, 5000000]);
   };
 
   return (
@@ -241,7 +256,26 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
             exit={{ opacity: 0, height: 0, marginTop: 0 }}
             className="overflow-hidden"
           >
-            <div className="rounded-2xl border border-border bg-card p-5 mb-6 shadow-elevated grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="rounded-2xl border border-border bg-card p-5 mb-6 shadow-elevated grid grid-cols-1 sm:grid-cols-4 gap-6">
+              
+              {/* Fees Slider */}
+              <div className="sm:col-span-4 sm:mb-2">
+                <div className="flex justify-between items-center mb-4">
+                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">Tuition Range (per year)</label>
+                  <span className="text-sm font-bold text-primary">
+                    ₹{(feesRange[0] / 100000).toFixed(1)}L - ₹{(feesRange[1] / 100000).toFixed(1)}L
+                  </span>
+                </div>
+                <Slider
+                  min={0}
+                  max={5000000}
+                  step={50000}
+                  value={feesRange}
+                  onValueChange={setFeesRange}
+                  className="w-full"
+                />
+              </div>
+
               <div>
                 <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-2 block">State</label>
                 <div className="relative">
@@ -296,7 +330,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
               {activeFilters > 0 && (
                 <button
                   onClick={clearFilters}
-                  className="sm:col-span-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+                  className="sm:col-span-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors mt-2"
                 >
                   <X className="h-4 w-4" />
                   Clear all filters

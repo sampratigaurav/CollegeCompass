@@ -126,6 +126,7 @@ model Course {
   seats     Int?
   college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
   collegeId String
+  cutoffs   Cutoff[]
 
   @@index([collegeId])
   @@index([name])
@@ -133,7 +134,8 @@ model Course {
 
 model Review {
   id        String   @id @default(cuid())
-  author    String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   rating    Float
   comment   String   @db.Text
   batch     String?
@@ -143,6 +145,22 @@ model Review {
   createdAt DateTime @default(now())
 
   @@index([collegeId])
+  @@index([userId])
+}
+
+model Cutoff {
+  id           String   @id @default(cuid())
+  courseId     String
+  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  exam         String   // e.g., "JEE Main", "NEET UG"
+  year         Int      // e.g., 2023, 2024
+  round        Int      // e.g., 1, 2, 6
+  category     String   // "OPEN", "OBC-NCL", "SC", "ST", "EWS"
+  quota        String   // "HS", "OS", "AI"
+  seat_pool    String   // "Gender-Neutral", "Female-only"
+  closing_rank Int
+  
+  @@index([courseId, category, quota, seat_pool])
 }
 
 enum CollegeType {
@@ -193,6 +211,7 @@ model User {
   sessions      Session[]
   shortlists    Shortlist[]
   trackedExams  TrackedExam[]
+  reviews       Review[]
 }
 
 model VerificationToken {

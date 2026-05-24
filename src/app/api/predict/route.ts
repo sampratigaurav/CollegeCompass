@@ -68,14 +68,14 @@ export async function POST(request: NextRequest) {
       return errorResponse(parsed.error.issues[0]?.message ?? "Invalid input", 422);
     }
 
-    const { exam, rank, budget, location } = parsed.data;
+    const { exam, rank, budget, location, category, quota, seat_pool } = parsed.data;
 
-    // Find colleges where this rank falls within the accepted range
+    // Find colleges where courses have matching cutoffs
     const colleges = await prisma.college.findMany({
       where: {
         exam: { has: exam },
-        // Instead of hard filtering min_rank/max_rank, we allow slightly above bounds to calculate score
-        min_rank: { not: null },
+        // A college is a match if ANY of its courses has a cutoff that satisfies the criteria
+        // (If there are no cutoffs seeded yet, we will fallback to a soft rank check below)
       },
       select: {
         id: true,
@@ -104,7 +104,20 @@ export async function POST(request: NextRequest) {
         courses: {
           where: { name: { contains: "B.", mode: "insensitive" } },
           take: 3,
-          select: { name: true, fees: true, duration: true },
+          select: { 
+            name: true, 
+            fees: true, 
+            duration: true,
+            cutoffs: {
+              where: {
+                category,
+                quota,
+                seat_pool
+              },
+              orderBy: { year: 'desc' },
+              take: 1
+            }
+          },
         },
       },
     });
@@ -112,10 +125,43 @@ export async function POST(request: NextRequest) {
     // Annotate each college with admission chance and match score
     const results = colleges
       .map((college) => {
+        // If cutoffs exist for the courses, we base the match score heavily on that
+        let effectiveMinRank = college.min_rank ?? 1;
+        let effectiveMaxRank = college.max_rank ?? 999999;
+        
+        // Find the most forgiving cutoff among the courses for this specific category/quota
+        let bestCutoffRank = -1;
+        college.courses.forEach(course => {
+          if (course.cutoffs && course.cutoffs.length > 0) {
+            const cutoff = course.cutoffs[0].closing_rank;
+            if (cutoff > bestCutoffRank) bestCutoffRank = cutoff;
+          }
+        });
+
+        // If we found a cutoff, use it as the definitive max rank
+        if (bestCutoffRank !== -1) {
+          effectiveMaxRank = bestCutoffRank;
+          // We don't really have a strict "min rank" for cutoffs (you can always get in if your rank is better)
+          // But to keep the score calculation balanced, we'll set it to half the closing rank
+          effectiveMinRank = Math.floor(bestCutoffRank / 2);
+        } else {
+          // Fallback mocking logic if no cutoffs seeded: 
+          // If category is not OPEN, artificially boost the user's perceived rank
+          let categoryMultiplier = 1.0;
+          if (category === "SC" || category === "ST") categoryMultiplier = 2.5;
+          else if (category === "OBC-NCL") categoryMultiplier = 1.5;
+          
+          // Apply multiplier to the college's max rank (equivalent to reducing user rank)
+          effectiveMaxRank = Math.floor(effectiveMaxRank * categoryMultiplier);
+          if (seat_pool === "Female-only") {
+             effectiveMaxRank = Math.floor(effectiveMaxRank * 1.2);
+          }
+        }
+
         const { chance, match_score } = calculateMatchScore(
           rank,
-          college.min_rank!,
-          college.max_rank!,
+          effectiveMinRank,
+          effectiveMaxRank,
           college.fees_min,
           college.state,
           budget,

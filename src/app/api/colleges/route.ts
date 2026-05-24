@@ -73,23 +73,23 @@ export async function GET(request: NextRequest) {
       andClauses.length > 0 ? { AND: andClauses } : {};
 
     // Build ORDER BY — nulls last for nirf_rank
-    let orderBy: Prisma.CollegeOrderByWithRelationInput[];
+    let orderBy: Prisma.CollegeOrderByWithRelationInput[] | undefined;
     if (sort === "nirf_rank") {
       orderBy = [{ nirf_rank: { sort: order, nulls: "last" } }];
-    } else {
+    } else if (sort !== "roi") {
       orderBy = [{ [sort]: order }];
     }
 
     const skip = (page - 1) * limit;
 
     // Run count + data queries in parallel
-    const [total, colleges] = await Promise.all([
+    const [total, rawColleges] = await Promise.all([
       prisma.college.count({ where }),
       prisma.college.findMany({
         where,
         orderBy,
-        skip,
-        take: limit,
+        skip: sort === "roi" ? 0 : skip,
+        take: sort === "roi" ? undefined : limit,
         select: {
           id: true,
           name: true,
@@ -113,6 +113,18 @@ export async function GET(request: NextRequest) {
         },
       }),
     ]);
+
+    let colleges = rawColleges;
+
+    // Handle ROI Sort in memory
+    if (sort === "roi") {
+      colleges.sort((a, b) => {
+        const roiA = (a.avg_salary && a.fees_min && a.fees_min > 0) ? a.avg_salary / a.fees_min : 0;
+        const roiB = (b.avg_salary && b.fees_min && b.fees_min > 0) ? b.avg_salary / b.fees_min : 0;
+        return order === "desc" ? roiB - roiA : roiA - roiB;
+      });
+      colleges = colleges.slice(skip, skip + limit);
+    }
 
     return successResponse(colleges, {
       pagination: {

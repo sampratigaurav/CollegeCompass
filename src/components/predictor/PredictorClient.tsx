@@ -10,6 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { PredictedCollege } from "@/types";
 import { motion } from "framer-motion";
 import { useUserMemory } from "@/hooks/useUserMemory";
+import dynamic from "next/dynamic";
+
+const PredictorSparkline = dynamic(() => import("@/components/predictor/PredictorSparkline"), { ssr: false });
 
 const EXAMS = ["JEE Advanced", "JEE Main", "NEET UG", "CAT", "CLAT"];
 
@@ -45,6 +48,9 @@ export function PredictorClient() {
   const [rank, setRank] = useState("");
   const [budget, setBudget] = useState("");
   const [location, setLocation] = useState("");
+  const [category, setCategory] = useState("OPEN");
+  const [quota, setQuota] = useState("AI");
+  const [seatPool, setSeatPool] = useState("Gender-Neutral");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<PredictedCollege[] | null>(null);
   const [meta, setMeta] = useState<PredictorMeta | null>(null);
@@ -68,6 +74,9 @@ export function PredictorClient() {
         body: JSON.stringify({ 
           exam, 
           rank: parseInt(rank, 10),
+          category,
+          quota,
+          seat_pool: seatPool,
           ...(budget && { budget: parseInt(budget, 10) }),
           ...(location && { location })
         }),
@@ -159,7 +168,68 @@ export function PredictorClient() {
                 className="h-11 bg-background border-border focus-visible:ring-1 focus-visible:ring-primary/50 text-foreground"
               />
             </div>
-            <div className="flex w-full sm:w-auto mt-4 sm:mt-0">
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                Category
+              </label>
+              <select
+                id="predictor-category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full h-11 rounded-lg border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all text-foreground"
+              >
+                {["OPEN", "OBC-NCL", "SC", "ST", "EWS"].map((c) => (
+                  <option key={c} value={c} className="bg-background text-foreground">
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                Quota
+              </label>
+              <select
+                id="predictor-quota"
+                value={quota}
+                onChange={(e) => setQuota(e.target.value)}
+                className="w-full h-11 rounded-lg border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all text-foreground"
+              >
+                {[
+                  { value: "AI", label: "All India (AI)" },
+                  { value: "HS", label: "Home State (HS)" },
+                  { value: "OS", label: "Other State (OS)" }
+                ].map((q) => (
+                  <option key={q.value} value={q.value} className="bg-background text-foreground">
+                    {q.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
+                Gender Pool
+              </label>
+              <select
+                id="predictor-seat-pool"
+                value={seatPool}
+                onChange={(e) => setSeatPool(e.target.value)}
+                className="w-full h-11 rounded-lg border border-border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all text-foreground"
+              >
+                {["Gender-Neutral", "Female-only"].map((s) => (
+                  <option key={s} value={s} className="bg-background text-foreground">
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-end mt-2">
+            <div className="flex w-full sm:w-auto">
               <button
                 type="submit"
                 disabled={loading || !rank}
@@ -296,6 +366,21 @@ export function PredictorClient() {
                             <div className="absolute inset-0 flex items-center justify-center">
                               <span className="text-[10px] font-bold">{college.match_score}%</span>
                             </div>
+                          </div>
+                          
+                          {/* Sparkline (mocked trend) */}
+                          <div className="hidden sm:block ml-2 border-l border-border pl-4">
+                            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Counseling Trend</p>
+                            <PredictorSparkline 
+                              data={[
+                                { round: 1, closing_rank: (college.min_rank || 1000) * 0.8 },
+                                { round: 2, closing_rank: (college.min_rank || 1000) * 0.9 },
+                                { round: 3, closing_rank: (college.min_rank || 1000) * 0.95 },
+                                { round: 4, closing_rank: (college.min_rank || 1000) * 1.05 },
+                                { round: 5, closing_rank: (college.min_rank || 1000) * 1.15 }
+                              ]} 
+                              color={college.match_score >= 80 ? '#10b981' : college.match_score >= 50 ? '#eab308' : '#ef4444'} 
+                            />
                           </div>
                         </div>
                       </div>

@@ -13,7 +13,7 @@ export const CollegesQuerySchema = z.object({
   fees_min: z.coerce.number().nonnegative().optional(),
   fees_max: z.coerce.number().nonnegative().optional(),
   sort: z
-    .enum(["nirf_rank", "rating", "fees_min", "placement_percentage", "name"])
+    .enum(["nirf_rank", "rating", "fees_min", "placement_percentage", "name", "roi"])
     .optional()
     .default("nirf_rank"),
   order: z.enum(["asc", "desc"]).optional().default("asc"),
@@ -41,6 +41,9 @@ export const PredictBodySchema = z.object({
   rank: z.number().int().positive("Rank must be a positive integer"),
   budget: z.number().int().positive().optional(),
   location: z.string().optional(),
+  category: z.string().optional().default("OPEN"),
+  quota: z.string().optional().default("AI"),
+  seat_pool: z.string().optional().default("Gender-Neutral"),
 });
 
 export type PredictBody = z.infer<typeof PredictBodySchema>;
