@@ -164,7 +164,7 @@ export async function GET(request: Request) {
           confidence,
           source_type: sourceType,
           parse_method: parseMethod,
-          previous_dates: hasChanges ? previousDates : existingExam?.previous_dates,
+          previous_dates: hasChanges ? (previousDates as any) : existingExam?.previous_dates,
         },
         create: {
           name: exam.name,
