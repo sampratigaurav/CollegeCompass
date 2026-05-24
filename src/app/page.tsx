@@ -29,7 +29,12 @@ export default async function HomePage() {
   // Exams
   const exams = await prisma.exam.findMany({
     take: 6,
-    orderBy: { last_updated_at: 'desc' }
+    orderBy: { last_changed_at: 'desc' },
+    include: {
+      events: {
+        orderBy: { startDate: 'asc' }
+      }
+    }
   });
 
   const initialData = {

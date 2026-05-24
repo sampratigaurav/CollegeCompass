@@ -1,0 +1,42 @@
+export const EXAMS_REGISTRY = [
+  {
+    id: "jee-main",
+    name: "JEE Main",
+    authority: "NTA",
+    officialSite: "https://jeemain.nta.nic.in/",
+    noticesPage: "https://jeemain.nta.nic.in/information-bulletin/",
+    parser: "nta",
+  },
+  {
+    id: "neet",
+    name: "NEET UG",
+    authority: "NTA",
+    officialSite: "https://neet.nta.nic.in/",
+    noticesPage: "https://neet.nta.nic.in/information-bulletin/",
+    parser: "nta",
+  },
+  {
+    id: "bitsat",
+    name: "BITSAT",
+    authority: "BITS Pilani",
+    officialSite: "https://bitsadmission.com/",
+    noticesPage: "https://bitsadmission.com/",
+    parser: "bits",
+  },
+  {
+    id: "kcet",
+    name: "KCET",
+    authority: "KEA",
+    officialSite: "https://cetonline.karnataka.gov.in/kea/",
+    noticesPage: "https://cetonline.karnataka.gov.in/kea/cet2024",
+    parser: "kea",
+  },
+  {
+    id: "cuet-ug",
+    name: "CUET UG",
+    authority: "NTA",
+    officialSite: "https://exams.nta.ac.in/CUET-UG/",
+    noticesPage: "https://exams.nta.ac.in/CUET-UG/about",
+    parser: "nta",
+  },
+];

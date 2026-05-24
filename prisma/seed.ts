@@ -94,19 +94,8 @@ async function main() {
   await prisma.course.deleteMany();
   await prisma.college.deleteMany();
   await prisma.exam.deleteMany();
+  console.log("✅ Exams are now managed dynamically via the sync-exams pipeline.");
 
-  console.log("🗑️  Cleared existing data");
-
-  // Seed Exams
-  const exams = [
-    { name: "JEE ADVANCED", counselling_starts: "June", registration_ends: "May 7", exam_date: "June 2" },
-    { name: "JEE MAIN", counselling_starts: "July", registration_ends: "March 12", exam_date: "April 15" },
-    { name: "BITSAT 2024", counselling_starts: "July", registration_ends: "May 20", exam_date: "May 25" },
-    { name: "CUET-UG", counselling_starts: "August", registration_ends: "April 10", exam_date: "May 15" },
-    { name: "KCET", counselling_starts: "July", registration_ends: "April 20", exam_date: "June 18" },
-  ];
-  await prisma.exam.createMany({ data: exams });
-  console.log("✅ Seeded Exams");
   // Inject some non-engineering mock colleges
   collegesData.push({
     name: "IIM Ahmedabad",

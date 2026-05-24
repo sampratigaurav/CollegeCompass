@@ -141,16 +141,23 @@ export function HomePageClientView({ initialData }: HomePageProps) {
 
               <div className="space-y-1">
                 {sortedExams.slice(0, 4).map((exam) => {
-                  // Parse days remaining from registration_ends string (e.g. "May 7")
+                  // Find the next upcoming event
+                  const now = new Date();
+                  const upcomingEvents = (exam.events || []).filter((e: any) => new Date(e.startDate) > now);
+                  const nextEvent = upcomingEvents[0]; // Already sorted by startDate asc in page.tsx
+
                   let daysLeft: number | null = null;
-                  if (exam.registration_ends) {
-                    try {
-                      const parsed = new Date(`${exam.registration_ends} ${new Date().getFullYear()}`);
-                      if (!isNaN(parsed.getTime())) {
-                        const diff = Math.ceil((parsed.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-                        if (diff > 0) daysLeft = diff;
-                      }
-                    } catch {}
+                  let eventTitle = "Monitored from official notices";
+                  let eventDateStr = "";
+                  
+                  if (nextEvent) {
+                    const eventDate = new Date(nextEvent.startDate);
+                    daysLeft = Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                    eventTitle = nextEvent.title;
+                    
+                    // Format e.g., "May 15"
+                    eventDateStr = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    if (nextEvent.is_tentative) eventDateStr += " (Expected)";
                   }
 
                   // Relative urgency — calm language, subtle tones
@@ -176,17 +183,17 @@ export function HomePageClientView({ initialData }: HomePageProps) {
                   return (
                     <div
                       key={exam.id}
-                      className={`pl-3 py-3 border-l-2 ${borderClass} transition-colors`}
+                      className={`pl-3 py-3 border-l-2 ${borderClass} transition-colors group cursor-default`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-foreground leading-tight truncate">
-                            {exam.name}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-semibold text-foreground leading-tight truncate">
+                              {exam.name}
+                            </p>
+                          </div>
                           <p className="text-[11px] text-muted-foreground mt-0.5">
-                            {exam.exam_date ? `Exam: ${exam.exam_date}` : ""}
-                            {exam.exam_date && exam.counselling_starts ? " · " : ""}
-                            {exam.counselling_starts ? `Counselling: ${exam.counselling_starts}` : ""}
+                            {eventTitle}
                           </p>
                         </div>
                         <div className="text-right shrink-0">
@@ -201,18 +208,29 @@ export function HomePageClientView({ initialData }: HomePageProps) {
                                 </p>
                               )}
                             </>
-                          ) : exam.registration_ends ? (
-                            <p className="text-xs text-muted-foreground">{exam.registration_ends}</p>
-                          ) : null}
+                          ) : (
+                            <p className="text-[10px] text-muted-foreground">TBA</p>
+                          )}
                         </div>
                       </div>
+                      {nextEvent && (
+                        <div className="mt-1.5 hidden group-hover:block">
+                           <p className="text-[9px] text-muted-foreground/50 italic">
+                             Schedule subject to official revisions.
+                           </p>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
               </div>
             </div>
 
-
+            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+               <p className="text-[9px] text-muted-foreground uppercase tracking-widest flex items-center gap-1">
+                 <Activity className="h-3 w-3" /> Verified today
+               </p>
+            </div>
           </div>
 
         </div>

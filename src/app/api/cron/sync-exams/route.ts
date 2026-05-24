@@ -1,24 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { GoogleGenAI } from "@google/genai";
-import * as cheerio from "cheerio";
+import { EXAMS_REGISTRY } from "@/lib/exams/registry";
+import { fetchExamNotices } from "@/lib/exams";
 import fs from "fs";
 import path from "path";
-
-// 1. Static Registry
-const EXAMS_REGISTRY = [
-  { name: "JEE Main", officialUrl: "https://jeemain.nta.nic.in" },
-  { name: "JEE Advanced", officialUrl: "https://jeeadv.ac.in" },
-  { name: "NEET", officialUrl: "https://neet.nta.nic.in" },
-  { name: "BITSAT", officialUrl: "https://bitsadmission.com" },
-  { name: "KCET", officialUrl: "https://cetonline.karnataka.gov.in/kea" },
-  { name: "COMEDK", officialUrl: "https://www.comedk.org" },
-];
 
 const genAI = process.env.GEMINI_API_KEY ? new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY }) : null;
 
 export async function GET(request: Request) {
-  // Authentication (optional for manual testing, mandatory for prod)
+  // Authentication
   const authHeader = request.headers.get("authorization");
   if (
     process.env.CRON_SECRET &&
@@ -29,7 +20,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    // 2. Load Overrides
+    // 1. Load Overrides
     const overridesPath = path.resolve(process.cwd(), "data", "manual_overrides.json");
     let overrides: any = {};
     if (fs.existsSync(overridesPath)) {
@@ -38,155 +29,153 @@ export async function GET(request: Request) {
 
     const results = [];
 
-    for (const exam of EXAMS_REGISTRY) {
-      console.log(`Syncing ${exam.name}...`);
-      
-      const existingExam = await prisma.exam.findUnique({ where: { name: exam.name } });
-      let finalDates = {
-        counselling_starts: existingExam?.counselling_starts || null,
-        registration_ends: existingExam?.registration_ends || null,
-        exam_date: existingExam?.exam_date || null,
-      };
-      
-      let confidence = 0;
-      let sourceType = "existing_db";
-      let parseMethod = "none";
-
-      // A. Soft Human Override Layer
-      if (overrides[exam.name] && overrides[exam.name].override_active) {
-        finalDates = {
-          counselling_starts: overrides[exam.name].counselling_starts,
-          registration_ends: overrides[exam.name].registration_ends,
-          exam_date: overrides[exam.name].exam_date,
-        };
-        confidence = 1.0;
-        sourceType = "manual_override";
-        parseMethod = "human";
-      } 
-      // B. Hybrid Pipeline
-      else if (genAI) {
-        let scrapedText = "";
-        try {
-          // Attempt lightweight scraping
-          const res = await fetch(exam.officialUrl, { 
-            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
-            signal: AbortSignal.timeout(5000) 
-          });
-          if (res.ok) {
-            const html = await res.text();
-            const $ = cheerio.load(html);
-            $('script, style, noscript, iframe, img').remove();
-            scrapedText = $('body').text().replace(/\s+/g, ' ').substring(0, 8000);
-          }
-        } catch (e) {
-          console.error(`Scrape failed for ${exam.name}, falling back strictly to AI search`);
-        }
-
-        // Gemini Interpretation & Normalization
-        try {
-          const prompt = `
-            You are a strict data extraction engine.
-            Extract the 2025/2026 exam dates for "${exam.name}".
-            
-            Context (scraped from official site):
-            ${scrapedText ? scrapedText : 'No scraped context available. Use Google Search.'}
-            
-            Return ONLY a valid JSON object with these exact keys, using null if unknown:
-            {
-              "counselling_starts": "Month YYYY",
-              "registration_ends": "Month DD, YYYY",
-              "exam_date": "Month DD, YYYY"
-            }
-          `;
-
-          const response = await genAI.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-            config: {
-              tools: [{ googleSearch: {} }],
-              responseMimeType: "application/json",
-            }
-          });
-
-          const jsonRes = JSON.parse(response.text || '{}');
-          
-          // 3. Validation Layer & Sanity Checks
-          const currentYear = new Date().getFullYear();
-          let isValid = true;
-          
-          if (jsonRes.exam_date && jsonRes.exam_date.includes(String(currentYear - 2))) {
-            isValid = false; // Reject impossible historical dates
-          }
-
-          if (isValid && (jsonRes.exam_date || jsonRes.registration_ends)) {
-            finalDates = {
-              counselling_starts: jsonRes.counselling_starts || finalDates.counselling_starts,
-              registration_ends: jsonRes.registration_ends || finalDates.registration_ends,
-              exam_date: jsonRes.exam_date || finalDates.exam_date,
-            };
-            confidence = 0.90;
-            sourceType = scrapedText ? "official_html" : "google_search";
-            parseMethod = "gemini_normalization";
-          }
-        } catch (e) {
-          console.error(`AI extraction failed for ${exam.name}`, e);
-          // Gracefully fallback to existing database values
-        }
-      }
-
-      // 4. Change Detection & History
-      let hasChanges = false;
-      const previousDates = {
-        counselling_starts: existingExam?.counselling_starts,
-        registration_ends: existingExam?.registration_ends,
-        exam_date: existingExam?.exam_date,
-      };
-
-      if (
-        finalDates.exam_date !== previousDates.exam_date ||
-        finalDates.registration_ends !== previousDates.registration_ends ||
-        finalDates.counselling_starts !== previousDates.counselling_starts
-      ) {
-        hasChanges = true;
-      }
-
-      // 5. Upsert
+    for (const examDef of EXAMS_REGISTRY) {
+      console.log(`Syncing ${examDef.name}...`);
       const now = new Date();
-      await prisma.exam.upsert({
-        where: { name: exam.name },
-        update: {
-          ...finalDates,
-          website: exam.officialUrl,
-          source_url: exam.officialUrl,
-          last_synced_at: now,
-          last_updated_at: hasChanges ? now : existingExam?.last_updated_at,
-          has_changes: hasChanges,
-          confidence,
-          source_type: sourceType,
-          parse_method: parseMethod,
-          previous_dates: hasChanges ? (previousDates as any) : existingExam?.previous_dates,
-        },
-        create: {
-          name: exam.name,
-          ...finalDates,
-          website: exam.officialUrl,
-          source_url: exam.officialUrl,
-          last_synced_at: now,
-          last_updated_at: now,
-          has_changes: false,
-          confidence,
-          source_type: sourceType,
-          parse_method: parseMethod,
-        }
-      });
+      
+      // Ensure Exam model exists
+      let exam = await prisma.exam.findUnique({ where: { slug: examDef.id } });
+      if (!exam) {
+        exam = await prisma.exam.create({
+          data: {
+            name: examDef.name,
+            slug: examDef.id,
+            authority: examDef.authority,
+            official_website: examDef.officialSite,
+            notices_url: examDef.noticesPage,
+            parser_version: "v1.0",
+          }
+        });
+      }
 
-      results.push({ name: exam.name, updated: hasChanges, dates: finalDates });
+      // Check Overrides First
+      if (overrides[examDef.id] && overrides[examDef.id].override_active) {
+        const events = overrides[examDef.id].events;
+        await syncEventsToDb(exam.id, events, "MANUAL_OVERRIDE", 1.0, "Manual Admin Override");
+        await prisma.exam.update({
+          where: { id: exam.id },
+          data: { last_verified_at: now, last_changed_at: now, parser_health: "HEALTHY" }
+        });
+        results.push({ name: exam.name, status: "overridden" });
+        continue;
+      }
+
+      if (!genAI) {
+        console.warn("No Gemini API key, skipping AI Normalization.");
+        continue;
+      }
+
+      // 2. Fetch from Official Source
+      const extraction = await fetchExamNotices(examDef.id);
+      
+      if (!extraction.success || !extraction.rawText) {
+        console.warn(`Parser failed or returned empty for ${examDef.name}`);
+        await prisma.exam.update({
+          where: { id: exam.id },
+          data: { parser_health: "WARNING" }
+        });
+        results.push({ name: exam.name, status: "parser_failed" });
+        continue; // Fallback: preserve existing data
+      }
+
+      // 3. AI Normalization
+      try {
+        const prompt = `
+          You are a strict data extraction engine for a college admissions platform.
+          Extract the critical exam events (like Registration, Exam dates, Counselling, Results) for "${examDef.name}".
+          
+          Context (scraped directly from their official notice board):
+          ${extraction.rawText.substring(0, 5000)}
+          
+          Return ONLY a valid JSON array of objects.
+          Each object must have:
+          - "type": MUST be one of ["REGISTRATION", "EXAM", "COUNSELLING", "RESULT", "SEAT_ALLOTMENT"]
+          - "title": A short description (e.g. "Session 1 Registration", "Phase 2 Exam")
+          - "startDate": ISO 8601 string (e.g. "2025-05-15T00:00:00Z").
+          - "endDate": ISO 8601 string or null if single day.
+          - "is_tentative": boolean. If the text says "tentative" or "expected", set to true.
+          
+          Only extract events relevant to the current admission cycle (${new Date().getFullYear()}/${new Date().getFullYear()+1}).
+          If no dates are found in the text, return an empty array [].
+        `;
+
+        const response = await genAI.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: prompt,
+          config: {
+            responseMimeType: "application/json",
+          }
+        });
+
+        const parsedEvents = JSON.parse(response.text || '[]');
+        
+        if (Array.isArray(parsedEvents) && parsedEvents.length > 0) {
+          // Verify we aren't hallucinating historical dates (basic sanity check)
+          const validEvents = parsedEvents.filter(e => {
+             const year = new Date(e.startDate).getFullYear();
+             return year >= new Date().getFullYear() - 1; 
+          });
+
+          if (validEvents.length > 0) {
+            // Check for diffs before saving to DB
+            const existingEvents = await prisma.examEvent.findMany({ where: { examId: exam.id } });
+            // Very simple diff detection: if count differs or dates differ, consider it changed.
+            const hasChanges = existingEvents.length !== validEvents.length || true; // Force update for MVP
+
+            await syncEventsToDb(exam.id, validEvents, "HTML_NOTICE", 0.9, extraction.rawText);
+            
+            await prisma.exam.update({
+              where: { id: exam.id },
+              data: { 
+                last_verified_at: now, 
+                last_changed_at: hasChanges ? now : exam.last_changed_at,
+                parser_health: "HEALTHY" 
+              }
+            });
+            results.push({ name: exam.name, status: "synced", events: validEvents.length });
+          } else {
+             results.push({ name: exam.name, status: "no_valid_dates_found" });
+          }
+        } else {
+          results.push({ name: exam.name, status: "no_events_found" });
+        }
+        
+      } catch (e) {
+        console.error(`AI normalization failed for ${examDef.name}`, e);
+        await prisma.exam.update({
+          where: { id: exam.id },
+          data: { parser_health: "FAILED" }
+        });
+        results.push({ name: exam.name, status: "normalization_failed" });
+      }
     }
 
     return NextResponse.json({ success: true, synced_count: results.length, results });
   } catch (error: any) {
     console.error("Sync Error:", error);
-    // Never crash, fail gracefully
     return NextResponse.json({ error: "Sync encountered an error, preserved last known good state." }, { status: 500 });
+  }
+}
+
+// Helper to wipe and rewrite events (Simplest approach for syncing)
+async function syncEventsToDb(examId: string, events: any[], sourceType: any, confidence: number, rawSnapshot: string) {
+  // Wipe old events
+  await prisma.examEvent.deleteMany({ where: { examId } });
+  
+  // Insert new events
+  for (const ev of events) {
+    await prisma.examEvent.create({
+      data: {
+        examId,
+        type: ev.type,
+        title: ev.title,
+        startDate: new Date(ev.startDate),
+        endDate: ev.endDate ? new Date(ev.endDate) : null,
+        is_tentative: ev.is_tentative || false,
+        source_type: sourceType,
+        confidence_score: confidence,
+        raw_text_snapshot: rawSnapshot
+      }
+    });
   }
 }
