@@ -53,6 +53,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
   const [state, setState] = useState(searchParams.get("state") ?? "");
   const [exam, setExam] = useState(searchParams.get("exam") ?? "");
   const [type, setType] = useState(searchParams.get("type") ?? "");
+  const [stream, setStream] = useState(searchParams.get("stream") ?? "");
   const [sort, setSort] = useState<SortOption>(
     (searchParams.get("sort") as SortOption) ?? "nirf_rank"
   );
@@ -94,10 +95,11 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
     if (state) params.set("state", state);
     if (exam) params.set("exam", exam);
     if (type) params.set("type", type);
+    if (stream) params.set("stream", stream);
     params.set("sort", sort);
     params.set("order", sortOpt?.order ?? "asc");
     params.set("page", String(page));
-    params.set("limit", "12");
+    params.set("limit", groupByStream ? "48" : "12");
 
     try {
       const res = await fetch(`/api/colleges?${params.toString()}`);
@@ -122,7 +124,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [debouncedSearch, state, exam, type, sort, page]);
+  }, [debouncedSearch, state, exam, type, stream, sort, page, groupByStream]);
 
   useEffect(() => {
     fetchColleges();
@@ -136,16 +138,17 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
       state,
       exam,
       type,
+      stream,
       sort,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, state, exam, type, sort]);
+  }, [debouncedSearch, state, exam, type, stream, sort, groupByStream]);
 
   // Infinite scroll observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !loadingMore && !loading && pagination.page < pagination.totalPages) {
+        if (entries[0].isIntersecting && !loadingMore && !loading && !groupByStream && pagination.page < pagination.totalPages) {
           setPage((p) => p + 1);
         }
       },
@@ -346,15 +349,25 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
               acc[stream].push(college);
               return acc;
             }, {} as Record<string, CollegeCardType[]>)
-          ).sort(([a], [b]) => a.localeCompare(b)).map(([stream, streamColleges]) => (
-            <div key={stream}>
+          ).sort(([a], [b]) => a.localeCompare(b)).map(([streamName, streamColleges]) => (
+            <div key={streamName}>
               <div className="flex items-center gap-3 mb-6">
-                <h2 className="text-2xl font-bold font-heading tracking-tight">{stream} Colleges</h2>
-                <Badge variant="secondary" className="rounded-full px-2.5">{streamColleges.length}</Badge>
+                <h2 className="text-2xl font-bold font-heading tracking-tight">{streamName} Colleges</h2>
+                <Badge variant="secondary" className="rounded-full px-2.5">{streamColleges.length > 4 ? "4+" : streamColleges.length}</Badge>
                 <div className="h-px bg-border flex-1 ml-4" />
+                <button
+                  onClick={() => {
+                    setStream(streamName);
+                    setGroupByStream(false);
+                    setPage(1);
+                  }}
+                  className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors shrink-0"
+                >
+                  View All →
+                </button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                {streamColleges.map((college) => (
+                {streamColleges.slice(0, 4).map((college) => (
                   <CollegeCard
                     key={college.id}
                     college={college}
@@ -365,11 +378,6 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
               </div>
             </div>
           ))}
-          {pagination.page < pagination.totalPages && (
-            <div ref={observerTarget} className="flex justify-center mt-12 mb-8 h-10 items-center">
-              {loadingMore && <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />}
-            </div>
-          )}
         </div>
       ) : (
         <>
