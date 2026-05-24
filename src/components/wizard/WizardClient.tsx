@@ -32,7 +32,7 @@ export function WizardClient() {
   
   // Form State
   const [persona, setPersona] = useState("Student");
-  const [stream, setStream] = useState("engineering");
+  const [stream, setStream] = useState("Engineering");
   const [budgetMax, setBudgetMax] = useState<number>(1000000);
   const [type, setType] = useState<string>("Any");
   const [priorities, setPriorities] = useState<string[]>([]);
@@ -260,38 +260,50 @@ export function WizardClient() {
         <p className="text-lg text-muted-foreground">Based on your {budgetMax ? 'budget' : 'preferences'} and priorities, here are your "Gold" matches.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
-        {topMatches.map((college, idx) => (
-          <div key={college.id} className="relative flex flex-col bg-card rounded-2xl border-2 border-primary/20 p-6 shadow-xl hover:-translate-y-1 hover:shadow-2xl hover:border-primary/50 transition-all">
-            <div className="absolute -top-4 -left-4 h-10 w-10 bg-primary text-primary-foreground font-black text-xl flex items-center justify-center rounded-xl shadow-lg rotate-[-10deg]">
-              #{idx + 1}
+      {topMatches.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
+          {topMatches.map((college, idx) => (
+            <div key={college.id} className="relative flex flex-col bg-card rounded-2xl border-2 border-primary/20 p-6 shadow-xl hover:-translate-y-1 hover:shadow-2xl hover:border-primary/50 transition-all">
+              <div className="absolute -top-4 -left-4 h-10 w-10 bg-primary text-primary-foreground font-black text-xl flex items-center justify-center rounded-xl shadow-lg rotate-[-10deg]">
+                #{idx + 1}
+              </div>
+              
+              <div className="h-32 rounded-xl bg-muted overflow-hidden relative mb-5 border border-border/50">
+                {college.image_url ? (
+                  <Image src={college.image_url} alt={college.name} fill className="object-cover" />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <Building2 className="h-8 w-8 text-muted-foreground/30" />
+                  </div>
+                )}
+              </div>
+              
+              <h3 className="text-lg font-bold font-heading line-clamp-2 leading-tight mb-2">{college.name}</h3>
+              <p className="text-xs font-medium text-muted-foreground mb-4 uppercase tracking-wider">{college.city}</p>
+              
+              <div className="mt-auto pt-4 border-t border-border/50 flex justify-between items-center">
+                 <div className="flex flex-col">
+                   <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider mb-0.5">Fit Score</span>
+                   <span className="text-lg font-black text-emerald-500">{college.matchScore}%</span>
+                 </div>
+                 <Link href={`/colleges/${college.slug}`} className="p-2 bg-muted rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors group">
+                   <ArrowUpRight className="h-5 w-5" />
+                 </Link>
+              </div>
             </div>
-            
-            <div className="h-32 rounded-xl bg-muted overflow-hidden relative mb-5 border border-border/50">
-              {college.image_url ? (
-                <Image src={college.image_url} alt={college.name} fill className="object-cover" />
-              ) : (
-                <div className="flex h-full items-center justify-center">
-                  <Building2 className="h-8 w-8 text-muted-foreground/30" />
-                </div>
-              )}
-            </div>
-            
-            <h3 className="text-lg font-bold font-heading line-clamp-2 leading-tight mb-2">{college.name}</h3>
-            <p className="text-xs font-medium text-muted-foreground mb-4 uppercase tracking-wider">{college.city}</p>
-            
-            <div className="mt-auto pt-4 border-t border-border/50 flex justify-between items-center">
-               <div className="flex flex-col">
-                 <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider mb-0.5">Fit Score</span>
-                 <span className="text-lg font-black text-emerald-500">{college.matchScore}%</span>
-               </div>
-               <Link href={`/colleges/${college.slug}`} className="p-2 bg-muted rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors group">
-                 <ArrowUpRight className="h-5 w-5" />
-               </Link>
-            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="w-full bg-muted/30 border-2 border-dashed border-border rounded-2xl p-12 text-center mb-12 flex flex-col items-center">
+          <div className="p-4 bg-muted rounded-full mb-4">
+            <Building2 className="h-8 w-8 text-muted-foreground" />
           </div>
-        ))}
-      </div>
+          <h3 className="text-xl font-bold font-heading mb-2">No Perfect Matches Found</h3>
+          <p className="text-muted-foreground max-w-md mx-auto">
+            Your strict criteria filtered out all colleges in our database. Try adjusting your budget or institution type to see more options!
+          </p>
+        </div>
+      )}
 
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
         <button 
