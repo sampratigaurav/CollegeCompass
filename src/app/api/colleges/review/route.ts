@@ -20,6 +20,15 @@ export async function POST(request: NextRequest) {
       return errorResponse("Unauthorized. Please log in to submit a review.", 401);
     }
 
+    // Verify user actually exists in DB (handles stale JWTs after DB resets)
+    const dbUser = await prisma.user.findUnique({
+      where: { id: session.user.id }
+    });
+
+    if (!dbUser) {
+      return errorResponse("User session invalid. Please log out and log back in.", 401);
+    }
+
     const body = await request.json();
     const parsed = ReviewSchema.safeParse(body);
 
