@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/", label: "Explore" },
   { href: "/discover", label: "Discover" },
   { href: "/compare", label: "Compare" },
+  { href: "/exams", label: "Exams" },
   { href: "/predictor", label: "Predictor" },
 ];
 

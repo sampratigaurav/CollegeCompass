@@ -129,7 +129,7 @@ export function HomePageClientView({ initialData }: HomePageProps) {
                 <h3 className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase flex items-center gap-1.5">
                   <Calendar className="h-3 w-3" /> Exam Calendar
                 </h3>
-                <Link href="/predictor" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/exams" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors">
                   View All →
                 </Link>
               </div>
