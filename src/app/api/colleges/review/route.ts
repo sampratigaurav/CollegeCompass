@@ -56,7 +56,15 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingReview) {
-      return errorResponse("You have already reviewed this college.", 400);
+      const updatedReview = await prisma.review.update({
+        where: { id: existingReview.id },
+        data: {
+          rating,
+          comment,
+          batch: batch || null,
+        }
+      });
+      return successResponse(updatedReview, { status: 200 });
     }
 
     const review = await prisma.review.create({

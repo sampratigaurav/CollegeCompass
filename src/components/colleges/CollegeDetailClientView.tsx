@@ -77,6 +77,10 @@ export function CollegeDetailClientView({
   const { addRecentCollege, logActivity, toggleSavedCollege, savedColleges } = useUserMemory();
   const isSaved = savedColleges.some(c => c.id === college.id);
 
+  const userReview = session?.user?.id 
+    ? college.reviews.find(r => r.userId === session.user.id)
+    : null;
+
   useEffect(() => {
     addRecentCollege({
       id: college.id,
@@ -413,7 +417,7 @@ export function CollegeDetailClientView({
                         onClick={() => setIsReviewModalOpen(true)}
                         className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold shadow-elevated hover:bg-primary/90 transition-transform active:scale-[0.98]"
                       >
-                        Add Your Review
+                        {userReview ? "Edit Your Review" : "Add Your Review"}
                       </button>
                     ) : (
                       <p className="text-xs text-muted-foreground font-medium bg-muted px-3 py-1.5 rounded-lg border border-border">
@@ -579,6 +583,7 @@ export function CollegeDetailClientView({
         <ReviewModal
           collegeId={college.id}
           collegeName={college.name}
+          existingReview={userReview}
           onClose={() => setIsReviewModalOpen(false)}
         />
       )}

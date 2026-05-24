@@ -7,16 +7,18 @@ import { useRouter } from "next/navigation";
 export default function ReviewModal({
   collegeId,
   collegeName,
+  existingReview,
   onClose,
 }: {
   collegeId: string;
   collegeName: string;
+  existingReview?: any;
   onClose: () => void;
 }) {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(existingReview?.rating || 0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [batch, setBatch] = useState("");
+  const [comment, setComment] = useState(existingReview?.comment || "");
+  const [batch, setBatch] = useState(existingReview?.batch || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -61,7 +63,9 @@ export default function ReviewModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
       <div className="bg-card border border-border w-full max-w-md rounded-2xl shadow-elevated relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <div className="flex justify-between items-center p-5 border-b border-border bg-muted/50">
-          <h2 className="font-bold text-lg text-foreground">Review {collegeName}</h2>
+          <h2 className="font-bold text-lg text-foreground">
+            {existingReview ? "Edit Your Review" : `Review ${collegeName}`}
+          </h2>
           <button onClick={onClose} className="p-1 text-muted-foreground hover:text-foreground rounded-full hover:bg-background transition-colors">
             <X className="h-5 w-5" />
           </button>
@@ -132,7 +136,7 @@ export default function ReviewModal({
               disabled={loading}
               className="flex-1 h-11 rounded-lg bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
             >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit Review"}
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : (existingReview ? "Update Review" : "Submit Review")}
             </button>
           </div>
         </form>
