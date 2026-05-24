@@ -127,7 +127,6 @@ function CompareContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tradeoffs, setTradeoffs] = useState<{ loading: boolean, text?: string }>({ loading: false });
-  const [showTradeoffs, setShowTradeoffs] = useState(false);
 
   const { addRecentComparison, logActivity, toggleSavedComparison, savedComparisons } = useUserMemory();
 
@@ -155,6 +154,17 @@ function CompareContent() {
             college2: { id: c2.id, name: c2.name, slug: c2.slug },
           });
           logActivity('compare', `Compared ${c1.name} and ${c2.name}`, `/compare?ids=${rawIds}`);
+          // Auto-fetch insights once colleges are loaded
+          setTradeoffs({ loading: true });
+          fetch("/api/insights", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "COMPARE_TRADEOFFS", payload: { colleges: json.data } })
+          }).then(r => r.json()).then(d => {
+            setTradeoffs({ loading: false, text: d.insight });
+          }).catch(() => {
+            setTradeoffs({ loading: false, text: undefined });
+          });
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load comparison");
@@ -240,25 +250,39 @@ function CompareContent() {
     });
   };
 
-  const fetchTradeoffs = async () => {
-    if (colleges.length < 2) return;
-    setShowTradeoffs(true);
-    setTradeoffs({ loading: true });
-    try {
-      const res = await fetch("/api/insights", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "COMPARE_TRADEOFFS",
-          payload: { colleges }
-        })
-      });
-      const data = await res.json();
-      setTradeoffs({ loading: false, text: data.insight });
-    } catch (error) {
-      setTradeoffs({ loading: false, text: "Trade-offs are currently unavailable." });
+  // Deterministic dimension winners (zero latency, no LLM)
+  const getDimensionWinners = () => {
+    if (colleges.length < 2) return [];
+    const dims: { label: string; winner: string; detail: string }[] = [];
+
+    // Best Placement
+    const bestPlacement = [...colleges].sort((a, b) => (b.placement_percentage ?? 0) - (a.placement_percentage ?? 0))[0];
+    if (bestPlacement.placement_percentage) {
+      dims.push({ label: "Placements", winner: bestPlacement.name.split(" ").slice(0, 3).join(" "), detail: `${bestPlacement.placement_percentage}% placed` });
     }
+
+    // Best Avg Salary
+    const bestSalary = [...colleges].sort((a, b) => (b.avg_salary ?? 0) - (a.avg_salary ?? 0))[0];
+    if (bestSalary.avg_salary) {
+      dims.push({ label: "Avg Salary", winner: bestSalary.name.split(" ").slice(0, 3).join(" "), detail: formatSalary(bestSalary.avg_salary) });
+    }
+
+    // Lowest Fees
+    const lowestFees = [...colleges].sort((a, b) => (a.fees_min ?? Infinity) - (b.fees_min ?? Infinity))[0];
+    if (lowestFees.fees_min) {
+      dims.push({ label: "Affordability", winner: lowestFees.name.split(" ").slice(0, 3).join(" "), detail: `from ${formatFees(lowestFees.fees_min, lowestFees.fees_max)}` });
+    }
+
+    // Best NIRF Rank
+    const bestRank = [...colleges].filter(c => c.nirf_rank).sort((a, b) => (a.nirf_rank ?? 999) - (b.nirf_rank ?? 999))[0];
+    if (bestRank?.nirf_rank) {
+      dims.push({ label: "NIRF Rank", winner: bestRank.name.split(" ").slice(0, 3).join(" "), detail: `#${bestRank.nirf_rank}` });
+    }
+
+    return dims;
   };
+
+  const dimensionWinners = getDimensionWinners();
 
   return (
     <>
@@ -285,41 +309,50 @@ function CompareContent() {
         )}
       </div>
 
-      {/* Trade-offs Banner */}
+      {/* Compare Insights Card — always visible, auto-loaded */}
       {colleges.length >= 2 && (
         <div className="mb-8 px-4 md:px-0">
-          {!showTradeoffs ? (
-            <button 
-              onClick={fetchTradeoffs}
-              className="w-full flex items-center justify-between p-4 rounded-xl border border-border bg-muted/10 hover:bg-muted/30 transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <Sparkles className="h-4 w-4" />
-                </div>
-                <div className="text-left">
-                  <p className="text-sm font-bold">Trade-offs Analysis</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Generate a concise comparison summary based on real data.</p>
-                </div>
+          <div className="w-full p-5 rounded-2xl border border-border bg-card shadow-elevated overflow-hidden relative">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(124,58,237,0.06),transparent_60%)] pointer-events-none" />
+            
+            {/* Header */}
+            <div className="flex items-center gap-2 mb-4">
+              <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <Sparkles className="h-3.5 w-3.5 text-primary" />
               </div>
-              <Plus className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-            </button>
-          ) : (
-            <div className="w-full p-5 rounded-xl border border-border bg-muted/20 animate-in fade-in slide-in-from-top-2">
-              <div className="flex items-center gap-2 mb-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                <Sparkles className="h-3.5 w-3.5 text-primary" /> 
-                Trade-offs
+              <div>
+                <p className="text-sm font-bold text-foreground">Compare Insights</p>
+                <p className="text-[11px] text-muted-foreground">Deterministic highlights · Narrative analysis</p>
               </div>
+            </div>
+
+            {/* Dimension Winner Chips */}
+            {dimensionWinners.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {dimensionWinners.map(dim => (
+                  <div key={dim.label} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/50 border border-border/60">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{dim.label}</span>
+                    <span className="h-3 w-px bg-border" />
+                    <span className="text-xs font-bold text-foreground">{dim.winner}</span>
+                    <span className="text-[10px] text-muted-foreground">· {dim.detail}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Narrative */}
+            <div className="border-t border-border/50 pt-4">
               {tradeoffs.loading ? (
                 <div className="space-y-2">
-                  <Skeleton className="h-4 w-full bg-muted/60" />
-                  <Skeleton className="h-4 w-3/4 bg-muted/60" />
+                  <Skeleton className="h-3.5 w-full" />
+                  <Skeleton className="h-3.5 w-5/6" />
+                  <Skeleton className="h-3.5 w-4/6" />
                 </div>
-              ) : (
-                <p className="text-sm leading-relaxed text-foreground">{tradeoffs.text}</p>
-              )}
+              ) : tradeoffs.text ? (
+                <p className="text-sm leading-relaxed text-foreground/90">{tradeoffs.text}</p>
+              ) : null}
             </div>
-          )}
+          </div>
         </div>
       )}
 
