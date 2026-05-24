@@ -122,38 +122,99 @@ export function HomePageClientView({ initialData }: HomePageProps) {
             </div>
           </div>
 
-          {/* RIGHT: Live Intelligence Feed */}
+          {/* RIGHT: Exam Countdown Panel */}
           <div className="lg:col-span-5 bg-card rounded-2xl border border-border p-6 h-full flex flex-col justify-between shadow-subtle">
             <div>
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-1">
                 <h3 className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase flex items-center gap-1.5">
-                  <Activity className="h-3 w-3" /> Trending this week
+                  <Calendar className="h-3 w-3" /> Exam Calendar
                 </h3>
-                <span className="text-[10px] text-muted-foreground">Updated 12m ago</span>
+                <Link href="/predictor" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors">
+                  View All →
+                </Link>
               </div>
-              
-              <div className="space-y-3">
-                {topColleges.slice(0, 4).map((college, idx) => (
-                  <Link href={`/colleges/${college.slug}`} key={college.id} className="group flex items-center justify-between p-2 -mx-2 rounded-lg hover:bg-foreground/5 active:bg-foreground/10 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="text-[10px] font-bold text-muted-foreground w-4 text-center">{idx + 1}</div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{college.name}</p>
-                        <p className="text-[11px] text-muted-foreground">{college.city}, {college.state}</p>
+              <p className="text-[10px] text-muted-foreground/60 mb-5">
+                {inferredStream
+                  ? `Prioritising ${inferredStream.toLowerCase()} entrance exams`
+                  : "Most relevant to your recent activity"}
+              </p>
+
+              <div className="space-y-1">
+                {sortedExams.slice(0, 4).map((exam) => {
+                  // Parse days remaining from registration_ends string (e.g. "May 7")
+                  let daysLeft: number | null = null;
+                  if (exam.registration_ends) {
+                    try {
+                      const parsed = new Date(`${exam.registration_ends} ${new Date().getFullYear()}`);
+                      if (!isNaN(parsed.getTime())) {
+                        const diff = Math.ceil((parsed.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+                        if (diff > 0) daysLeft = diff;
+                      }
+                    } catch {}
+                  }
+
+                  // Relative urgency — calm language, subtle tones
+                  let urgencyLabel = "";
+                  let urgencyClass = "";
+                  let borderClass = "border-l-border";
+                  if (daysLeft !== null) {
+                    if (daysLeft <= 5) {
+                      urgencyLabel = "Closing Soon";
+                      urgencyClass = "text-orange-500/80 dark:text-orange-400/80";
+                      borderClass = "border-l-orange-400/60";
+                    } else if (daysLeft <= 14) {
+                      urgencyLabel = "Approaching";
+                      urgencyClass = "text-yellow-600/70 dark:text-yellow-400/70";
+                      borderClass = "border-l-yellow-400/50";
+                    } else if (daysLeft <= 30) {
+                      urgencyLabel = "Upcoming";
+                      urgencyClass = "text-muted-foreground";
+                      borderClass = "border-l-muted-foreground/30";
+                    }
+                  }
+
+                  return (
+                    <div
+                      key={exam.id}
+                      className={`pl-3 py-3 border-l-2 ${borderClass} transition-colors`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-foreground leading-tight truncate">
+                            {exam.name}
+                          </p>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">
+                            {exam.exam_date ? `Exam: ${exam.exam_date}` : ""}
+                            {exam.exam_date && exam.counselling_starts ? " · " : ""}
+                            {exam.counselling_starts ? `Counselling: ${exam.counselling_starts}` : ""}
+                          </p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          {daysLeft !== null ? (
+                            <>
+                              <p className={`text-xs font-bold ${urgencyClass}`}>
+                                in {daysLeft}d
+                              </p>
+                              {urgencyLabel && (
+                                <p className={`text-[10px] ${urgencyClass} opacity-80`}>
+                                  {urgencyLabel}
+                                </p>
+                              )}
+                            </>
+                          ) : exam.registration_ends ? (
+                            <p className="text-xs text-muted-foreground">{exam.registration_ends}</p>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-xs font-medium text-emerald-400">{formatLPA(college.avg_salary)}</p>
-                      <p className="text-[10px] text-muted-foreground uppercase">Median</p>
-                    </div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             </div>
-            
-            <div className="mt-8 pt-6 border-t border-border grid grid-cols-2 gap-4">
+
+            <div className="mt-6 pt-5 border-t border-border grid grid-cols-2 gap-4">
               <div>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Total Indexed</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Institutions</p>
                 <p className="text-lg font-medium">{stats.totalColleges.toLocaleString()}</p>
               </div>
               <div>
