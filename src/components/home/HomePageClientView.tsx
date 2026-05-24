@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Search, Clock, TrendingUp, ChevronRight, Activity, Calendar, Building2, Wallet, Users, Lightbulb, MapPin, ArrowRight } from "lucide-react";
+import { Search, Clock, TrendingUp, ChevronRight, Activity, Calendar, Building2, Wallet, Users, Lightbulb, MapPin, ArrowRight, History, Bookmark, Sparkles } from "lucide-react";
 import { useUserMemory } from "@/hooks/useUserMemory";
 import { SearchBar } from "@/components/shared/SearchBar";
 
@@ -26,8 +26,23 @@ interface HomePageProps {
 }
 
 export function HomePageClientView({ initialData }: HomePageProps) {
-  const { isLoaded, recentSearches, recentColleges, recentComparisons } = useUserMemory();
+  const { isLoaded, recentSearches, recentColleges, recentComparisons, savedColleges, recentActivity, preferredExams, previousPredictions } = useUserMemory();
   const { topColleges, stats, exams } = initialData;
+
+  const hasPersonalization = isLoaded && (recentColleges.length > 0 || savedColleges?.length > 0 || recentActivity?.length > 0);
+
+  // For suggestions: find colleges with similar type to recently viewed, excluding already viewed/saved
+  const viewedIds = new Set([...recentColleges.map(c => c.id), ...(savedColleges?.map(c => c.id) || [])]);
+  const dominantType = recentColleges.length > 0 ? recentColleges[0].type : null;
+  const suggestions = topColleges.filter(c => !viewedIds.has(c.id) && (dominantType ? c.type === dominantType : true)).slice(0, 3);
+  const suggestionReason = dominantType ? `Related to your interest in ${dominantType} institutions` : "Based on your search patterns";
+
+  // For exams: sort exams based on preferredExams
+  const sortedExams = [...exams].sort((a, b) => {
+    const aPref = preferredExams?.includes(a.name) ? 1 : 0;
+    const bPref = preferredExams?.includes(b.name) ? 1 : 0;
+    return bPref - aPref;
+  });
 
   const formatLPA = (val: number | null) => val ? `₹${(val / 100000).toFixed(1)} LPA` : "N/A";
 
@@ -127,6 +142,95 @@ export function HomePageClientView({ initialData }: HomePageProps) {
 
         </div>
       </section>
+
+      {/* NEW SECTION: PERSONALIZED WORKSPACE */}
+      {hasPersonalization && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-border/50 bg-primary/5">
+          <div className="mb-8">
+            <h2 className="text-xl font-medium flex items-center gap-2 text-foreground">
+              <Sparkles className="h-5 w-5 text-primary" /> Continue Exploring
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">Based on your recent activity and shortlisted choices.</p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* LEFT: Saved & Suggested */}
+            <div className="lg:col-span-8 space-y-10">
+              {/* Shortlist */}
+              {savedColleges?.length > 0 && (
+                <div>
+                  <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <Bookmark className="h-4 w-4" /> Decision Workspace (Shortlist)
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {savedColleges.map(college => (
+                      <Link href={`/colleges/${college.slug}`} key={college.id} className="bg-card border border-border rounded-xl p-4 shadow-subtle hover:border-primary/40 transition-colors group flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1">{college.name}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{college.location || "Institution"}</p>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Suggestions */}
+              {suggestions.length > 0 && (
+                <div>
+                  <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4 text-amber-500" /> Suggested for You
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-4 ml-6">{suggestionReason}</p>
+                  <div className="flex overflow-x-auto snap-x snap-proximity gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-3 hide-scrollbar">
+                    {suggestions.map(college => (
+                       <Link href={`/colleges/${college.slug}`} key={college.id} className="min-w-[75vw] sm:min-w-0 snap-center bg-card border border-border rounded-xl p-4 shadow-subtle hover:border-foreground/20 transition-colors group">
+                          <p className="font-medium text-sm text-foreground line-clamp-1 group-hover:text-primary">{college.name}</p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground uppercase tracking-wider font-bold">
+                              {formatLPA(college.avg_salary)}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground">{college.type || "College"}</span>
+                          </div>
+                       </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* RIGHT: Recent Activity Timeline */}
+            <div className="lg:col-span-4 bg-card rounded-2xl border border-border p-6 shadow-subtle">
+              <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-6 flex items-center gap-2">
+                <History className="h-4 w-4" /> Recent Activity
+              </h3>
+              {recentActivity?.length > 0 ? (
+                <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[5px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-border before:via-border before:to-transparent">
+                  {recentActivity.slice(0, 5).map(act => (
+                    <div key={act.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                      <div className="flex items-center justify-center w-3 h-3 rounded-full border border-background bg-muted-foreground shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow absolute left-0 md:left-1/2 -translate-x-[4px] md:translate-x-0" 
+                           style={{
+                             backgroundColor: act.type === 'view' ? '#60a5fa' : act.type === 'compare' ? '#c084fc' : act.type === 'predict' ? '#34d399' : '#fbbf24'
+                           }} />
+                      <div className="w-[calc(100%-2rem)] md:w-[calc(50%-1.5rem)] ml-6 md:ml-0 p-3 rounded-lg border border-border bg-background shadow-subtle">
+                        {act.link ? (
+                           <Link href={act.link} className="text-xs font-medium hover:text-primary transition-colors text-foreground line-clamp-2 leading-relaxed">{act.text}</Link>
+                        ) : (
+                           <p className="text-xs font-medium text-foreground line-clamp-2 leading-relaxed">{act.text}</p>
+                        )}
+                        <p className="text-[9px] text-muted-foreground mt-1 uppercase tracking-wider font-bold">{new Date(act.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">No recent activity yet.</p>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* SECTION 2: SPOTLIGHT & HISTORY */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -335,8 +439,8 @@ export function HomePageClientView({ initialData }: HomePageProps) {
         </div>
 
         <div className="flex overflow-x-auto snap-x snap-proximity gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 md:grid-cols-3 hide-scrollbar">
-          {exams.map((exam) => (
-            <div key={exam.id} className="min-w-[85vw] sm:min-w-0 snap-center bg-card border border-border shadow-subtle rounded-xl p-5 hover:border-foreground/10 transition-colors relative group">
+          {sortedExams.map((exam) => (
+            <div key={exam.id} className={`min-w-[85vw] sm:min-w-0 snap-center bg-card border shadow-subtle rounded-xl p-5 transition-colors relative group ${preferredExams?.includes(exam.name) ? "border-primary/40 bg-primary/[0.02]" : "border-border hover:border-foreground/10"}`}>
               {exam.has_changes && (
                 <div className="absolute -top-1.5 -right-1.5 flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
@@ -346,7 +450,12 @@ export function HomePageClientView({ initialData }: HomePageProps) {
               
               <div className="flex justify-between items-start mb-5">
                 <div>
-                  <h4 className="text-sm font-medium text-foreground">{exam.name}</h4>
+                  <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
+                    {exam.name}
+                    {preferredExams?.includes(exam.name) && (
+                      <span className="bg-primary/10 text-primary text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">Relevant</span>
+                    )}
+                  </h4>
                   {exam.source_url && (
                     <a href={exam.source_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-0.5 mt-0.5">
                       Source: Official Website

@@ -9,6 +9,7 @@ import { EmptyState, ErrorState } from "@/components/shared/EmptyState";
 import { Badge } from "@/components/ui/badge";
 import { PredictedCollege } from "@/types";
 import { motion } from "framer-motion";
+import { useUserMemory } from "@/hooks/useUserMemory";
 
 const EXAMS = ["JEE Advanced", "JEE Main", "NEET UG", "CAT", "CLAT"];
 
@@ -49,6 +50,8 @@ export function PredictorClient() {
   const [meta, setMeta] = useState<PredictorMeta | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const { addPreviousPrediction, logActivity } = useUserMemory();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!rank || isNaN(Number(rank)) || Number(rank) <= 0) return;
@@ -73,6 +76,9 @@ export function PredictorClient() {
       if (!json.success) throw new Error(json.error);
       setResults(json.data.results);
       setMeta(json.data.meta);
+      
+      addPreviousPrediction({ exam, rank: parseInt(rank, 10) });
+      logActivity('predict', `Predicted rank ${rank} in ${exam}`, `/predictor?exam=${encodeURIComponent(exam)}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to run prediction");
     } finally {

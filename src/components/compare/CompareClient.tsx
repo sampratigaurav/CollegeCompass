@@ -9,6 +9,7 @@ import { CollegeDetail } from "@/types";
 import { EmptyState, ErrorState } from "@/components/shared/EmptyState";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUserMemory } from "@/hooks/useUserMemory";
 
 function formatFees(min: number, max: number): string {
   const fmt = (n: number) =>
@@ -126,6 +127,8 @@ function CompareContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { addRecentComparison, logActivity } = useUserMemory();
+
   useEffect(() => {
     if (ids.length < 1) return;
 
@@ -141,6 +144,16 @@ function CompareContent() {
         const json = await res.json();
         if (!json.success) throw new Error(json.error);
         setColleges(json.data);
+        
+        if (json.data.length >= 2) {
+          const c1 = json.data[0];
+          const c2 = json.data[1];
+          addRecentComparison({
+            college1: { id: c1.id, name: c1.name, slug: c1.slug },
+            college2: { id: c2.id, name: c2.name, slug: c2.slug },
+          });
+          logActivity('compare', `Compared ${c1.name} and ${c2.name}`, `/compare?ids=${rawIds}`);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load comparison");
       } finally {

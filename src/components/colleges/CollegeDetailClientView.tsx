@@ -5,14 +5,15 @@ import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import {
   MapPin, Star, TrendingUp, Trophy, Globe, Calendar,
-  BookOpen, Users, ArrowLeft, CheckCircle2, Building2, Sparkles
+  BookOpen, Users, ArrowLeft, CheckCircle2, Building2, Sparkles, Bookmark, BookmarkCheck
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { CollegeDetail } from "@/types";
 import { FallbackImage } from "@/components/shared/FallbackImage";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUserMemory } from "@/hooks/useUserMemory";
 
 function formatSalary(sal: number | null): string {
   if (!sal) return "N/A";
@@ -64,6 +65,23 @@ export function CollegeDetailClientView({
 }) {
   const [imgError, setImgError] = useState(!college.image_url);
   const [aboutExpanded, setAboutExpanded] = useState(false);
+
+  const { addRecentCollege, logActivity, toggleSavedCollege, savedColleges } = useUserMemory();
+  const isSaved = savedColleges.some(c => c.id === college.id);
+
+  useEffect(() => {
+    addRecentCollege({
+      id: college.id,
+      name: college.name,
+      slug: college.slug,
+      nirf_rank: college.nirf_rank,
+      image_url: college.image_url,
+      type: college.type,
+      location: college.location
+    });
+    logActivity('view', `Viewed ${college.name}`, `/colleges/${college.slug}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [college.id]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -427,6 +445,16 @@ export function CollegeDetailClientView({
                     Check My Chances
                   </Link>
                 )}
+                <button
+                  onClick={() => toggleSavedCollege({
+                    id: college.id, name: college.name, slug: college.slug, nirf_rank: college.nirf_rank, image_url: college.image_url, type: college.type, location: college.location
+                  })}
+                  className={`w-full inline-flex items-center justify-center gap-2 rounded-lg border px-5 py-3.5 text-sm font-bold transition-colors active:scale-[0.98] ${
+                    isSaved ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : "bg-transparent border-border text-foreground hover:bg-muted"
+                  }`}
+                >
+                  {isSaved ? <><BookmarkCheck className="h-4 w-4" /> Saved to Shortlist</> : <><Bookmark className="h-4 w-4" /> Save to Shortlist</>}
+                </button>
                 {college.website && (
                   <a
                     href={college.website}
@@ -475,6 +503,16 @@ export function CollegeDetailClientView({
 
       {/* Mobile Sticky Action Bar */}
       <div className="lg:hidden fixed bottom-16 left-0 right-0 z-40 bg-background/95 backdrop-blur-md border-t border-border p-3 flex gap-2 shadow-[0_-8px_20px_rgba(0,0,0,0.3)] pb-[calc(env(safe-area-inset-bottom)+12px)]">
+        <button
+          onClick={() => toggleSavedCollege({
+            id: college.id, name: college.name, slug: college.slug, nirf_rank: college.nirf_rank, image_url: college.image_url, type: college.type, location: college.location
+          })}
+          className={`shrink-0 inline-flex items-center justify-center rounded-lg border px-3 py-3 active:scale-[0.98] transition-all ${
+            isSaved ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" : "bg-muted border-border text-foreground"
+          }`}
+        >
+          {isSaved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
+        </button>
         <Link
           href={`/compare?ids=${college.slug}`}
           className="flex-1 inline-flex items-center justify-center rounded-lg bg-muted border border-border px-3 py-3 text-[13px] font-bold text-foreground active:scale-[0.98] transition-transform"
