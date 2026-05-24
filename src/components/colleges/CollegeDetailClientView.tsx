@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { CollegeDetail } from "@/types";
 import { FallbackImage } from "@/components/shared/FallbackImage";
+import { InvestmentOutlook } from "@/components/college/InvestmentOutlook";
 import { useState, useEffect } from "react";
 import { useUserMemory } from "@/hooks/useUserMemory";
 
@@ -496,6 +497,9 @@ export function CollegeDetailClientView({
                   </div>
                 </div>
               )}
+              
+              {/* Investment Outlook */}
+              <InvestmentOutlook college={college} />
             </motion.div>
           </div>
         </motion.div>
