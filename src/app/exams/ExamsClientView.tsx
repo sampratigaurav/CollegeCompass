@@ -6,6 +6,7 @@ import { Activity, ShieldCheck, Calendar, Clock, GraduationCap, ArrowRight } fro
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { TrackExamButton } from "@/components/exams/TrackExamButton";
 
 type ExamEvent = {
   id: string;
@@ -187,7 +188,10 @@ function ExamEcosystemCard({ exam }: { exam: Exam }) {
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-6 gap-4">
           <div>
-            <h2 className="text-2xl font-bold font-heading mb-1.5 group-hover:text-primary transition-colors">{exam.name}</h2>
+            <div className="flex items-center gap-3 mb-1.5">
+              <h2 className="text-2xl font-bold font-heading group-hover:text-primary transition-colors">{exam.name}</h2>
+              <TrackExamButton examId={exam.id} variant="icon" className="h-8 w-8 p-1.5" />
+            </div>
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <span className="text-muted-foreground font-medium">{exam.authority}</span>
               {exam._count && exam._count.colleges > 0 && (

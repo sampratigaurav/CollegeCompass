@@ -11,6 +11,9 @@ export default async function WorkspacePage() {
   // If authenticated, fetch their server-side shortlist
   let serverShortlist: string[] = [];
   let serverColleges: any[] = [];
+  
+  let serverTrackedExams: string[] = [];
+  let serverEvents: any[] = [];
 
   if (session?.user?.id) {
     const list = await prisma.shortlist.findMany({
@@ -32,8 +35,34 @@ export default async function WorkspacePage() {
         fees_max: true,
         placement_percentage: true,
         avg_salary: true,
+        slug: true,
       },
     });
+
+    const trackedList = await prisma.trackedExam.findMany({
+      where: { userId: session.user.id },
+      select: { examId: true },
+    });
+    serverTrackedExams = trackedList.map((item) => item.examId);
+
+    if (serverTrackedExams.length > 0) {
+      serverEvents = await prisma.examEvent.findMany({
+        where: {
+          examId: { in: serverTrackedExams },
+          // Only fetch events that haven't ended yet, or if they don't have an endDate, haven't started yet
+          OR: [
+            { endDate: { gte: new Date() } },
+            { endDate: null, startDate: { gte: new Date() } }
+          ]
+        },
+        include: {
+          exam: {
+            select: { name: true, slug: true, authority: true }
+          }
+        },
+        orderBy: { startDate: 'asc' },
+      });
+    }
   }
 
   return (
@@ -49,6 +78,8 @@ export default async function WorkspacePage() {
         session={session} 
         serverShortlist={serverShortlist} 
         serverColleges={serverColleges} 
+        serverTrackedExams={serverTrackedExams}
+        serverEvents={serverEvents}
       />
     </div>
   );

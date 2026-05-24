@@ -18,6 +18,7 @@ const navLinks = [
 
 export function Navbar() {
   const pathname = usePathname();
+  if (pathname.startsWith("/wizard")) return null;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 md:bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 transition-colors duration-300">

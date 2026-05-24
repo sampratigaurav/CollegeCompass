@@ -88,6 +88,7 @@ model Exam {
   
   colleges              College[]
   events                ExamEvent[]
+  trackedBy             TrackedExam[]
 
   // Telemetry & Monitoring
   last_verified_at      DateTime?
@@ -191,6 +192,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   shortlists    Shortlist[]
+  trackedExams  TrackedExam[]
 }
 
 model VerificationToken {
@@ -217,4 +219,18 @@ model Shortlist {
   @@unique([userId, collegeId])
   @@index([userId])
   @@index([collegeId])
+}
+
+model TrackedExam {
+  id        String   @id @default(cuid())
+  userId    String
+  examId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exam      Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, examId])
+  @@index([userId])
+  @@index([examId])
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SlidersHorizontal, CheckCircle2, ChevronRight, Scale, X, Sparkles, Building2, Wallet, Briefcase, Microscope, Target, BookOpen } from "lucide-react";
 import { STREAMS } from "@/lib/taxonomy";
 
@@ -38,16 +38,22 @@ const BUDGET_OPTIONS = [
 export function DiscoverClient() {
   const router = useRouter();
   
+  const searchParams = useSearchParams();
+  const urlStream = searchParams.get("stream");
+  const urlBudget = searchParams.get("budget");
+  const urlType = searchParams.get("type");
+  const urlPriorities = searchParams.get("priorities");
+
   // Canvas State
-  const [stream, setStream] = useState<string | null>(null);
-  const [budgetMax, setBudgetMax] = useState<number>(0);
-  const [type, setType] = useState<string>("Any");
-  const [priorities, setPriorities] = useState<string[]>([]);
+  const [stream, setStream] = useState<string | null>(urlStream || null);
+  const [budgetMax, setBudgetMax] = useState<number>(urlBudget ? parseInt(urlBudget, 10) : 0);
+  const [type, setType] = useState<string>(urlType || "Any");
+  const [priorities, setPriorities] = useState<string[]>(urlPriorities ? urlPriorities.split(",") : []);
   
   // Results State
   const [results, setResults] = useState<CollegeMatch[]>([]);
   const [loading, setLoading] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(!!urlStream || !!urlBudget || !!urlType || !!urlPriorities);
   const [insights, setInsights] = useState<Record<string, { loading: boolean, text?: string }>>({});
   
   // Compare Handoff

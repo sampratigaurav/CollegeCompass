@@ -41,6 +41,7 @@ export interface UserMemoryState {
   savedComparisons: RecentComparison[];
   recentActivity: ActivityLog[];
   inferredStream: string | null;
+  trackedExams: string[];
 }
 
 const DEFAULT_STATE: UserMemoryState = {
@@ -53,6 +54,7 @@ const DEFAULT_STATE: UserMemoryState = {
   savedComparisons: [],
   recentActivity: [],
   inferredStream: null,
+  trackedExams: [],
 };
 
 const MEMORY_KEY = "college_compass_memory_v2";
@@ -243,6 +245,32 @@ export function useUserMemory() {
     saveMemory(DEFAULT_STATE);
   };
 
+  const toggleTrackedExam = (examId: string) => {
+    setMemory(prev => {
+      const isTracked = prev.trackedExams.includes(examId);
+      let newTracked;
+      if (isTracked) {
+        newTracked = prev.trackedExams.filter(id => id !== examId);
+      } else {
+        newTracked = [...prev.trackedExams, examId];
+      }
+      const newState = { ...prev, trackedExams: newTracked };
+      
+      if (!isTracked) {
+        const newActivity: ActivityLog = {
+          id: Math.random().toString(36).substr(2, 9),
+          type: 'save',
+          text: `Started tracking exam`,
+          timestamp: Date.now(),
+        };
+        newState.recentActivity = [newActivity, ...newState.recentActivity].slice(0, 15);
+      }
+      
+      localStorage.setItem(MEMORY_KEY, JSON.stringify(newState));
+      return newState;
+    });
+  };
+
   return {
     ...memory,
     isLoaded,
@@ -255,5 +283,6 @@ export function useUserMemory() {
     setInferredStream,
     logActivity,
     clearMemory,
+    toggleTrackedExam,
   };
 }

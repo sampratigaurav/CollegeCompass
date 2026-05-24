@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { DiscoverClient } from "@/components/discover/DiscoverClient";
 
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
 export default function DiscoverPage() {
   return (
     <div className="min-h-screen bg-background">
-      <DiscoverClient />
+      <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse">Loading dashboard...</div>}>
+        <DiscoverClient />
+      </Suspense>
     </div>
   );
 }

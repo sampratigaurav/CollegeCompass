@@ -111,13 +111,13 @@ export function HomePageClientView({ initialData }: HomePageProps) {
               </div>
             )}
             
-            {/* Action Links instead of 'Get Started' */}
-            <div className="flex items-center gap-2 pt-4">
-              <Link href="/colleges" className="text-sm font-medium text-foreground hover:text-primary transition-all active:scale-[0.98] flex items-center gap-1.5 group px-2 py-1.5 -ml-2 rounded-md hover:bg-foreground/5">
-                Explore Rankings <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+            {/* Action Links */}
+            <div className="flex items-center gap-3 pt-4">
+              <Link href="/wizard" className="text-sm font-medium bg-foreground text-background transition-all hover:bg-foreground/90 hover:scale-[1.02] active:scale-95 flex items-center gap-2 px-6 py-3 rounded-xl shadow-md">
+                Find My College <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/predictor" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all active:scale-[0.98] flex items-center gap-1.5 group px-2 py-1.5 rounded-md hover:bg-foreground/5">
-                Try Predictor <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              <Link href="/discover" className="text-sm font-medium bg-card border border-border text-foreground transition-all hover:border-primary/40 active:scale-95 flex items-center gap-1.5 px-6 py-3 rounded-xl shadow-subtle">
+                Dashboard
               </Link>
             </div>
           </div>
