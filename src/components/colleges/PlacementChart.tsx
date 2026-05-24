@@ -39,7 +39,7 @@ export default function PlacementChart({ avgSalary }: { avgSalary: number | null
           <Tooltip
             cursor={{ fill: "currentColor", opacity: 0.1 }}
             contentStyle={{ backgroundColor: "var(--background)", borderColor: "var(--border)", borderRadius: "8px", color: "var(--foreground)" }}
-            formatter={(val: number) => [`₹${(val / 100000).toFixed(2)} LPA`, "Average Salary"]}
+            formatter={(val: any) => [`₹${(Number(val) / 100000).toFixed(2)} LPA`, "Average Salary"]}
             labelStyle={{ color: "var(--muted-foreground)", fontWeight: "bold", marginBottom: "4px" }}
           />
           <Bar 

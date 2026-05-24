@@ -271,7 +271,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
                   max={5000000}
                   step={50000}
                   value={feesRange}
-                  onValueChange={setFeesRange}
+                  onValueChange={(val) => setFeesRange(val as number[])}
                   className="w-full"
                 />
               </div>

@@ -19,7 +19,7 @@ export default function PredictorSparkline({ data, color }: PredictorSparklinePr
             contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: '4px', fontSize: '10px', color: '#fff', padding: '4px 8px' }}
             itemStyle={{ color: '#fff' }}
             labelStyle={{ display: 'none' }}
-            formatter={(val: number) => [val.toLocaleString(), 'Rank']}
+            formatter={(val: any) => [Number(val).toLocaleString(), 'Rank']}
           />
           <Line 
             type="monotone" 

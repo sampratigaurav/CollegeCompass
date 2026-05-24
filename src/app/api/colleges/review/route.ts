@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { z } from "zod";
 import { successResponse, errorResponse } from "@/lib/api-response";
 
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    return successResponse(review, 201);
+    return successResponse(review, { status: 201 });
   } catch (error) {
     console.error("[POST /api/colleges/review]", error);
     return errorResponse("Internal server error", 500);
