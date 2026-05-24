@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
       state,
       city,
       course,
+      stream,
       exam,
       type,
       fees_min,
@@ -56,6 +57,7 @@ export async function GET(request: NextRequest) {
     if (state) andClauses.push({ state: { contains: state, mode: "insensitive" } });
     if (city) andClauses.push({ city: { contains: city, mode: "insensitive" } });
     if (type) andClauses.push({ type });
+    if (stream) andClauses.push({ streams: { has: stream } });
     if (exam) andClauses.push({ exam: { has: exam } });
     if (fees_min !== undefined) andClauses.push({ fees_min: { gte: fees_min } });
     if (fees_max !== undefined) andClauses.push({ fees_max: { lte: fees_max } });

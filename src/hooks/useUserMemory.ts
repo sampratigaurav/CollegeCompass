@@ -40,6 +40,7 @@ export interface UserMemoryState {
   savedColleges: RecentCollege[];
   savedComparisons: RecentComparison[];
   recentActivity: ActivityLog[];
+  inferredStream: string | null;
 }
 
 const DEFAULT_STATE: UserMemoryState = {
@@ -51,6 +52,7 @@ const DEFAULT_STATE: UserMemoryState = {
   savedColleges: [],
   savedComparisons: [],
   recentActivity: [],
+  inferredStream: null,
 };
 
 const MEMORY_KEY = "college_compass_memory_v2";
@@ -229,6 +231,14 @@ export function useUserMemory() {
     });
   };
 
+  const setInferredStream = (stream: string | null) => {
+    setMemory(prev => {
+      const newState = { ...prev, inferredStream: stream };
+      localStorage.setItem(MEMORY_KEY, JSON.stringify(newState));
+      return newState;
+    });
+  };
+
   const clearMemory = () => {
     saveMemory(DEFAULT_STATE);
   };
@@ -242,6 +252,7 @@ export function useUserMemory() {
     toggleSavedCollege,
     toggleSavedComparison,
     addPreviousPrediction,
+    setInferredStream,
     logActivity,
     clearMemory,
   };

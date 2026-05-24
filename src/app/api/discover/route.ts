@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { budgetMax, type, priorities } = body;
+    const { budgetMax, type, priorities, stream } = body;
     // budgetMax: number (e.g. 500000)
     // type: string ("Any", "GOVERNMENT", "PRIVATE")
     // priorities: string[] (e.g. ["Placements", "Startup Culture", "Research"])
@@ -65,6 +65,15 @@ export async function POST(req: NextRequest) {
           reasons.push("Top ranked academics");
         }
       });
+
+      // 4. Stream Penalty
+      if (stream && college.streams && !college.streams.includes(stream)) {
+        score -= 50; // Heavy penalty
+        excludeReasons.push(`Does not offer ${stream} programs`);
+      } else if (stream && college.streams && college.streams.includes(stream)) {
+        score += 20;
+        reasons.push(`Strong ${stream} department`);
+      }
 
       // Normalize score to max 99 (never perfectly 100 to feel realistic)
       const maxPossible = 100 + 10 + 10 + 30 + 20 + 10; // 180

@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Search, Clock, TrendingUp, ChevronRight, Activity, Calendar, Building2, Wallet, Users, Lightbulb, MapPin, ArrowRight, History, Bookmark, Sparkles, Scale } from "lucide-react";
 import { useUserMemory } from "@/hooks/useUserMemory";
 import { SearchBar } from "@/components/shared/SearchBar";
+import { STREAMS } from "@/lib/taxonomy";
 
 interface HomePageProps {
   initialData: {
@@ -26,7 +27,7 @@ interface HomePageProps {
 }
 
 export function HomePageClientView({ initialData }: HomePageProps) {
-  const { isLoaded, recentSearches, recentColleges, recentComparisons, savedColleges, savedComparisons, recentActivity, preferredExams, previousPredictions } = useUserMemory();
+  const { isLoaded, recentSearches, recentColleges, recentComparisons, savedColleges, savedComparisons, recentActivity, preferredExams, previousPredictions, inferredStream } = useUserMemory();
   const { topColleges, stats, exams } = initialData;
 
   const hasPersonalization = isLoaded && (recentColleges.length > 0 || savedColleges?.length > 0 || savedComparisons?.length > 0 || recentActivity?.length > 0);
@@ -61,15 +62,37 @@ export function HomePageClientView({ initialData }: HomePageProps) {
               System Active • {stats.totalColleges.toLocaleString()} Institutions
             </div>
             
-            <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-foreground leading-[1.1]">
-              Search colleges. <span className="text-muted-foreground">Compare placements. Predict admissions.</span>
+            <h1 className="text-5xl lg:text-[4rem] font-black tracking-tight leading-[1.05] font-heading mt-2">
+              Decide your <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground/80 to-muted-foreground">future path.</span>
             </h1>
+            <p className="text-lg text-muted-foreground max-w-lg mt-4 font-medium">
+              Data-driven college discovery for ambitious students. Analyze placements, compare real fees, and find your perfect fit.
+            </p>
 
             {/* Smart Search Input */}
-            <div className="relative mt-2">
-              <div className="bg-card border border-border rounded-xl p-1.5 shadow-elevated focus-within:border-foreground/20 focus-within:ring-1 focus-within:ring-foreground/10 transition-all z-50">
-                <SearchBar />
-              </div>
+            <div className="w-full max-w-2xl mt-4 relative z-20">
+              <SearchBar />
+            </div>
+
+            {/* Quick Streams */}
+            <div className="flex overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 gap-3 no-scrollbar snap-x mt-2">
+              {Object.values(STREAMS).map(stream => {
+                const Icon = stream.icon;
+                const isPrimary = inferredStream === stream.id;
+                return (
+                  <Link 
+                    key={stream.id} 
+                    href={`/discover?stream=${stream.id}`} 
+                    className={`shrink-0 snap-start flex items-center gap-2 px-4 py-2.5 rounded-full border transition-all hover:scale-[1.02] active:scale-95 ${
+                      isPrimary ? `${stream.bgClass} ${stream.colorClass} border-current shadow-sm` : 'bg-card border-border hover:border-foreground/20 text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span className="text-sm font-medium whitespace-nowrap">{stream.label}</span>
+                  </Link>
+                );
+              })}
             </div>
 
             {/* User Memory: Recent Searches */}

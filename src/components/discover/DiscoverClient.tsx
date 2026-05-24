@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { SlidersHorizontal, CheckCircle2, ChevronRight, Scale, X, Sparkles, Building2, Wallet, Briefcase, Microscope, Target } from "lucide-react";
+import { SlidersHorizontal, CheckCircle2, ChevronRight, Scale, X, Sparkles, Building2, Wallet, Briefcase, Microscope, Target, BookOpen } from "lucide-react";
+import { STREAMS } from "@/lib/taxonomy";
 
 type CollegeMatch = {
   id: string;
@@ -38,6 +39,7 @@ export function DiscoverClient() {
   const router = useRouter();
   
   // Canvas State
+  const [stream, setStream] = useState<string | null>(null);
   const [budgetMax, setBudgetMax] = useState<number>(0);
   const [type, setType] = useState<string>("Any");
   const [priorities, setPriorities] = useState<string[]>([]);
@@ -60,6 +62,7 @@ export function DiscoverClient() {
           budgetMax: currentBudget > 0 ? currentBudget : null,
           type: currentType,
           priorities: currentPriorities,
+          stream: stream,
         }),
       });
       const data = await res.json();
@@ -85,7 +88,7 @@ export function DiscoverClient() {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [budgetMax, type, priorities, hasInteracted]);
+  }, [budgetMax, type, priorities, stream, hasInteracted]);
 
   const togglePriority = (id: string) => {
     setHasInteracted(true);
@@ -151,6 +154,36 @@ export function DiscoverClient() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight mb-2">Find Your Fit</h1>
           <p className="text-sm text-muted-foreground">Adjust your preferences below. The engine will instantly update your matches.</p>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 mb-2">
+            <BookOpen className="h-4 w-4 text-primary" />
+            <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Field of Interest</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {Object.values(STREAMS).map(s => {
+              const Icon = s.icon;
+              const isActive = stream === s.id;
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => {
+                    setHasInteracted(true);
+                    setStream(s.id);
+                  }}
+                  className={`flex items-center gap-2 px-3 py-3 rounded-xl border text-sm font-medium transition-all active:scale-[0.98] ${
+                    isActive 
+                      ? `${s.bgClass} ${s.colorClass} border-current shadow-subtle` 
+                      : 'bg-card text-foreground border-border hover:border-primary/30'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {s.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="space-y-4">

@@ -7,6 +7,7 @@ export const CollegesQuerySchema = z.object({
   state: z.string().optional(),
   city: z.string().optional(),
   course: z.string().optional(),
+  stream: z.string().optional(),
   exam: z.string().optional(),
   type: z.enum(["GOVERNMENT", "PRIVATE", "DEEMED", "AUTONOMOUS"]).optional(),
   fees_min: z.coerce.number().nonnegative().optional(),

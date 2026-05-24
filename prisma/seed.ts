@@ -107,8 +107,80 @@ async function main() {
   ];
   await prisma.exam.createMany({ data: exams });
   console.log("✅ Seeded Exams");
+  // Inject some non-engineering mock colleges
+  collegesData.push({
+    name: "IIM Ahmedabad",
+    slug: "iim-ahmedabad",
+    location: "Vastrapur, Ahmedabad, Gujarat",
+    state: "Gujarat",
+    city: "Ahmedabad",
+    fees_min: 2500000,
+    fees_max: 3000000,
+    rating: 4.9,
+    nirf_rank: 1,
+    placement_percentage: 100,
+    avg_salary: 3200000,
+    description: "The Indian Institute of Management Ahmedabad is a business school located in Ahmedabad, Gujarat, India. It is one of the premier management institutes in India.",
+    image_url: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80",
+    type: "GOVERNMENT",
+    exam: ["CAT"],
+    courses: [
+      { name: "MBA", duration: "2 Years", fees: 2800000 }
+    ]
+  });
 
-  for (const college of collegesData) {
+  collegesData.push({
+    name: "AIIMS New Delhi",
+    slug: "aiims-new-delhi",
+    location: "Ansari Nagar, New Delhi",
+    state: "Delhi",
+    city: "Delhi",
+    fees_min: 5000,
+    fees_max: 10000,
+    rating: 5.0,
+    nirf_rank: 1,
+    placement_percentage: 100,
+    avg_salary: 1500000,
+    description: "All India Institute of Medical Sciences, New Delhi is a public medical research university and hospital in New Delhi, India.",
+    image_url: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80",
+    type: "GOVERNMENT",
+    exam: ["NEET"],
+    courses: [
+      { name: "MBBS", duration: "5.5 Years", fees: 6865 }
+    ]
+  });
+
+  collegesData.push({
+    name: "NLSIU Bengaluru",
+    slug: "nlsiu-bengaluru",
+    location: "Nagarbhavi, Bengaluru",
+    state: "Karnataka",
+    city: "Bengaluru",
+    fees_min: 300000,
+    fees_max: 350000,
+    rating: 4.8,
+    nirf_rank: 1,
+    placement_percentage: 95,
+    avg_salary: 1600000,
+    description: "The National Law School of India University is a public law school and a National Law University located in Bangalore, Karnataka.",
+    image_url: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=800&q=80",
+    type: "GOVERNMENT",
+    exam: ["CLAT"],
+    courses: [
+      { name: "BA LLB (Hons)", duration: "5 Years", fees: 327000 }
+    ]
+  });
+
+  const uniqueSlugs = new Set();
+  const dedupedColleges = [];
+  for (const c of collegesData) {
+    if (!uniqueSlugs.has(c.slug)) {
+      uniqueSlugs.add(c.slug);
+      dedupedColleges.push(c);
+    }
+  }
+
+  for (const college of dedupedColleges) {
     const { courses, ...collegeData } = college;
 
     // Generate Tags
@@ -126,10 +198,27 @@ async function main() {
     if (["Mumbai", "Delhi", "Bengaluru", "Chennai", "Hyderabad"].includes(collegeData.city)) best_for.push("Startup Culture");
     if (best_for.length === 0) best_for.push("Academic Excellence");
 
+    // Generate Streams
+    const streams = [];
+    if (collegeData.name.includes("IIT") || collegeData.name.includes("NIT") || collegeData.name.includes("IIIT") || collegeData.name.includes("Technology") || collegeData.name.includes("Engineering") || collegeData.name.includes("Pilani") || collegeData.name.includes("Vellore") || collegeData.name.includes("Jadavpur")) {
+      streams.push("Engineering");
+      if (collegeData.name.includes("IIT") || collegeData.name.includes("Science") || collegeData.name.includes("BITS")) streams.push("Science");
+    } else if (collegeData.name.includes("IIM") || collegeData.name.includes("Management") || collegeData.name.includes("Business")) {
+      streams.push("Management");
+    } else if (collegeData.name.includes("AIIMS") || collegeData.name.includes("Medical") || collegeData.name.includes("Health")) {
+      streams.push("Medical");
+      streams.push("Science");
+    } else if (collegeData.name.includes("Law") || collegeData.name.includes("NLSIU")) {
+      streams.push("Law");
+    }
+    
+    // Default fallback if empty
+    if (streams.length === 0) streams.push("Engineering");
+
     // Generate AI Summary
     const avgSalaryStr = collegeData.avg_salary ? `₹${(collegeData.avg_salary / 100000).toFixed(1)} LPA` : "highly competitive packages";
     const rankStr = collegeData.nirf_rank ? `a NIRF rank of ${collegeData.nirf_rank}` : "strong national recognition";
-    const ai_summary = `**AI Summary**: ${collegeData.name} is an exceptional ${collegeData.type.toLowerCase()} institution located in ${collegeData.city}. It is best suited for students focused on ${best_for.join(', ')}. With an average placement package of ${avgSalaryStr} and ${rankStr}, it represents a top-tier choice for ambitious engineering aspirants.`;
+    const ai_summary = `**AI Summary**: ${collegeData.name} is an exceptional ${collegeData.type.toLowerCase()} institution located in ${collegeData.city}. It is best suited for students focused on ${best_for.join(', ')}. With an average placement package of ${avgSalaryStr} and ${rankStr}, it represents a top-tier choice for ambitious aspirants.`;
 
     // Create college
     const created = await prisma.college.create({
@@ -137,6 +226,7 @@ async function main() {
         ...collegeData,
         tags,
         best_for,
+        streams,
         ai_summary,
       },
     });
