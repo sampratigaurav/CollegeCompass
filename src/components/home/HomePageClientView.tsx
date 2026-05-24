@@ -112,12 +112,15 @@ export function HomePageClientView({ initialData }: HomePageProps) {
             )}
             
             {/* Action Links */}
-            <div className="flex items-center gap-3 pt-4">
+            <div className="flex flex-wrap items-center gap-3 pt-4">
               <Link href="/wizard" className="text-sm font-medium bg-foreground text-background transition-all hover:bg-foreground/90 hover:scale-[1.02] active:scale-95 flex items-center gap-2 px-6 py-3 rounded-xl shadow-md">
                 Find My College <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="/discover" className="text-sm font-medium bg-card border border-border text-foreground transition-all hover:border-primary/40 active:scale-95 flex items-center gap-1.5 px-6 py-3 rounded-xl shadow-subtle">
                 Dashboard
+              </Link>
+              <Link href="/colleges" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors active:scale-95 flex items-center gap-1.5 px-4 py-3 rounded-xl">
+                Explore All →
               </Link>
             </div>
           </div>

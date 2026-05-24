@@ -9,7 +9,8 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { AuthButton } from "@/components/auth/AuthButton";
 
 const navLinks = [
-  { href: "/", label: "Explore" },
+  { href: "/", label: "Home" },
+  { href: "/colleges", label: "Colleges" },
   { href: "/discover", label: "Discover" },
   { href: "/compare", label: "Compare" },
   { href: "/exams", label: "Exams" },
