@@ -1,8 +1,8 @@
 {
-  "JEE Advanced": {
-    "counselling_starts": "June 2025",
-    "registration_ends": "May 2025",
-    "exam_date": "June 2025",
-    "override_active": false
+  "JEE ADVANCED": {
+    "counselling_starts": "June 1, 2026 (Result Declaration)",
+    "registration_ends": "May 7, 2026",
+    "exam_date": "May 17, 2026",
+    "override_active": true
   }
 }
