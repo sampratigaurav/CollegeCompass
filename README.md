@@ -2,7 +2,7 @@
 
 **India's most developer-friendly college discovery and comparison platform.**
 
-Built as a production-grade MVP using Next.js 15, TypeScript, Prisma, and PostgreSQL. Covers 25+ top Indian colleges with real NIRF 2023 data.
+Built as a production-grade MVP using Next.js 16, TypeScript, Prisma, and PostgreSQL. Covers **100+ top Indian colleges** fully enriched with real NIRF rankings, premium imagery, AI-generated summaries, and placement data.
 
 ---
 
@@ -10,131 +10,48 @@ Built as a production-grade MVP using Next.js 15, TypeScript, Prisma, and Postgr
 
 | Feature | Description |
 |---------|-------------|
-| **College Listing** | Searchable, filterable, sortable list of 25+ colleges with pagination |
-| **College Detail** | Full SSR detail page with tabs for Overview, Courses, Placements, Reviews |
-| **Compare Colleges** | Side-by-side comparison table with winner highlighting, shareable URLs |
-| **Admission Predictor** | Enter exam + rank → get High/Medium/Low admission chance predictions |
+| **College Listing** | Searchable, filterable, sortable list of 100+ colleges with pagination. |
+| **College Detail** | Full SSR detail page with AI summaries, placement stats, and dynamically loaded premium images. |
+| **Compare Colleges** | Side-by-side comparison matrix with winner highlighting and shareable URLs. |
+| **Global Smart Search** | Tokenized acronym-friendly autocomplete search dropdown mapping names, locations, and slugs. |
+| **Institution Spotlight** | Dynamic homepage showcase of top-ranked colleges featuring high-quality photography and AI intelligence. |
+| **Automated Data Pipeline** | Multi-source programmatic enrichment fetching official websites, images, and generating summaries via Gemini AI, Wikipedia, Pexels, and Google Custom Search. |
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router + Turbopack)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS v4 + shadcn/ui
+- **Styling**: Tailwind CSS v4 + Framer Motion
 - **ORM**: Prisma v7
 - **Database**: PostgreSQL (Neon)
 - **Deployment**: Vercel + Neon PostgreSQL
-- **Validation**: Zod (all API routes)
+- **Data Pipeline**: Gemini 1.5 Pro, Pexels API, Google Custom Search API, Wikipedia API
 
 ---
 
-## 📁 Project Structure
+## 📁 Architecture & Pipelines
 
-```
-college-platform/
-├── prisma/
-│   ├── schema.prisma        # DB schema (College, Course, Review)
-│   └── seed.ts              # Seed script with 25+ real Indian colleges
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── colleges/    # GET /api/colleges + GET /api/colleges/:id
-│   │   │   ├── compare/     # POST /api/compare
-│   │   │   └── predict/     # POST /api/predict
-│   │   ├── colleges/        # Listing + [id] detail pages
-│   │   ├── compare/         # Compare page
-│   │   └── predictor/       # Predictor page
-│   ├── components/
-│   │   ├── colleges/        # CollegeCard, CollegesClient, Skeleton, etc.
-│   │   ├── compare/         # CompareClient (URL-based state)
-│   │   ├── predictor/       # PredictorClient
-│   │   ├── layout/          # Navbar, Footer
-│   │   └── shared/          # EmptyState, ErrorState, Pagination
-│   ├── lib/
-│   │   ├── db.ts            # Prisma client singleton
-│   │   ├── validations.ts   # Zod schemas
-│   │   ├── api-response.ts  # Standardized API responses
-│   │   └── rate-limit.ts    # IP-based rate limiter
-│   ├── hooks/
-│   │   └── useDebounce.ts   # Debounce hook for search
-│   └── types/index.ts       # Shared TypeScript types
-```
+### Data Enrichment Pipeline
+The data architecture has been upgraded from hardcoded files to a fully automated pipeline:
+1. `data/colleges.raw.json`: Base 100+ college records.
+2. **Enrichment Script (`scripts/enrich-colleges.ts`)**: Iterates through raw data, safely fetches from multiple fallback sources with concurrency limits and retries, generates AI summaries, and scores image quality.
+3. `data/colleges.enriched.json`: The final production-ready JSON seeded directly into PostgreSQL.
+4. **Resilience**: Features automatic fallbacks (e.g., animated gradient UI components `FallbackImage.tsx` if an image is missing) and intelligent domain trust scoring to avoid scraping junk data.
 
 ---
 
 ## 🗄️ Database Schema
 
-```
+```text
 College ──< Course   (one college → many courses)
 College ──< Review   (one college → many reviews)
 ```
 
-**College fields**: id, name, slug, location, state, city, fees_min, fees_max, rating, nirf_rank, placement_percentage, avg_salary, description, image_url, type, exam[], min_rank, max_rank, accreditation
+**College fields**: id, name, slug, location, state, city, fees_min, fees_max, rating, nirf_rank, placement_percentage, avg_salary, description, image_url, type, exam[], min_rank, max_rank, accreditation, **ai_summary**, **image_source**, **domain_trust**, **image_score**, **verification_priority**, **enriched_at**
 
 **Indexes**: state, city, nirf_rank, rating, fees_min, placement_percentage, slug
-
----
-
-## 📡 API Reference
-
-### `GET /api/colleges`
-Returns paginated college list.
-
-| Param | Type | Description |
-|-------|------|-------------|
-| `search` | string | Full-text search (name, city, state, courses) |
-| `state` | string | Filter by state |
-| `exam` | string | Filter by entrance exam |
-| `type` | enum | GOVERNMENT / PRIVATE / DEEMED / AUTONOMOUS |
-| `sort` | enum | nirf_rank / rating / fees_min / placement_percentage / name |
-| `page` | number | Page number (default: 1) |
-| `limit` | number | Results per page (default: 12, max: 50) |
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": [...],
-  "pagination": { "page": 1, "limit": 12, "total": 25, "totalPages": 3 }
-}
-```
-
-### `GET /api/colleges/:id`
-Returns full college detail with courses and reviews. Accepts either `id` (cuid) or `slug`.
-
-### `POST /api/compare`
-```json
-// Request
-{ "ids": ["iit-bombay", "iit-delhi", "bits-pilani"] }
-
-// Response
-{ "success": true, "data": [...] }
-```
-Rate limited: 30 requests/minute per IP.
-
-### `POST /api/predict`
-```json
-// Request
-{ "exam": "JEE Main", "rank": 5000 }
-
-// Response
-{
-  "success": true,
-  "data": {
-    "results": [
-      { ...college, "chance": "High" | "Medium" | "Low" }
-    ],
-    "meta": { "totalMatches": 8, "highChance": 3, "mediumChance": 4, "lowChance": 1 }
-  }
-}
-```
-Rate limited: 15 requests/minute per IP.
-
-**Chance calculation:**
-- Rank ≤ minRank + 20% of range → **High**
-- Rank ≤ minRank + 60% of range → **Medium**
-- Rank ≤ maxRank → **Low**
 
 ---
 
@@ -143,36 +60,34 @@ Rate limited: 15 requests/minute per IP.
 ### 1. Clone & Install
 ```bash
 git clone <repo-url>
-cd college-platform
+cd CollegeCompass
 npm install
 ```
 
-### 2. Create Neon Database
-1. Sign up at [neon.tech](https://neon.tech)
-2. Create a new project
-3. Copy the connection string
-
-### 3. Environment Variables
+### 2. Environment Variables
 ```bash
 cp .env.example .env.local
-# Edit .env.local and set DATABASE_URL
 ```
 
 ```env
-DATABASE_URL="postgresql://user:pass@host/db?sslmode=require"
+DATABASE_URL="postgresql://user:pass@host/db?uselibpqcompat=true&sslmode=require"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
+GEMINI_API_KEY="your-key"
+PEXELS_API_KEY="your-key"
+GOOGLE_SEARCH_API_KEY="your-key"
+GOOGLE_SEARCH_CX="your-cx"
 ```
 
-### 4. Set Up Database
+### 3. Set Up Database
 ```bash
 # Push schema to database
 npm run db:push
 
-# Seed with 25+ real Indian colleges
+# Seed with the enriched 100+ college dataset
 npm run db:seed
 ```
 
-### 5. Run Development Server
+### 4. Run Development Server
 ```bash
 npm run dev
 # → http://localhost:3000
@@ -182,54 +97,29 @@ npm run dev
 
 ## 🚢 Deployment (Vercel + Neon)
 
-1. Push your code to GitHub
-2. Import the repository on [vercel.com](https://vercel.com)
-3. Add environment variables in Vercel dashboard:
-   - `DATABASE_URL` — your Neon connection string
-   - `NEXT_PUBLIC_APP_URL` — your Vercel deployment URL
-4. Set build command: `npx prisma generate && next build`
+1. Push your code to GitHub.
+2. Import the repository on [vercel.com](https://vercel.com).
+3. Add environment variables in the Vercel dashboard.
+4. Set build command: `npx prisma generate && next build`.
 5. Deploy!
 
-> **Tip**: Use Neon's "Connection Pooling" URL for the `DATABASE_URL` in production for better serverless performance.
+> **Note**: A strict type declaration for `probe-image-size` is included to ensure flawless Vercel production builds.
 
 ---
 
 ## 🌱 Dataset
+The dataset now includes **100+ real Indian colleges** spanning IITs, NITs, IIITs, Top Private Engineering Institutes (BITS, VIT, SRM, Manipal), IIMs, Medical Colleges (AIIMS), Law Schools (NLSIU), and more.
 
-The seed data includes **25+ real Indian colleges** across:
-- **IITs**: Bombay, Delhi, Madras, Kharagpur, Kanpur
-- **NITs**: Trichy, Surathkal, Warangal
-- **IIITs**: Hyderabad
-- **Private (Engineering)**: BITS Pilani/Goa, VIT Vellore, SRM, Manipal, RVCE, PSG, DTU, COEP, Thapar, Jadavpur, Anna University, BMSCE, PES, Amity, Symbiosis
-- **IIMs**: Ahmedabad, Bangalore; FMS Delhi
-- **Medical**: AIIMS Delhi, CMC Vellore
-- **Law**: NLSIU Bangalore, NALSAR Hyderabad
-
-All data sourced from NIRF 2023 rankings and publicly available information.
+All data is deeply enriched with high-resolution photography, accurate median salary brackets, official website URLs, and comprehensive AI-generated summaries capturing the essence of each institution.
 
 ---
 
-## 📸 Screenshots
-
-| Page | Description |
-|------|-------------|
-| `/` | Homepage with feature overview |
-| `/colleges` | Listing with search, filters, sort |
-| `/colleges/iit-bombay` | Detail page with tabs |
-| `/compare?ids=iit-bombay,iit-delhi` | Side-by-side comparison |
-| `/predictor` | Rank-based admission predictor |
-
----
-
-## 🔒 Security
-
-- Zod validation on all API inputs
-- IP-based rate limiting on predict (15/min) and compare (30/min) routes
-- No sensitive data exposed in client-side code
-- Environment variables for all secrets
+## 🔒 Security & Optimization
+- **Search Robustness**: Advanced tokenized search logic matches complex inputs like "iit madras" directly to canonical slugs (`iit-madras`) and names without strict substring constraints.
+- **Resilience**: Animated gradient fallbacks ensure premium UI aesthetics even if third-party image sources fail or return 404s.
+- **Database Safety**: Uses `uselibpqcompat=true&sslmode=require` for secure, warning-free connections to Neon Postgres.
 
 ---
 
 ## 📝 License
-
-MIT — Built as an internship project demonstrating production-grade full-stack engineering.
+MIT — Built as a production-grade full-stack engineering project demonstrating scalable data pipelines and premium UI design.
