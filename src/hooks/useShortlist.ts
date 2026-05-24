@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useAuthModal } from "@/store/useAuthModal";
+import { useRouter } from "next/navigation";
 
 export function useShortlist(collegeId: string) {
   const { data: session } = useSession();
   const { openModal } = useAuthModal();
+  const router = useRouter();
   const [isSaved, setIsSaved] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -57,6 +59,8 @@ export function useShortlist(collegeId: string) {
         // Revert on failure
         setIsSaved(!newValue);
         console.error("Failed to sync shortlist to server");
+      } else {
+        router.refresh();
       }
     } catch (err) {
       // Revert on failure

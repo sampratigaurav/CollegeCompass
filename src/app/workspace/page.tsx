@@ -3,6 +3,8 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import WorkspaceClient from "./WorkspaceClient";
 
+export const dynamic = 'force-dynamic';
+
 export default async function WorkspacePage() {
   const session = await getServerSession(authOptions);
 
