@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, TrendingUp, Trophy, MapPin, X, Search, Plus, Bookmark, BookmarkCheck } from "lucide-react";
+import { Star, TrendingUp, Trophy, MapPin, X, Search, Plus, Bookmark, BookmarkCheck, Sparkles } from "lucide-react";
 import { CollegeDetail } from "@/types";
 import { EmptyState, ErrorState } from "@/components/shared/EmptyState";
 import { Badge } from "@/components/ui/badge";
@@ -126,6 +126,8 @@ function CompareContent() {
   const [colleges, setColleges] = useState<CollegeDetail[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [tradeoffs, setTradeoffs] = useState<{ loading: boolean, text?: string }>({ loading: false });
+  const [showTradeoffs, setShowTradeoffs] = useState(false);
 
   const { addRecentComparison, logActivity, toggleSavedComparison, savedComparisons } = useUserMemory();
 
@@ -238,6 +240,26 @@ function CompareContent() {
     });
   };
 
+  const fetchTradeoffs = async () => {
+    if (colleges.length < 2) return;
+    setShowTradeoffs(true);
+    setTradeoffs({ loading: true });
+    try {
+      const res = await fetch("/api/insights", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "COMPARE_TRADEOFFS",
+          payload: { colleges }
+        })
+      });
+      const data = await res.json();
+      setTradeoffs({ loading: false, text: data.insight });
+    } catch (error) {
+      setTradeoffs({ loading: false, text: "Trade-offs are currently unavailable." });
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 px-4 md:px-0 gap-4">
@@ -262,6 +284,44 @@ function CompareContent() {
           </button>
         )}
       </div>
+
+      {/* Trade-offs Banner */}
+      {colleges.length >= 2 && (
+        <div className="mb-8 px-4 md:px-0">
+          {!showTradeoffs ? (
+            <button 
+              onClick={fetchTradeoffs}
+              className="w-full flex items-center justify-between p-4 rounded-xl border border-border bg-muted/10 hover:bg-muted/30 transition-colors group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-bold">Trade-offs Analysis</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Generate a concise comparison summary based on real data.</p>
+                </div>
+              </div>
+              <Plus className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+            </button>
+          ) : (
+            <div className="w-full p-5 rounded-xl border border-border bg-muted/20 animate-in fade-in slide-in-from-top-2">
+              <div className="flex items-center gap-2 mb-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <Sparkles className="h-3.5 w-3.5 text-primary" /> 
+                Trade-offs
+              </div>
+              {tradeoffs.loading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full bg-muted/60" />
+                  <Skeleton className="h-4 w-3/4 bg-muted/60" />
+                </div>
+              ) : (
+                <p className="text-sm leading-relaxed text-foreground">{tradeoffs.text}</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Mobile Stacked Swipeable Cards (< 768px) */}
       <div className="md:hidden flex overflow-x-auto snap-x snap-proximity gap-4 pb-4 -mx-4 px-4 hide-scrollbar">

@@ -48,6 +48,7 @@ export function DiscoverClient() {
   const [results, setResults] = useState<CollegeMatch[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [insights, setInsights] = useState<Record<string, { loading: boolean, text?: string }>>({});
   
   // Compare Handoff
   const [selectedForCompare, setSelectedForCompare] = useState<string[]>([]);
@@ -67,6 +68,8 @@ export function DiscoverClient() {
       });
       const data = await res.json();
       setResults(data);
+      // Clear insights when results change
+      setInsights({});
     } catch (error) {
       console.error("Failed to fetch matches", error);
     } finally {
@@ -99,6 +102,25 @@ export function DiscoverClient() {
         return [...prev, id];
       }
     });
+  };
+
+  const fetchInsight = async (college: CollegeMatch) => {
+    setInsights(prev => ({ ...prev, [college.id]: { loading: true } }));
+    try {
+      const res = await fetch("/api/insights", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "EXPLAIN_FIT",
+          payload: { college },
+          userContext: { priorities, stream }
+        })
+      });
+      const data = await res.json();
+      setInsights(prev => ({ ...prev, [college.id]: { loading: false, text: data.insight } }));
+    } catch (error) {
+      setInsights(prev => ({ ...prev, [college.id]: { loading: false, text: "Fit analysis is currently unavailable." } }));
+    }
   };
 
   const toggleCompare = (slug: string) => {
@@ -337,6 +359,29 @@ export function DiscoverClient() {
                         
                         <div className="mt-4 p-3 rounded-lg bg-muted/50 border border-border/50">
                           <p className="text-sm font-medium leading-relaxed">{college.narrative}</p>
+                        </div>
+                        
+                        {/* Fit Analysis Button & Display */}
+                        <div className="mt-3">
+                          {!insights[college.id] ? (
+                            <button 
+                              onClick={() => fetchInsight(college)}
+                              className="text-xs font-medium text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
+                            >
+                              <Sparkles className="h-3 w-3" /> Fit Analysis
+                            </button>
+                          ) : (
+                            <div className="mt-2 p-3 rounded-lg bg-muted/30 border border-border/40 animate-in fade-in slide-in-from-top-2">
+                              <div className="flex items-center gap-1.5 mb-1 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                                <Sparkles className="h-3 w-3" /> Fit Analysis
+                              </div>
+                              {insights[college.id].loading ? (
+                                <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+                              ) : (
+                                <p className="text-sm leading-relaxed">{insights[college.id].text}</p>
+                              )}
+                            </div>
+                          )}
                         </div>
                         
                         {/* Mobile Checkbox */}
