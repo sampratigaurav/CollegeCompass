@@ -5,6 +5,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AuthProvider } from "@/components/providers/AuthProvider";
+import { AuthModal } from "@/components/auth/AuthModal";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s | CollegeCompass",
   },
   description:
-    "Discover, compare, and predict admissions for 500+ Indian colleges. Get real data on fees, placements, NIRF rankings, and more.",
+    "Discover, compare, and predict admissions for 1500+ Indian colleges. Get real data on fees, placements, NIRF rankings, and more.",
   keywords: [
     "Indian colleges",
     "college comparison",
@@ -65,17 +67,20 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${plusJakartaSans.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans antialiased text-foreground pb-20 md:pb-0" suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <MobileNav />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <MobileNav />
+            <AuthModal />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

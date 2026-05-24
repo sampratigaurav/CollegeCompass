@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format, differenceInDays } from "date-fns";
-import { Activity, ShieldCheck, Calendar, Clock } from "lucide-react";
+import { Activity, ShieldCheck, Calendar, Clock, GraduationCap, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 type ExamEvent = {
   id: string;
@@ -21,6 +22,9 @@ type Exam = {
   authority: string | null;
   last_verified_at: Date | null;
   events: ExamEvent[];
+  _count?: {
+    colleges: number;
+  };
 };
 
 function getExamStatus(events: ExamEvent[]) {
@@ -48,11 +52,59 @@ function getExamStatus(events: ExamEvent[]) {
 }
 
 const statusColors: Record<string, string> = {
-  live: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
-  urgency: "bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400",
-  anticipation: "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400",
-  historical: "bg-zinc-500/10 text-zinc-500 border-zinc-500/20 dark:text-zinc-400",
+  live: "bg-emerald-500/15 text-emerald-700 border-emerald-500/30 dark:text-emerald-400 dark:bg-emerald-500/10",
+  urgency: "bg-amber-500/15 text-amber-700 border-amber-500/30 dark:text-amber-400 dark:bg-amber-500/10",
+  anticipation: "bg-blue-500/15 text-blue-700 border-blue-500/30 dark:text-blue-400 dark:bg-blue-500/10",
+  historical: "bg-zinc-500/15 text-zinc-600 border-zinc-500/30 dark:text-zinc-400 dark:bg-zinc-500/10",
 };
+
+function CountdownTimer({ targetDate, label }: { targetDate: Date, label: string }) {
+  const [timeLeft, setTimeLeft] = useState<{d:number, h:number, m:number, s:number} | null>(null);
+
+  useEffect(() => {
+    const calc = () => {
+      const diff = targetDate.getTime() - new Date().getTime();
+      if (diff <= 0) return { d:0, h:0, m:0, s:0 };
+      return {
+        d: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        h: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        m: Math.floor((diff / 1000 / 60) % 60),
+        s: Math.floor((diff / 1000) % 60)
+      };
+    };
+    setTimeLeft(calc());
+    const interval = setInterval(() => setTimeLeft(calc()), 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  if (!timeLeft) return null;
+  if (timeLeft.d === 0 && timeLeft.h === 0 && timeLeft.m === 0 && timeLeft.s === 0) return null;
+
+  return (
+    <div className="flex flex-col gap-1.5 items-end">
+      <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground flex items-center gap-1">
+        <Clock className="w-3 h-3 text-primary/70" /> {label}
+      </span>
+      <div className="flex gap-1.5">
+        {[
+          { v: timeLeft.d, l: "Days" },
+          { v: timeLeft.h.toString().padStart(2, '0'), l: "Hrs" },
+          { v: timeLeft.m.toString().padStart(2, '0'), l: "Min" },
+        ].map((item, i) => (
+          <div key={i} className="flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm rounded-md w-10 h-10 border shadow-sm">
+            <span className="text-sm font-bold font-mono leading-none">{item.v}</span>
+            <span className="text-[8px] uppercase text-muted-foreground mt-0.5">{item.l}</span>
+          </div>
+        ))}
+        <div className="flex flex-col items-center justify-center bg-primary/10 text-primary rounded-md w-10 h-10 border border-primary/20 shadow-sm relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
+          <span className="text-sm font-bold font-mono leading-none z-10">{timeLeft.s.toString().padStart(2, '0')}</span>
+          <span className="text-[8px] uppercase text-primary/70 mt-0.5 z-10">Sec</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function ExamsClientView({ exams }: { exams: Exam[] }) {
   const [filterAuthority, setFilterAuthority] = useState<string | null>(null);
@@ -117,17 +169,47 @@ export function ExamsClientView({ exams }: { exams: Exam[] }) {
 function ExamEcosystemCard({ exam }: { exam: Exam }) {
   const statusInfo = getExamStatus(exam.events);
   const now = new Date();
+  
+  const activeEvent = exam.events.find(e => new Date(e.startDate) <= now && (!e.endDate || new Date(e.endDate) >= now));
+  const upcomingEvent = exam.events.find(e => new Date(e.startDate) > now);
+  const targetDate = activeEvent?.endDate ? new Date(activeEvent.endDate) : upcomingEvent?.startDate ? new Date(upcomingEvent.startDate) : null;
+  const targetLabel = activeEvent?.endDate ? `Closes In` : upcomingEvent?.startDate ? `Starts In` : null;
 
   return (
-    <Card className="p-6 flex flex-col justify-between hover:shadow-subtle transition-shadow duration-300">
-      <div>
-        <div className="flex justify-between items-start mb-6">
+    <Card className="p-6 flex flex-col justify-between hover:shadow-lg transition-all duration-300 relative overflow-hidden group border-border/60 bg-card/80 backdrop-blur-xl">
+      {statusInfo.status === "live" && (
+        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none group-hover:bg-emerald-500/20 transition-all"></div>
+      )}
+      {statusInfo.status === "urgency" && (
+        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none group-hover:bg-amber-500/20 transition-all"></div>
+      )}
+      
+      <div className="relative z-10">
+        <div className="flex justify-between items-start mb-6 gap-4">
           <div>
-            <h2 className="text-xl font-bold font-heading mb-1">{exam.name}</h2>
-            <p className="text-sm text-muted-foreground">{exam.authority}</p>
+            <h2 className="text-2xl font-bold font-heading mb-1.5 group-hover:text-primary transition-colors">{exam.name}</h2>
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-muted-foreground font-medium">{exam.authority}</span>
+              {exam._count && exam._count.colleges > 0 && (
+                <>
+                  <span className="text-muted-foreground/40">•</span>
+                  <Link href={`/colleges?exam=${exam.name}`} className="flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors bg-primary/10 px-2 py-0.5 rounded-full text-xs font-semibold">
+                    <GraduationCap className="w-3.5 h-3.5" />
+                    Accepted by {exam._count.colleges} Colleges
+                    <ArrowRight className="w-3 h-3 ml-0.5 opacity-70 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
-          <div className={`px-3 py-1 rounded-md border text-xs font-semibold tracking-wide ${statusColors[statusInfo.status]}`}>
-            {statusInfo.label}
+          
+          <div className="flex flex-col items-end gap-3">
+            <div className={`px-3 py-1.5 rounded-full border text-xs font-bold tracking-wide shadow-sm ${statusColors[statusInfo.status]}`}>
+              {statusInfo.label}
+            </div>
+            {targetDate && targetLabel && (
+              <CountdownTimer targetDate={targetDate} label={targetLabel} />
+            )}
           </div>
         </div>
 

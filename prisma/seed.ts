@@ -223,6 +223,11 @@ async function main() {
     const created = await prisma.college.create({
       data: {
         ...collegeData,
+        placement_percentage: collegeData.placement_percentage ?? 60,
+        rating: collegeData.rating ?? 3.5,
+        fees_min: collegeData.fees_min ?? 10000,
+        fees_max: collegeData.fees_max ?? 50000,
+        type: collegeData.type ?? "GOVERNMENT",
         tags,
         best_for,
         streams,

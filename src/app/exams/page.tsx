@@ -16,6 +16,9 @@ export default async function ExamsPage() {
       events: {
         orderBy: { startDate: "asc" },
       },
+      _count: {
+        select: { colleges: true }
+      }
     },
     orderBy: {
       name: "asc",

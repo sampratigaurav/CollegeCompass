@@ -6,6 +6,7 @@ import { CollegeCard as CollegeCardType } from "@/types";
 import { motion } from "framer-motion";
 import { FallbackImage } from "@/components/shared/FallbackImage";
 import { useState } from "react";
+import { ShortlistButton } from "@/components/shared/ShortlistButton";
 
 interface CollegeCardProps {
   college: CollegeCardType;
@@ -62,9 +63,14 @@ export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCa
         )}
         {/* Type Badge */}
         <div
-          className={`absolute top-3 right-3 rounded-full border px-2 py-0.5 text-xs font-medium ${typeColors[college.type] ?? ""}`}
+          className={`absolute bottom-3 right-3 rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase backdrop-blur-md ${typeColors[college.type] ?? ""}`}
         >
-          {college.type.charAt(0) + college.type.slice(1).toLowerCase()}
+          {college.type}
+        </div>
+        
+        {/* Shortlist Button */}
+        <div className="absolute top-3 right-3 z-10">
+          <ShortlistButton collegeId={college.id} variant="icon" />
         </div>
       </div>
 

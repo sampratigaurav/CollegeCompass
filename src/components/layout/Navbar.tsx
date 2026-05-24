@@ -6,6 +6,7 @@ import { GraduationCap, Menu, X, Search } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { AuthButton } from "@/components/auth/AuthButton";
 
 const navLinks = [
   { href: "/", label: "Explore" },
@@ -62,6 +63,7 @@ export function Navbar() {
                 Try Predictor
               </Link>
             )}
+            <AuthButton />
           </div>
         </div>
       </div>
