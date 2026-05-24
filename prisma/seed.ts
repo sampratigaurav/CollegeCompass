@@ -60,22 +60,20 @@ const reviewTemplates = [
   },
 ];
 
-const authors = [
-  "Rahul Sharma", "Priya Patel", "Aditya Kumar", "Sneha Reddy", "Vikram Singh",
-  "Anjali Gupta", "Rohit Verma", "Kavya Nair", "Arjun Mehta", "Divya Krishnan",
-  "Siddharth Joshi", "Pooja Iyer", "Karan Malhotra", "Neha Agarwal", "Amit Chowdhury",
-  "Shreya Banerjee", "Varun Tiwari", "Ananya Das", "Ravi Shankar", "Meera Pillai",
+// We will create users in the DB to represent these authors
+const mockUserNames = [
+  "Rahul Sharma", "Priya Patel", "Aditya Kumar", "Sneha Reddy", "Vikram Singh"
 ];
 
 const batches = ["2020", "2021", "2022", "2023", "2024"];
 
-function generateReviews(collegeId: string, rating: number) {
+function generateReviews(collegeId: string, rating: number, userIds: string[]) {
   const isTop = rating >= 4.4;
   const template = isTop ? reviewTemplates[0] : reviewTemplates[1];
   const reviewCount = 4 + Math.floor(Math.random() * 3);
 
   return Array.from({ length: reviewCount }, (_, i) => ({
-    author: authors[Math.floor(Math.random() * authors.length)],
+    userId: userIds[Math.floor(Math.random() * userIds.length)],
     rating: template.ratings[i % template.ratings.length] + (Math.random() * 0.4 - 0.2),
     comment: template.comments[i % template.comments.length],
     batch: batches[Math.floor(Math.random() * batches.length)],
@@ -93,8 +91,18 @@ async function main() {
   await prisma.review.deleteMany();
   await prisma.course.deleteMany();
   await prisma.college.deleteMany();
+  await prisma.user.deleteMany();
   await prisma.exam.deleteMany();
   console.log("✅ Exams are now managed dynamically via the sync-exams pipeline.");
+
+  // Create Mock Users
+  const createdUsers = [];
+  for (const name of mockUserNames) {
+    const u = await prisma.user.create({
+      data: { name, email: `${name.replace(' ', '').toLowerCase()}@example.com` }
+    });
+    createdUsers.push(u.id);
+  }
 
   // Inject some non-engineering mock colleges
   collegesData.push({
@@ -187,22 +195,39 @@ async function main() {
     if (["Mumbai", "Delhi", "Bengaluru", "Chennai", "Hyderabad"].includes(collegeData.city)) best_for.push("Startup Culture");
     if (best_for.length === 0) best_for.push("Academic Excellence");
 
-    // Generate Streams
-    const streams = [];
-    if (collegeData.name.includes("IIT") || collegeData.name.includes("NIT") || collegeData.name.includes("IIIT") || collegeData.name.includes("Technology") || collegeData.name.includes("Engineering") || collegeData.name.includes("Pilani") || collegeData.name.includes("Vellore") || collegeData.name.includes("Jadavpur")) {
-      streams.push("Engineering");
-      if (collegeData.name.includes("IIT") || collegeData.name.includes("Science") || collegeData.name.includes("BITS")) streams.push("Science");
-    } else if (collegeData.name.includes("IIM") || collegeData.name.includes("Management") || collegeData.name.includes("Business")) {
-      streams.push("Management");
-    } else if (collegeData.name.includes("AIIMS") || collegeData.name.includes("Medical") || collegeData.name.includes("Health")) {
-      streams.push("Medical");
-      streams.push("Science");
-    } else if (collegeData.name.includes("Law") || collegeData.name.includes("NLSIU")) {
-      streams.push("Law");
+    // Generate Streams accurately based on Courses and Name
+    const streams = new Set<string>();
+    
+    // Check Courses first (most accurate)
+    if (courses && Array.isArray(courses)) {
+      for (const course of courses) {
+        const cName = course.name.toUpperCase();
+        if (cName.includes("B.TECH") || cName.includes("M.TECH") || cName.includes("B.E") || cName.includes("B.E.")) streams.add("Engineering");
+        if (cName.includes("MBBS") || cName.includes("MD") || cName.includes("BDS") || cName.includes("SURGERY")) streams.add("Medical");
+        if (cName.includes("MBA") || cName.includes("BBA") || cName.includes("PGDM") || cName.includes("MANAGEMENT")) streams.add("Management");
+        if (cName.includes("LLB") || cName.includes("LLM") || cName.includes("LAW")) streams.add("Law");
+        if (cName.includes("B.SC") || cName.includes("M.SC") || cName.includes("SCIENCE")) streams.add("Science");
+      }
+    }
+
+    // Fallbacks based on college name if courses didn't match anything
+    if (streams.size === 0) {
+      const nameUpper = collegeData.name.toUpperCase();
+      if (nameUpper.includes("MEDICAL") || nameUpper.includes("HEALTH") || nameUpper.includes("AIIMS") || nameUpper.includes("CMC ") || nameUpper.includes("JIPMER")) {
+        streams.add("Medical");
+      } else if (nameUpper.includes("LAW") || nameUpper.includes("LEGAL") || nameUpper.includes("NALSAR") || nameUpper.includes("NLSIU")) {
+        streams.add("Law");
+      } else if (nameUpper.includes("IIM ") || nameUpper.includes("MANAGEMENT") || nameUpper.includes("BUSINESS")) {
+        streams.add("Management");
+      } else if (nameUpper.includes("IIT ") || nameUpper.includes("NIT ") || nameUpper.includes("IIIT ") || nameUpper.includes("TECHNOLOGY") || nameUpper.includes("ENGINEERING") || nameUpper.includes("BITS ")) {
+        streams.add("Engineering");
+      }
     }
     
-    // Default fallback if empty
-    if (streams.length === 0) streams.push("Engineering");
+    // Ultimate fallback if still empty
+    if (streams.size === 0) streams.add("Engineering");
+
+    const streamsArray = Array.from(streams);
 
     // Generate AI Summary
     const avgSalaryStr = collegeData.avg_salary ? `₹${(collegeData.avg_salary / 100000).toFixed(1)} LPA` : "highly competitive packages";
@@ -210,9 +235,9 @@ async function main() {
     const ai_summary = `**AI Summary**: ${collegeData.name} is an exceptional ${collegeData.type.toLowerCase()} institution located in ${collegeData.city}. It is best suited for students focused on ${best_for.join(', ')}. With an average placement package of ${avgSalaryStr} and ${rankStr}, it represents a top-tier choice for ambitious aspirants.`;
 
     // Create synthetic reviews (without collegeId since it's nested)
-    const rawReviews = generateReviews("dummy", collegeData.rating);
+    const rawReviews = generateReviews("dummy", collegeData.rating, createdUsers);
     const formattedReviews = rawReviews.map((r) => ({
-      author: r.author,
+      userId: r.userId,
       rating: Math.max(1, Math.min(5, parseFloat(r.rating.toFixed(1)))),
       comment: r.comment,
       batch: r.batch,
@@ -230,7 +255,7 @@ async function main() {
         type: collegeData.type ?? "GOVERNMENT",
         tags,
         best_for,
-        streams,
+        streams: streamsArray,
         ai_summary,
         courses: {
           create: courses.map((c: any) => ({

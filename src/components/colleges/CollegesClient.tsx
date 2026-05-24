@@ -378,9 +378,11 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
         <div className="space-y-12">
           {Object.entries(
             colleges.reduce((acc, college) => {
-              const stream = college.streams && college.streams.length > 0 ? college.streams[0] : "Other";
-              if (!acc[stream]) acc[stream] = [];
-              acc[stream].push(college);
+              const streams = college.streams && college.streams.length > 0 ? college.streams : ["Other"];
+              for (const stream of streams) {
+                if (!acc[stream]) acc[stream] = [];
+                acc[stream].push(college);
+              }
               return acc;
             }, {} as Record<string, CollegeCardType[]>)
           ).sort(([a], [b]) => a.localeCompare(b)).map(([streamName, streamColleges]) => (
