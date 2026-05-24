@@ -64,7 +64,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${plusJakartaSans.variable}`} suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans antialiased text-foreground pb-20 md:pb-0">
+      <body className="min-h-screen bg-background font-sans antialiased text-foreground pb-20 md:pb-0" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

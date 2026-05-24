@@ -14,6 +14,7 @@ enum SourceType {
   PDF_BULLETIN
   PRESS_RELEASE
   MANUAL_OVERRIDE
+  GEMINI_SEARCH
 }
 
 enum ExamEventType {

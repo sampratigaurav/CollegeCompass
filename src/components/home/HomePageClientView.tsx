@@ -579,23 +579,27 @@ export function HomePageClientView({ initialData }: HomePageProps) {
                   )}
                 </div>
                 <div className="bg-foreground/5 border border-border rounded px-1.5 py-0.5 flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
-                  <Calendar className="h-3 w-3" /> 2025/26
+                  <Calendar className="h-3 w-3" /> {new Date().getFullYear()}/{String(new Date().getFullYear() + 1).slice(-2)}
                 </div>
               </div>
               
               <div className="space-y-3">
-                <div className="flex justify-between text-xs items-center bg-muted/50 p-2 rounded-lg border border-border/50">
-                  <span className="text-muted-foreground">Exam Date</span>
-                  <span className="font-medium text-foreground">{exam.exam_date || "To be announced"}</span>
-                </div>
-                <div className="flex justify-between text-xs items-center px-2">
-                  <span className="text-muted-foreground">Registration Ends</span>
-                  <span className="font-medium text-foreground">{exam.registration_ends || "To be announced"}</span>
-                </div>
-                <div className="flex justify-between text-xs items-center px-2">
-                  <span className="text-muted-foreground">Counselling</span>
-                  <span className="font-medium text-foreground">{exam.counselling_starts || "To be announced"}</span>
-                </div>
+                {exam.events && exam.events.length > 0 ? (
+                  exam.events.slice(0, 3).map((ev: any, idx: number) => (
+                    <div key={idx} className={`flex justify-between text-xs items-center px-2 ${idx === 0 ? "bg-muted/50 p-2 rounded-lg border border-border/50" : ""}`}>
+                      <span className="text-muted-foreground">{ev.title}</span>
+                      <span className="font-medium text-foreground">
+                        {new Date(ev.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        {ev.is_tentative && " (Tentative)"}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex justify-between text-xs items-center px-2">
+                    <span className="text-muted-foreground">Schedule</span>
+                    <span className="font-medium text-foreground">To be announced</span>
+                  </div>
+                )}
               </div>
 
               {exam.has_changes && exam.last_updated_at && (

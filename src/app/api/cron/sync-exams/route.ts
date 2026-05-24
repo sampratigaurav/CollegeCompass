@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { GoogleGenAI } from "@google/genai";
 import { EXAMS_REGISTRY } from "@/lib/exams/registry";
-import { fetchExamNotices } from "@/lib/exams";
 import fs from "fs";
 import path from "path";
 
@@ -65,49 +64,40 @@ export async function GET(request: Request) {
         continue;
       }
 
-      // 2. Fetch from Official Source
-      const extraction = await fetchExamNotices(examDef.id);
-      
-      if (!extraction.success || !extraction.rawText) {
-        console.warn(`Parser failed or returned empty for ${examDef.name}`);
-        await prisma.exam.update({
-          where: { id: exam.id },
-          data: { parser_health: "WARNING" }
-        });
-        results.push({ name: exam.name, status: "parser_failed" });
-        continue; // Fallback: preserve existing data
-      }
-
-      // 3. AI Normalization
+      // 2. Pure Gemini Grounded Search
       try {
         const prompt = `
-          You are a strict data extraction engine for a college admissions platform.
-          Extract the critical exam events (like Registration, Exam dates, Counselling, Results) for "${examDef.name}".
+          Search the web for the official exam dates and schedule for "${examDef.name}" for the upcoming admission cycle (${new Date().getFullYear()}/${new Date().getFullYear() + 1}).
+          Focus your search on official sources like "${examDef.officialSite}" or reliable educational portals.
           
-          Context (scraped directly from their official notice board):
-          ${extraction.rawText.substring(0, 5000)}
+          Extract the critical exam events (like Registration, Exam dates, Counselling, Results).
           
           Return ONLY a valid JSON array of objects.
           Each object must have:
           - "type": MUST be one of ["REGISTRATION", "EXAM", "COUNSELLING", "RESULT", "SEAT_ALLOTMENT"]
           - "title": A short description (e.g. "Session 1 Registration", "Phase 2 Exam")
-          - "startDate": ISO 8601 string (e.g. "2025-05-15T00:00:00Z").
+          - "startDate": ISO 8601 string (e.g. "${new Date().getFullYear() + 1}-05-15T00:00:00Z").
           - "endDate": ISO 8601 string or null if single day.
-          - "is_tentative": boolean. If the text says "tentative" or "expected", set to true.
+          - "is_tentative": boolean. If you are unsure or the text says "tentative" or "expected", set to true.
           
-          Only extract events relevant to the current admission cycle (${new Date().getFullYear()}/${new Date().getFullYear()+1}).
-          If no dates are found in the text, return an empty array [].
+          If no dates are found, return an empty array [].
         `;
 
         const response = await genAI.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: prompt,
           config: {
-            responseMimeType: "application/json",
+            tools: [{ googleSearch: {} }],
           }
         });
 
-        const parsedEvents = JSON.parse(response.text || '[]');
+        let responseText = response.text || '[]';
+        // Grounded Search sometimes includes markdown blocks or citations, so extract the JSON array
+        const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          responseText = jsonMatch[0];
+        }
+        const parsedEvents = JSON.parse(responseText);
         
         if (Array.isArray(parsedEvents) && parsedEvents.length > 0) {
           // Verify we aren't hallucinating historical dates (basic sanity check)
@@ -117,12 +107,11 @@ export async function GET(request: Request) {
           });
 
           if (validEvents.length > 0) {
-            // Check for diffs before saving to DB
             const existingEvents = await prisma.examEvent.findMany({ where: { examId: exam.id } });
-            // Very simple diff detection: if count differs or dates differ, consider it changed.
             const hasChanges = existingEvents.length !== validEvents.length || true; // Force update for MVP
 
-            await syncEventsToDb(exam.id, validEvents, "HTML_NOTICE", 0.9, extraction.rawText);
+            // Use GEMINI_SEARCH as the source type. Include the raw JSON output as snapshot for debugging.
+            await syncEventsToDb(exam.id, validEvents, "GEMINI_SEARCH", 0.9, response.text || "");
             
             await prisma.exam.update({
               where: { id: exam.id },
@@ -140,14 +129,17 @@ export async function GET(request: Request) {
           results.push({ name: exam.name, status: "no_events_found" });
         }
         
-      } catch (e) {
+      } catch (e: any) {
         console.error(`AI normalization failed for ${examDef.name}`, e);
         await prisma.exam.update({
           where: { id: exam.id },
           data: { parser_health: "FAILED" }
         });
-        results.push({ name: exam.name, status: "normalization_failed" });
+        results.push({ name: exam.name, status: "normalization_failed", error: e.message || String(e) });
       }
+
+      // Add a small delay to avoid hitting Gemini free tier rate limits (15 RPM)
+      await new Promise(r => setTimeout(r, 2000));
     }
 
     return NextResponse.json({ success: true, synced_count: results.length, results });
