@@ -100,7 +100,7 @@ export async function GET(request: Request) {
           `;
 
           const response = await genAI.models.generateContent({
-            model: 'gemini-2.5-pro',
+            model: 'gemini-2.5-flash',
             contents: prompt,
             config: {
               tools: [{ googleSearch: {} }],
