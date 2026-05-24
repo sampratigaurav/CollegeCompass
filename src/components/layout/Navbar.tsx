@@ -15,10 +15,9 @@ const navLinks = [
 
 export function Navbar() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 transition-colors duration-300">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 md:bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
           {/* Logo */}
@@ -36,7 +35,7 @@ export function Navbar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-200",
+                  "px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-200 active:scale-[0.98]",
                   pathname === href
                     ? "text-primary bg-primary/10"
                     : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
@@ -47,58 +46,23 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center gap-3">
+          <div className="flex items-center gap-3">
+            {/* Search shortcut for mobile, hidden on md since we have a giant search bar on home */}
+            <Link href="/colleges" className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground active:scale-[0.95] transition-all">
+              <Search className="h-5 w-5" />
+            </Link>
             <ThemeToggle />
             {pathname !== "/" && (
               <Link
                 href="/predictor"
-                className="inline-flex items-center gap-2 rounded-md bg-foreground text-background px-4 py-1.5 text-[13px] font-semibold shadow-sm transition-all hover:bg-foreground/90 active:scale-[0.98]"
+                className="hidden md:inline-flex items-center gap-2 rounded-md bg-foreground text-background px-4 py-1.5 text-[13px] font-semibold shadow-sm transition-all hover:bg-foreground/90 active:scale-[0.98]"
               >
                 Try Predictor
               </Link>
             )}
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
         </div>
       </div>
-
-      {/* Mobile Nav */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl px-4 pb-4 pt-2">
-          <nav className="flex flex-col gap-1">
-            {navLinks.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  "px-4 py-3 rounded-md text-sm font-medium transition-colors",
-                  pathname === href
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                )}
-              >
-                {label}
-              </Link>
-            ))}
-            <Link
-              href="/predictor"
-              onClick={() => setMobileOpen(false)}
-              className="mt-2 inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
-            >
-              Check My Chances
-            </Link>
-          </nav>
-        </div>
-      )}
     </header>
   );
 }

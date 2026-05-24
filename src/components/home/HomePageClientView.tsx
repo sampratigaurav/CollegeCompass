@@ -46,7 +46,7 @@ export function HomePageClientView({ initialData }: HomePageProps) {
               System Active • {stats.totalColleges.toLocaleString()} Institutions
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-medium tracking-tight text-foreground leading-[1.1]">
+            <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-foreground leading-[1.1]">
               Search colleges. <span className="text-muted-foreground">Compare placements. Predict admissions.</span>
             </h1>
 
@@ -74,11 +74,11 @@ export function HomePageClientView({ initialData }: HomePageProps) {
             )}
             
             {/* Action Links instead of 'Get Started' */}
-            <div className="flex items-center gap-4 pt-4">
-              <Link href="/colleges" className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
+            <div className="flex items-center gap-2 pt-4">
+              <Link href="/colleges" className="text-sm font-medium text-foreground hover:text-primary transition-all active:scale-[0.98] flex items-center gap-1.5 group px-2 py-1.5 -ml-2 rounded-md hover:bg-foreground/5">
                 Explore Rankings <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
-              <Link href="/predictor" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group">
+              <Link href="/predictor" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all active:scale-[0.98] flex items-center gap-1.5 group px-2 py-1.5 rounded-md hover:bg-foreground/5">
                 Try Predictor <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
@@ -94,9 +94,9 @@ export function HomePageClientView({ initialData }: HomePageProps) {
                 <span className="text-[10px] text-muted-foreground">Updated 12m ago</span>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {topColleges.slice(0, 4).map((college, idx) => (
-                  <Link href={`/colleges/${college.slug}`} key={college.id} className="group flex items-center justify-between p-2 -mx-2 rounded-lg hover:bg-foreground/5 transition-colors">
+                  <Link href={`/colleges/${college.slug}`} key={college.id} className="group flex items-center justify-between p-2 -mx-2 rounded-lg hover:bg-foreground/5 active:bg-foreground/10 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="text-[10px] font-bold text-muted-foreground w-4 text-center">{idx + 1}</div>
                       <div>
@@ -140,9 +140,9 @@ export function HomePageClientView({ initialData }: HomePageProps) {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           {/* Featured College Card */}
-          <Link href={`/colleges/${initialData.featured.slug}`} className="md:col-span-2 bg-card rounded-xl border border-border shadow-subtle flex flex-col md:flex-row items-stretch relative overflow-hidden group hover:border-foreground/10 hover:shadow-elevated transition-all">
+          <Link href={`/colleges/${initialData.featured.slug}`} className="md:col-span-2 bg-card rounded-xl border border-border shadow-subtle flex flex-col md:flex-row items-stretch relative overflow-hidden group active:scale-[0.99] md:active:scale-100 hover:border-foreground/10 hover:shadow-elevated transition-all">
             
             {/* Image Side */}
             <div className="relative w-full md:w-2/5 h-48 md:h-auto shrink-0 overflow-hidden">
@@ -243,9 +243,9 @@ export function HomePageClientView({ initialData }: HomePageProps) {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex overflow-x-auto snap-x snap-proximity gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 hide-scrollbar">
               {/* Featured Compare Card 1 */}
-              <div className="bg-card rounded-xl border border-border shadow-subtle p-5 hover:border-foreground/10 transition-colors cursor-pointer group">
+              <div className="min-w-[85vw] sm:min-w-0 snap-center bg-card rounded-xl border border-border shadow-subtle p-5 hover:border-foreground/10 active:scale-[0.98] md:active:scale-100 transition-all cursor-pointer group">
                 <div className="flex justify-between items-start mb-4">
                   <span className="text-[9px] font-bold bg-foreground/5 text-muted-foreground px-2 py-0.5 rounded uppercase tracking-wider">Featured Matchup</span>
                 </div>
@@ -267,7 +267,7 @@ export function HomePageClientView({ initialData }: HomePageProps) {
               </div>
 
               {/* Featured Compare Card 2 */}
-              <div className="bg-card rounded-xl border border-border shadow-subtle p-5 hover:border-foreground/10 transition-colors cursor-pointer group">
+              <div className="min-w-[85vw] sm:min-w-0 snap-center bg-card rounded-xl border border-border shadow-subtle p-5 hover:border-foreground/10 active:scale-[0.98] md:active:scale-100 transition-all cursor-pointer group">
                 <div className="flex justify-between items-start mb-4">
                   <span className="text-[9px] font-bold bg-foreground/5 text-muted-foreground px-2 py-0.5 rounded uppercase tracking-wider">ROI Analysis</span>
                 </div>
@@ -334,9 +334,9 @@ export function HomePageClientView({ initialData }: HomePageProps) {
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="flex overflow-x-auto snap-x snap-proximity gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 md:grid-cols-3 hide-scrollbar">
           {exams.map((exam) => (
-            <div key={exam.id} className="bg-card border border-border shadow-subtle rounded-xl p-5 hover:border-foreground/10 transition-colors relative group">
+            <div key={exam.id} className="min-w-[85vw] sm:min-w-0 snap-center bg-card border border-border shadow-subtle rounded-xl p-5 hover:border-foreground/10 transition-colors relative group">
               {exam.has_changes && (
                 <div className="absolute -top-1.5 -right-1.5 flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>

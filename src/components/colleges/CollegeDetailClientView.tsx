@@ -63,6 +63,7 @@ export function CollegeDetailClientView({
   avgReviewRating: number;
 }) {
   const [imgError, setImgError] = useState(!college.image_url);
+  const [aboutExpanded, setAboutExpanded] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -234,7 +235,20 @@ export function CollegeDetailClientView({
                   
                   <div>
                     <h2 className="text-lg font-bold text-foreground mb-3">About</h2>
-                    <p className="text-muted-foreground leading-relaxed text-[15px] font-medium">{college.description}</p>
+                    <div className="relative">
+                      <p className={`text-muted-foreground leading-relaxed text-[15px] font-medium transition-all duration-300 ${!aboutExpanded ? "line-clamp-4" : ""}`}>
+                        {college.description}
+                      </p>
+                      {!aboutExpanded && (
+                        <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-card to-transparent" />
+                      )}
+                    </div>
+                    <button 
+                      onClick={() => setAboutExpanded(!aboutExpanded)}
+                      className="mt-2 text-sm font-bold text-primary hover:text-primary/80 transition-colors active:scale-[0.98]"
+                    >
+                      {aboutExpanded ? "Show less" : "Read more"}
+                    </button>
                   </div>
                   
                   <div className="h-px w-full bg-border my-8" />
@@ -457,6 +471,26 @@ export function CollegeDetailClientView({
             </motion.div>
           </div>
         </motion.div>
+      </div>
+
+      {/* Mobile Sticky Action Bar */}
+      <div className="lg:hidden fixed bottom-16 left-0 right-0 z-40 bg-background/95 backdrop-blur-md border-t border-border p-3 flex gap-2 shadow-[0_-8px_20px_rgba(0,0,0,0.3)] pb-[calc(env(safe-area-inset-bottom)+12px)]">
+        <Link
+          href={`/compare?ids=${college.slug}`}
+          className="flex-1 inline-flex items-center justify-center rounded-lg bg-muted border border-border px-3 py-3 text-[13px] font-bold text-foreground active:scale-[0.98] transition-transform"
+        >
+          Compare
+        </Link>
+        {college.website && (
+          <a
+            href={college.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-[0_0_15px_rgba(124,58,237,0.4)] px-3 py-3 text-[13px] font-bold active:scale-[0.98] transition-transform"
+          >
+            Visit Website
+          </a>
+        )}
       </div>
     </div>
   );

@@ -59,7 +59,7 @@ function CompareRow({
 
   return (
     <tr className="border-b border-border bg-card hover:bg-muted transition-colors">
-      <td className="py-4 px-6 text-[13px] text-muted-foreground whitespace-nowrap">
+      <td className="py-4 px-6 text-[13px] text-muted-foreground font-medium whitespace-nowrap sticky left-0 z-20 bg-card shadow-[4px_0_10px_rgba(0,0,0,0.05)] dark:shadow-[4px_0_10px_rgba(0,0,0,0.3)] border-r border-border">
         {label}
       </td>
       {formatted.map((val, i) => (
@@ -212,13 +212,59 @@ function CompareContent() {
   }
 
   return (
-    <div className="overflow-x-auto bg-card border border-border rounded-2xl shadow-elevated">
-      <table className="w-full min-w-[640px] border-collapse">
-        <thead>
-          <tr className="border-b border-border bg-background sticky top-0 z-20">
-            <th className="py-5 px-6 text-left text-[11px] font-bold text-muted-foreground uppercase tracking-wider w-40">
-              Metric
-            </th>
+    <>
+      {/* Mobile Stacked Swipeable Cards (< 768px) */}
+      <div className="md:hidden flex overflow-x-auto snap-x snap-proximity gap-4 pb-4 -mx-4 px-4 hide-scrollbar">
+        {colleges.map(college => (
+          <div key={college.id} className="min-w-[85vw] snap-center bg-card rounded-2xl border border-border shadow-elevated p-5 relative">
+            <button
+              onClick={() => removeCollege(college.slug)}
+              className="absolute top-4 right-4 z-10 h-8 w-8 rounded-full bg-muted border border-border hover:bg-red-500/20 text-muted-foreground hover:text-red-600 flex items-center justify-center transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="relative h-16 w-16 rounded-xl overflow-hidden border border-border shrink-0 bg-muted">
+                <Image src={college.image_url || "/images/fallback-college.jpg"} alt={college.name} fill className="object-cover" />
+              </div>
+              <div className="pr-10">
+                <Link href={`/colleges/${college.slug}`} className="text-base font-bold text-foreground hover:text-primary transition-colors line-clamp-2">
+                  {college.name}
+                </Link>
+                <p className="text-xs text-muted-foreground mt-0.5">{college.city}</p>
+              </div>
+            </div>
+            
+            <div className="space-y-1">
+              {[
+                { label: "NIRF Rank", value: college.nirf_rank ? `#${college.nirf_rank}` : "Unranked" },
+                { label: "Rating", value: `${college.rating.toFixed(1)} / 5` },
+                { label: "Placement", value: `${college.placement_percentage}%` },
+                { label: "Avg Salary", value: formatSalary(college.avg_salary) },
+                { label: "Annual Fees", value: formatFees(college.fees_min, college.fees_min) },
+                { label: "Type", value: college.type.charAt(0) + college.type.slice(1).toLowerCase() },
+              ].map(stat => (
+                <div key={stat.label} className="flex justify-between items-center py-2.5 border-b border-border/50 last:border-0">
+                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</span>
+                  <span className="text-sm font-bold text-foreground">{stat.value}</span>
+                </div>
+              ))}
+            </div>
+            <Link href={`/colleges/${college.slug}`} className="mt-6 w-full inline-flex items-center justify-center bg-primary/10 text-primary hover:bg-primary/20 py-3 rounded-xl text-sm font-bold active:scale-[0.98] transition-all">
+               View Full Details
+            </Link>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop/Tablet Matrix (>= 768px) */}
+      <div className="hidden md:block overflow-x-auto bg-card border border-border rounded-2xl shadow-elevated relative">
+        <table className="w-full min-w-[640px] border-collapse">
+          <thead>
+            <tr className="border-b border-border bg-background sticky top-0 z-30">
+              <th className="py-5 px-6 text-left text-[11px] font-bold text-muted-foreground uppercase tracking-wider w-40 sticky left-0 z-40 bg-background shadow-[4px_0_10px_rgba(0,0,0,0.05)] dark:shadow-[4px_0_10px_rgba(0,0,0,0.3)] border-r border-border">
+                Metric
+              </th>
             {colleges.map((college) => (
               <th key={college.id} className="py-5 px-6 text-center min-w-[180px]">
                 <div className="relative mx-auto max-w-[200px]">
@@ -301,7 +347,7 @@ function CompareContent() {
             values={colleges.map((c) => c.established ?? "N/A")}
           />
           <tr className="border-b border-border bg-card">
-            <td className="py-4 px-6 text-[13px] text-muted-foreground">Exams</td>
+            <td className="py-4 px-6 text-[13px] text-muted-foreground font-medium whitespace-nowrap sticky left-0 z-20 bg-card shadow-[4px_0_10px_rgba(0,0,0,0.05)] dark:shadow-[4px_0_10px_rgba(0,0,0,0.3)] border-r border-border">Exams</td>
             {colleges.map((college) => (
               <td key={college.id} className="py-3 px-4 text-center">
                 <div className="flex flex-wrap gap-1 justify-center">
@@ -315,7 +361,7 @@ function CompareContent() {
             ))}
           </tr>
           <tr className="bg-card">
-            <td className="py-4 px-6 text-[13px] text-muted-foreground">Courses</td>
+            <td className="py-4 px-6 text-[13px] text-muted-foreground font-medium whitespace-nowrap sticky left-0 z-20 bg-card shadow-[4px_0_10px_rgba(0,0,0,0.05)] dark:shadow-[4px_0_10px_rgba(0,0,0,0.3)] border-r border-border">Courses</td>
             {colleges.map((college) => (
               <td key={college.id} className="py-4 px-4 text-center text-xs text-muted-foreground">
                 {college._count.courses} courses
@@ -324,7 +370,8 @@ function CompareContent() {
           </tr>
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   );
 }
 

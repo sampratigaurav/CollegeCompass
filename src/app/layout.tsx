@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { MobileNav } from "@/components/layout/MobileNav";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({
@@ -63,7 +64,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${plusJakartaSans.variable}`} suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans antialiased text-foreground">
+      <body className="min-h-screen bg-background font-sans antialiased text-foreground pb-20 md:pb-0">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -73,6 +74,7 @@ export default function RootLayout({
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />
+          <MobileNav />
         </ThemeProvider>
       </body>
     </html>

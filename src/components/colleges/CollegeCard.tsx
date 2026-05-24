@@ -40,7 +40,7 @@ export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCa
       className="group overflow-hidden bg-card border border-border rounded-2xl hover:border-foreground/15 transition-colors relative shadow-subtle hover:shadow-elevated"
     >
       {/* Image */}
-      <div className="relative h-44 overflow-hidden bg-muted">
+      <div className="relative h-36 md:h-44 overflow-hidden bg-muted">
         {imgError ? (
           <FallbackImage name={college.name} className="absolute inset-0 h-full w-full" />
         ) : (
@@ -68,7 +68,7 @@ export function CollegeCard({ college, onCompareToggle, isInCompare }: CollegeCa
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-3 md:p-4">
         {/* College Name */}
         <Link href={`/colleges/${college.slug}`}>
           <h3 className="font-semibold text-base leading-tight mb-1.5 line-clamp-2 hover:text-primary transition-colors">
