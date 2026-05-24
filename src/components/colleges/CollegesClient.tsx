@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
 import { CollegeCard } from "@/components/colleges/CollegeCard";
 import { CollegeGridSkeleton } from "@/components/colleges/CollegeSkeleton";
-import { Pagination } from "@/components/shared/Pagination";
 import { EmptyState, ErrorState } from "@/components/shared/EmptyState";
 import { CollegeCard as CollegeCardType, SortOption } from "@/types";
 import { Badge } from "@/components/ui/badge";
@@ -57,11 +56,12 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
   const [sort, setSort] = useState<SortOption>(
     (searchParams.get("sort") as SortOption) ?? "nirf_rank"
   );
-  const [page, setPage] = useState(parseInt(searchParams.get("page") ?? "1", 10));
+  const [page, setPage] = useState(1);
 
   const [colleges, setColleges] = useState<CollegeCardType[]>([]);
   const [pagination, setPagination] = useState({ page: 1, limit: 12, total: 0, totalPages: 0 });
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [groupByStream, setGroupByStream] = useState(true);
@@ -82,7 +82,8 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
   );
 
   const fetchColleges = useCallback(async () => {
-    setLoading(true);
+    if (page === 1) setLoading(true);
+    else setLoadingMore(true);
     setError(null);
 
     const sortOpt = SORT_OPTIONS.find((s) => s.value === sort);
@@ -101,12 +102,23 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
       const json = await res.json();
 
       if (!json.success) throw new Error(json.error);
-      setColleges(json.data);
+      
+      if (page === 1) {
+        setColleges(json.data);
+      } else {
+        setColleges(prev => {
+          // Filter out duplicates in case the user clicked load more quickly
+          const existingIds = new Set(prev.map(c => c.id));
+          const newColleges = json.data.filter((c: CollegeCardType) => !existingIds.has(c.id));
+          return [...prev, ...newColleges];
+        });
+      }
       setPagination(json.pagination);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load colleges");
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   }, [debouncedSearch, state, exam, type, sort, page]);
 
@@ -123,16 +135,9 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
       exam,
       type,
       sort,
-      page: 1,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, state, exam, type, sort]);
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    syncToUrl({ page: newPage });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   const activeFilters = [state, exam, type].filter(Boolean).length;
   const clearFilters = () => {
@@ -339,13 +344,18 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
               </div>
             </div>
           ))}
-          <Pagination
-            page={pagination.page}
-            totalPages={pagination.totalPages}
-            total={pagination.total}
-            limit={pagination.limit}
-            onPageChange={handlePageChange}
-          />
+          {pagination.page < pagination.totalPages && (
+            <div className="flex justify-center mt-12 mb-8">
+              <button
+                onClick={() => setPage(p => p + 1)}
+                disabled={loadingMore}
+                className="rounded-full bg-primary px-8 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 inline-flex items-center gap-2 shadow-subtle"
+              >
+                {loadingMore && <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />}
+                Load More Colleges
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <>
@@ -359,13 +369,18 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
               />
             ))}
           </div>
-          <Pagination
-            page={pagination.page}
-            totalPages={pagination.totalPages}
-            total={pagination.total}
-            limit={pagination.limit}
-            onPageChange={handlePageChange}
-          />
+          {pagination.page < pagination.totalPages && (
+            <div className="flex justify-center mt-12 mb-8">
+              <button
+                onClick={() => setPage(p => p + 1)}
+                disabled={loadingMore}
+                className="rounded-full bg-primary px-8 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 inline-flex items-center gap-2 shadow-subtle"
+              >
+                {loadingMore && <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />}
+                Load More Colleges
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
