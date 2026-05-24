@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Search, SlidersHorizontal, X, ArrowUpDown, ChevronDown, Layers } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -65,6 +65,8 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
   const [error, setError] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [groupByStream, setGroupByStream] = useState(true);
+
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   const debouncedSearch = useDebounce(search, 350);
 
@@ -138,6 +140,25 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, state, exam, type, sort]);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loadingMore && !loading && pagination.page < pagination.totalPages) {
+          setPage((p) => p + 1);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const target = observerTarget.current;
+    if (target) observer.observe(target);
+
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, [loadingMore, loading, pagination.page, pagination.totalPages]);
 
   const activeFilters = [state, exam, type].filter(Boolean).length;
   const clearFilters = () => {
@@ -345,15 +366,8 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
             </div>
           ))}
           {pagination.page < pagination.totalPages && (
-            <div className="flex justify-center mt-12 mb-8">
-              <button
-                onClick={() => setPage(p => p + 1)}
-                disabled={loadingMore}
-                className="rounded-full bg-primary px-8 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 inline-flex items-center gap-2 shadow-subtle"
-              >
-                {loadingMore && <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />}
-                Load More Colleges
-              </button>
+            <div ref={observerTarget} className="flex justify-center mt-12 mb-8 h-10 items-center">
+              {loadingMore && <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />}
             </div>
           )}
         </div>
@@ -370,15 +384,8 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
             ))}
           </div>
           {pagination.page < pagination.totalPages && (
-            <div className="flex justify-center mt-12 mb-8">
-              <button
-                onClick={() => setPage(p => p + 1)}
-                disabled={loadingMore}
-                className="rounded-full bg-primary px-8 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 inline-flex items-center gap-2 shadow-subtle"
-              >
-                {loadingMore && <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />}
-                Load More Colleges
-              </button>
+            <div ref={observerTarget} className="flex justify-center mt-12 mb-8 h-10 items-center">
+              {loadingMore && <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />}
             </div>
           )}
         </>
