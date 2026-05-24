@@ -212,16 +212,7 @@ export function HomePageClientView({ initialData }: HomePageProps) {
               </div>
             </div>
 
-            <div className="mt-6 pt-5 border-t border-border grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Institutions</p>
-                <p className="text-lg font-medium">{stats.totalColleges.toLocaleString()}</p>
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Top Placement</p>
-                <p className="text-lg font-medium text-primary">{stats.topPlacement}%</p>
-              </div>
-            </div>
+
           </div>
 
         </div>
