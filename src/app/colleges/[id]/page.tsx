@@ -16,6 +16,9 @@ async function getCollege(id: string): Promise<CollegeDetail | null> {
         reviews: {
           orderBy: { createdAt: "desc" },
           take: 20,
+          include: {
+            user: { select: { name: true } }
+          }
         },
         _count: { select: { reviews: true, courses: true } },
       },

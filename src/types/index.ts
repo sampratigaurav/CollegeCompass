@@ -36,13 +36,14 @@ export interface Course {
 
 export interface Review {
   id: string;
-  author: string;
+  userId: string | null;
+  user?: { name: string | null } | null;
   rating: number;
   comment: string;
   batch: string | null;
   verified: boolean;
   collegeId: string;
-  createdAt: string;
+  createdAt: string | Date;
 }
 
 export interface CollegeDetail extends CollegeCard {

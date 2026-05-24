@@ -438,7 +438,7 @@ export function CollegeDetailClientView({
                           <div className="flex items-start justify-between mb-4">
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="font-bold text-sm text-foreground">{review.author}</span>
+                                <span className="font-bold text-sm text-foreground">{review.user?.name || "Anonymous Student"}</span>
                                 {review.verified && (
                                   <Badge variant="glass" className="text-[9px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400 border-emerald-500/20 bg-emerald-500/10">
                                     <CheckCircle2 className="h-3 w-3 mr-1" /> Verified
