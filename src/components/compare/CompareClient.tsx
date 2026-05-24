@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, TrendingUp, Trophy, MapPin, X, Search, Plus } from "lucide-react";
+import { Star, TrendingUp, Trophy, MapPin, X, Search, Plus, Bookmark, BookmarkCheck } from "lucide-react";
 import { CollegeDetail } from "@/types";
 import { EmptyState, ErrorState } from "@/components/shared/EmptyState";
 import { Badge } from "@/components/ui/badge";
@@ -127,7 +127,7 @@ function CompareContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { addRecentComparison, logActivity } = useUserMemory();
+  const { addRecentComparison, logActivity, toggleSavedComparison, savedComparisons } = useUserMemory();
 
   useEffect(() => {
     if (ids.length < 1) return;
@@ -224,8 +224,45 @@ function CompareContent() {
     );
   }
 
+  const isSaved = colleges.length === 2 && savedComparisons?.some(
+    c => 
+      (c.college1.id === colleges[0].id && c.college2.id === colleges[1].id) ||
+      (c.college1.id === colleges[1].id && c.college2.id === colleges[0].id)
+  );
+
+  const handleSave = () => {
+    if (colleges.length !== 2) return;
+    toggleSavedComparison({
+      college1: { id: colleges[0].id, name: colleges[0].name, slug: colleges[0].slug },
+      college2: { id: colleges[1].id, name: colleges[1].name, slug: colleges[1].slug }
+    });
+  };
+
   return (
     <>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 px-4 md:px-0 gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground">Comparison Matrix</h2>
+          <p className="text-sm text-muted-foreground mt-1">Side-by-side analysis of selected institutions</p>
+        </div>
+        {colleges.length === 2 && (
+          <button
+            onClick={handleSave}
+            className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border text-sm font-medium transition-transform active:scale-[0.98] ${
+              isSaved 
+                ? 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/15' 
+                : 'bg-card border-border hover:bg-muted text-foreground'
+            }`}
+          >
+            {isSaved ? (
+              <><BookmarkCheck className="h-4 w-4" /> Session Saved</>
+            ) : (
+              <><Bookmark className="h-4 w-4" /> Save Session</>
+            )}
+          </button>
+        )}
+      </div>
+
       {/* Mobile Stacked Swipeable Cards (< 768px) */}
       <div className="md:hidden flex overflow-x-auto snap-x snap-proximity gap-4 pb-4 -mx-4 px-4 hide-scrollbar">
         {colleges.map(college => (

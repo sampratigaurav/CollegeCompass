@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Search, Clock, TrendingUp, ChevronRight, Activity, Calendar, Building2, Wallet, Users, Lightbulb, MapPin, ArrowRight, History, Bookmark, Sparkles } from "lucide-react";
+import { Search, Clock, TrendingUp, ChevronRight, Activity, Calendar, Building2, Wallet, Users, Lightbulb, MapPin, ArrowRight, History, Bookmark, Sparkles, Scale } from "lucide-react";
 import { useUserMemory } from "@/hooks/useUserMemory";
 import { SearchBar } from "@/components/shared/SearchBar";
 
@@ -26,10 +26,10 @@ interface HomePageProps {
 }
 
 export function HomePageClientView({ initialData }: HomePageProps) {
-  const { isLoaded, recentSearches, recentColleges, recentComparisons, savedColleges, recentActivity, preferredExams, previousPredictions } = useUserMemory();
+  const { isLoaded, recentSearches, recentColleges, recentComparisons, savedColleges, savedComparisons, recentActivity, preferredExams, previousPredictions } = useUserMemory();
   const { topColleges, stats, exams } = initialData;
 
-  const hasPersonalization = isLoaded && (recentColleges.length > 0 || savedColleges?.length > 0 || recentActivity?.length > 0);
+  const hasPersonalization = isLoaded && (recentColleges.length > 0 || savedColleges?.length > 0 || savedComparisons?.length > 0 || recentActivity?.length > 0);
 
   // For suggestions: find colleges with similar type to recently viewed, excluding already viewed/saved
   const viewedIds = new Set([...recentColleges.map(c => c.id), ...(savedColleges?.map(c => c.id) || [])]);
@@ -170,6 +170,29 @@ export function HomePageClientView({ initialData }: HomePageProps) {
                           <p className="text-xs text-muted-foreground mt-1">{college.location || "Institution"}</p>
                         </div>
                         <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Saved Comparisons */}
+              {savedComparisons?.length > 0 && (
+                <div>
+                  <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <Scale className="h-4 w-4" /> Active Comparisons
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {savedComparisons.map((comp, idx) => (
+                      <Link href={`/compare?ids=${comp.college1.slug},${comp.college2.slug}`} key={idx} className="bg-card border border-border rounded-xl p-4 shadow-subtle hover:border-primary/40 transition-colors group">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-medium text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1 flex-1">{comp.college1.name}</p>
+                          <span className="text-[10px] text-muted-foreground font-bold px-2">VS</span>
+                          <p className="font-medium text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1 flex-1 text-right">{comp.college2.name}</p>
+                        </div>
+                        <p className="text-[10px] text-primary/80 font-medium uppercase tracking-wider flex items-center justify-center gap-1 mt-3">
+                          Continue Session <ChevronRight className="h-3 w-3" />
+                        </p>
                       </Link>
                     ))}
                   </div>

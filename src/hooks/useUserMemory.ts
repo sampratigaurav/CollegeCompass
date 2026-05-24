@@ -38,6 +38,7 @@ export interface UserMemoryState {
   preferredExams: string[];
   previousPredictions: PreviousPrediction[];
   savedColleges: RecentCollege[];
+  savedComparisons: RecentComparison[];
   recentActivity: ActivityLog[];
 }
 
@@ -48,6 +49,7 @@ const DEFAULT_STATE: UserMemoryState = {
   preferredExams: [],
   previousPredictions: [],
   savedColleges: [],
+  savedComparisons: [],
   recentActivity: [],
 };
 
@@ -171,6 +173,41 @@ export function useUserMemory() {
     });
   };
 
+  const toggleSavedComparison = (comp: RecentComparison) => {
+    setMemory(prev => {
+      const isSaved = prev.savedComparisons.some(
+        c => 
+          (c.college1.id === comp.college1.id && c.college2.id === comp.college2.id) ||
+          (c.college1.id === comp.college2.id && c.college2.id === comp.college1.id)
+      );
+      let newSaved;
+      if (isSaved) {
+        newSaved = prev.savedComparisons.filter(
+          c => 
+            !(c.college1.id === comp.college1.id && c.college2.id === comp.college2.id) &&
+            !(c.college1.id === comp.college2.id && c.college2.id === comp.college1.id)
+        );
+      } else {
+        newSaved = [comp, ...prev.savedComparisons];
+      }
+      const newState = { ...prev, savedComparisons: newSaved };
+      
+      if (!isSaved) {
+        const newActivity: ActivityLog = {
+          id: Math.random().toString(36).substr(2, 9),
+          type: 'save',
+          text: `Saved comparison: ${comp.college1.name} vs ${comp.college2.name}`,
+          timestamp: Date.now(),
+          link: `/compare?ids=${comp.college1.slug},${comp.college2.slug}`
+        };
+        newState.recentActivity = [newActivity, ...newState.recentActivity].slice(0, 15);
+      }
+      
+      localStorage.setItem(MEMORY_KEY, JSON.stringify(newState));
+      return newState;
+    });
+  };
+
   const addPreviousPrediction = (prediction: { exam: string, rank: number }) => {
     setMemory(prev => {
       const newPred: PreviousPrediction = { ...prediction, timestamp: Date.now() };
@@ -203,6 +240,7 @@ export function useUserMemory() {
     addRecentCollege,
     addRecentComparison,
     toggleSavedCollege,
+    toggleSavedComparison,
     addPreviousPrediction,
     logActivity,
     clearMemory,
