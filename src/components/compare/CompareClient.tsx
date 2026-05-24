@@ -176,12 +176,12 @@ function CompareContent() {
             <div className="mt-8 text-left border-t border-border pt-8">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Trending Comparisons</p>
               <div className="flex flex-col gap-2">
-                <Link href="/compare?ids=indian-institute-of-technology-madras,indian-institute-of-technology-delhi" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-muted border border-border rounded-lg p-3 hover:bg-muted/80">
+                <Link href="/compare?ids=iit-madras,iit-delhi" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-muted border border-border rounded-lg p-3 hover:bg-muted/80">
                   <span>IIT Madras vs IIT Delhi</span>
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </Link>
-                <Link href="/compare?ids=indian-institute-of-science,indian-institute-of-technology-bombay" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-muted border border-border rounded-lg p-3 hover:bg-muted/80">
-                  <span>IISc Bangalore vs IIT Bombay</span>
+                <Link href="/compare?ids=bits-pilani,nit-surathkal" className="text-sm font-medium hover:text-primary transition-colors flex items-center justify-between bg-muted border border-border rounded-lg p-3 hover:bg-muted/80">
+                  <span>BITS Pilani vs NIT Surathkal</span>
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </Link>
               </div>
