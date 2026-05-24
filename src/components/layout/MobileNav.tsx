@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Compass, GitCompare, Calculator, Search } from "lucide-react";
+import { Home, Sparkles, GitCompare, Calculator, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function MobileNav() {
@@ -16,9 +16,9 @@ export function MobileNav() {
           <span className="text-[10px] font-medium tracking-wide">Home</span>
         </Link>
         
-        <Link href="/colleges" className={cn("flex flex-col items-center justify-center w-16 h-full gap-1 active:scale-[0.95] transition-transform", pathname === "/colleges" ? "text-primary" : "text-muted-foreground")}>
-          <Compass className="h-5 w-5" />
-          <span className="text-[10px] font-medium tracking-wide">Explore</span>
+        <Link href="/discover" className={cn("flex flex-col items-center justify-center w-16 h-full gap-1 active:scale-[0.95] transition-transform", pathname === "/discover" ? "text-primary" : "text-muted-foreground")}>
+          <Sparkles className="h-5 w-5" />
+          <span className="text-[10px] font-medium tracking-wide">Discover</span>
         </Link>
         
         {/* Search Elevated Pill */}
