@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Search, SlidersHorizontal, X, ArrowUpDown, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, X, ArrowUpDown, ChevronDown, Layers } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -64,6 +64,7 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [groupByStream, setGroupByStream] = useState(true);
 
   const debouncedSearch = useDebounce(search, 350);
 
@@ -176,6 +177,16 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
           </select>
           <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         </div>
+
+        {/* Group By Toggle */}
+        <button
+          onClick={() => setGroupByStream(!groupByStream)}
+          className={`inline-flex items-center gap-2 h-10 rounded-lg border px-4 text-sm font-semibold transition-all relative ${groupByStream ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-foreground hover:bg-muted'}`}
+        >
+          <Layers className="h-4 w-4" />
+          <span className="hidden sm:inline">Group by Stream</span>
+          <span className="sm:hidden">Group</span>
+        </button>
 
         {/* Filter Toggle */}
         <button
@@ -300,6 +311,42 @@ export function CollegesClient({ compareIds, onCompareToggle }: CollegesClientPr
             </button>
           }
         />
+      ) : groupByStream ? (
+        <div className="space-y-12">
+          {Object.entries(
+            colleges.reduce((acc, college) => {
+              const stream = college.streams && college.streams.length > 0 ? college.streams[0] : "Other";
+              if (!acc[stream]) acc[stream] = [];
+              acc[stream].push(college);
+              return acc;
+            }, {} as Record<string, CollegeCardType[]>)
+          ).sort(([a], [b]) => a.localeCompare(b)).map(([stream, streamColleges]) => (
+            <div key={stream}>
+              <div className="flex items-center gap-3 mb-6">
+                <h2 className="text-2xl font-bold font-heading tracking-tight">{stream} Colleges</h2>
+                <Badge variant="secondary" className="rounded-full px-2.5">{streamColleges.length}</Badge>
+                <div className="h-px bg-border flex-1 ml-4" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                {streamColleges.map((college) => (
+                  <CollegeCard
+                    key={college.id}
+                    college={college}
+                    onCompareToggle={onCompareToggle}
+                    isInCompare={compareIds.includes(college.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+          <Pagination
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            total={pagination.total}
+            limit={pagination.limit}
+            onPageChange={handlePageChange}
+          />
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">

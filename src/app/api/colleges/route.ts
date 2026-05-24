@@ -108,6 +108,7 @@ export async function GET(request: NextRequest) {
           accreditation: true,
           exam: true,
           established: true,
+          streams: true,
           _count: { select: { reviews: true, courses: true } },
         },
       }),

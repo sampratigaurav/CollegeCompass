@@ -20,6 +20,7 @@ export interface CollegeCard {
   established: number | null;
   tags: string[];
   best_for: string[];
+  streams: string[];
   ai_summary: string | null;
   _count: { reviews: number; courses: number };
 }

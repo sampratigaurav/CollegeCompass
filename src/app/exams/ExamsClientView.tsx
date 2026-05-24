@@ -18,7 +18,7 @@ type ExamEvent = {
 type Exam = {
   id: string;
   name: string;
-  authority: string;
+  authority: string | null;
   last_verified_at: Date | null;
   events: ExamEvent[];
 };
