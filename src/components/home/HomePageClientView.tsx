@@ -317,45 +317,71 @@ export function HomePageClientView({ initialData }: HomePageProps) {
       </section>
 
       {/* SECTION 4: ADMISSION TIMELINE */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-border mt-12">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-medium">Application Deadlines</h2>
-            <p className="text-sm text-muted-foreground">Upcoming entrance exams and counselling schedules.</p>
+            <h2 className="text-lg font-medium flex items-center gap-2">
+              Application Deadlines
+              <span className="bg-foreground/5 text-muted-foreground text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded border border-border">Updated Daily</span>
+            </h2>
+            <p className="text-sm text-muted-foreground">Monitoring official notices for entrance exams and schedules.</p>
           </div>
+          {exams.length > 0 && exams[0].last_synced_at && (
+            <div className="text-[10px] text-muted-foreground flex items-center gap-1.5 bg-muted px-2 py-1 rounded border border-border">
+              <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              Last checked {new Date(exams[0].last_synced_at).toLocaleDateString()}
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {exams.map((exam) => (
-            <div key={exam.id} className="bg-card border border-border shadow-subtle rounded-xl p-4 hover:bg-foreground/5 transition-colors">
-              <div className="flex justify-between items-start mb-4">
-                <h4 className="text-sm font-medium text-foreground">{exam.name}</h4>
-                <div className="bg-foreground/5 border border-foreground/10 rounded px-1.5 py-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
-                  <Calendar className="h-3 w-3" /> 2025
+            <div key={exam.id} className="bg-card border border-border shadow-subtle rounded-xl p-5 hover:border-foreground/10 transition-colors relative group">
+              {exam.has_changes && (
+                <div className="absolute -top-1.5 -right-1.5 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                </div>
+              )}
+              
+              <div className="flex justify-between items-start mb-5">
+                <div>
+                  <h4 className="text-sm font-medium text-foreground">{exam.name}</h4>
+                  {exam.source_url && (
+                    <a href={exam.source_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-0.5 mt-0.5">
+                      Source: Official Website
+                    </a>
+                  )}
+                </div>
+                <div className="bg-foreground/5 border border-border rounded px-1.5 py-0.5 flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
+                  <Calendar className="h-3 w-3" /> 2025/26
                 </div>
               </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
+              
+              <div className="space-y-3">
+                <div className="flex justify-between text-xs items-center bg-muted/50 p-2 rounded-lg border border-border/50">
                   <span className="text-muted-foreground">Exam Date</span>
-                  <span className="font-medium text-foreground">{exam.exam_date || "TBD"}</span>
+                  <span className="font-medium text-foreground">{exam.exam_date || "To be announced"}</span>
                 </div>
-                <div className="flex justify-between text-xs">
+                <div className="flex justify-between text-xs items-center px-2">
+                  <span className="text-muted-foreground">Registration Ends</span>
+                  <span className="font-medium text-foreground">{exam.registration_ends || "To be announced"}</span>
+                </div>
+                <div className="flex justify-between text-xs items-center px-2">
                   <span className="text-muted-foreground">Counselling</span>
-                  <span className="font-medium text-foreground">{exam.counselling_starts || "TBD"}</span>
+                  <span className="font-medium text-foreground">{exam.counselling_starts || "To be announced"}</span>
                 </div>
               </div>
+
+              {exam.has_changes && exam.last_updated_at && (
+                <div className="mt-4 pt-3 border-t border-border/50">
+                   <p className="text-[10px] text-amber-500/80 leading-relaxed font-medium">
+                     Schedule was recently revised on {new Date(exam.last_updated_at).toLocaleDateString()}. Check official portal for details.
+                   </p>
+                </div>
+              )}
             </div>
           ))}
-          
-          {/* Mocked Alert Card */}
-          <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 hover:bg-amber-500/10 transition-colors">
-             <div className="flex justify-between items-start mb-4">
-                <h4 className="text-sm font-medium text-amber-400">KCET Update</h4>
-             </div>
-             <p className="text-xs text-amber-500/80 leading-relaxed">
-               Document verification schedule has been revised. Check official portal for updates.
-             </p>
-          </div>
         </div>
       </section>
 

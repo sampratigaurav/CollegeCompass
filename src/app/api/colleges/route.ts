@@ -37,18 +37,21 @@ export async function GET(request: NextRequest) {
     const andClauses: Prisma.CollegeWhereInput[] = [];
 
     if (search) {
-      andClauses.push({
+      const tokens = search.trim().split(/\s+/);
+      const searchConditions: Prisma.CollegeWhereInput[] = tokens.map((token) => ({
         OR: [
-          { name: { contains: search, mode: "insensitive" } },
-          { city: { contains: search, mode: "insensitive" } },
-          { state: { contains: search, mode: "insensitive" } },
+          { name: { contains: token, mode: "insensitive" } },
+          { slug: { contains: token, mode: "insensitive" } },
+          { city: { contains: token, mode: "insensitive" } },
+          { state: { contains: token, mode: "insensitive" } },
           {
             courses: {
-              some: { name: { contains: search, mode: "insensitive" } },
+              some: { name: { contains: token, mode: "insensitive" } },
             },
           },
         ],
-      });
+      }));
+      andClauses.push({ AND: searchConditions });
     }
     if (state) andClauses.push({ state: { contains: state, mode: "insensitive" } });
     if (city) andClauses.push({ city: { contains: city, mode: "insensitive" } });

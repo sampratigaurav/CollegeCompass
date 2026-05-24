@@ -16,9 +16,9 @@ interface Suggestion {
 }
 
 const TRENDING = [
-  { slug: "indian-institute-of-technology-madras", name: "IIT Madras" },
-  { slug: "indian-institute-of-science", name: "IISc Bangalore" },
-  { slug: "indian-institute-of-technology-delhi", name: "IIT Delhi" },
+  { slug: "iit-madras", name: "IIT Madras" },
+  { slug: "iim-ahmedabad", name: "IIM Ahmedabad" },
+  { slug: "iit-delhi", name: "IIT Delhi" },
 ];
 
 export function SearchBar() {

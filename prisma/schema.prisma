@@ -59,12 +59,24 @@ model College {
 }
 
 model Exam {
-  id                 String   @id @default(cuid())
-  name               String   @unique
+  id                 String    @id @default(cuid())
+  name               String    @unique
   counselling_starts String?
   registration_ends  String?
   exam_date          String?
-  website            String?
+  website            String?   // General website link
+  
+  // Pipeline Operational Metadata
+  source_url         String?   // Exact official notice URL
+  last_synced_at     DateTime? // When cron last checked
+  last_updated_at    DateTime? // When actual data changed
+  has_changes        Boolean   @default(false)
+  previous_dates     Json?     // Lightweight snapshot
+  
+  // Telemetry internally
+  confidence         Float?
+  source_type        String?   // e.g. "official_html", "manual_override"
+  parse_method       String?   // e.g. "regex", "gemini_fallback"
   
   @@index([name])
 }

@@ -27,7 +27,10 @@ export default async function HomePage() {
   const statesCovered = uniqueStates.length;
 
   // Exams
-  const exams = await prisma.exam.findMany({ take: 3 });
+  const exams = await prisma.exam.findMany({
+    take: 6,
+    orderBy: { last_updated_at: 'desc' }
+  });
 
   const initialData = {
     topColleges,

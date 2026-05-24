@@ -11,13 +11,18 @@ export async function GET(request: NextRequest) {
       return successResponse([]);
     }
 
+    const tokens = q.trim().split(/\s+/);
+    const searchConditions = tokens.map((token) => ({
+      OR: [
+        { name: { contains: token, mode: "insensitive" as const } },
+        { location: { contains: token, mode: "insensitive" as const } },
+        { slug: { contains: token, mode: "insensitive" as const } },
+      ],
+    }));
+
     const suggestions = await prisma.college.findMany({
       where: {
-        OR: [
-          { name: { contains: q, mode: "insensitive" } },
-          { location: { contains: q, mode: "insensitive" } },
-          { slug: { contains: q, mode: "insensitive" } },
-        ],
+        AND: searchConditions,
       },
       select: {
         id: true,
