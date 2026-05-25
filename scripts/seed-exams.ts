@@ -1,3 +1,6 @@
+import { config } from 'dotenv';
+config({ path: '.env.local' });
+
 import { ExamEventType, SourceType } from '@prisma/client';
 import { EXAMS_REGISTRY } from '../src/lib/exams/registry';
 import { prisma } from '../src/lib/db';
@@ -127,7 +130,68 @@ async function main() {
     }
   }
 
-  console.log("Seeding and linking complete!");
+  // 4. Generate Cutoffs for Courses
+  console.log("\nGenerating Cutoffs for Courses...");
+  const courses = await prisma.course.findMany({
+    include: {
+      college: {
+        include: {
+          acceptedExams: true
+        }
+      }
+    }
+  });
+
+  await prisma.cutoff.deleteMany({}); // Reset cutoffs
+  console.log(`Cleared old cutoffs.`);
+
+  const newCutoffs = [];
+  let cutoffCount = 0;
+
+  for (const course of courses) {
+    if (!course.college.acceptedExams || course.college.acceptedExams.length === 0) continue;
+
+    const exam = course.college.acceptedExams[0]; // Take the first accepted exam
+    
+    // Generate some realistic-looking closing ranks based on college metrics
+    const baseRank = course.college.nirf_rank ? course.college.nirf_rank * 50 : 20000;
+    
+    const categories = ["OPEN", "OBC-NCL", "SC", "ST"];
+    
+    for (const category of categories) {
+      let multiplier = 1;
+      if (category === "OBC-NCL") multiplier = 1.5;
+      if (category === "SC") multiplier = 3;
+      if (category === "ST") multiplier = 5;
+
+      const closingRank = Math.floor(baseRank * multiplier) + Math.floor(Math.random() * 5000);
+
+      newCutoffs.push({
+        courseId: course.id,
+        exam: exam.name,
+        year: currentYear,
+        round: 6,
+        category: category,
+        quota: "AI",
+        seat_pool: "Gender-Neutral",
+        closing_rank: closingRank > 0 ? closingRank : 1000
+      });
+      
+      cutoffCount++;
+      if (newCutoffs.length > 5000) {
+        await prisma.cutoff.createMany({ data: newCutoffs });
+        newCutoffs.length = 0;
+      }
+    }
+  }
+
+  if (newCutoffs.length > 0) {
+    await prisma.cutoff.createMany({ data: newCutoffs });
+  }
+
+  console.log(`  Seeded ${cutoffCount} cutoffs.`);
+
+  console.log("\nSeeding and linking complete!");
 }
 
 main()
