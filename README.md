@@ -4,6 +4,7 @@
 <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
 <img src="https://img.shields.io/badge/PostgreSQL-Neon-00E599?style=for-the-badge&logo=postgresql&logoColor=white" />
 <img src="https://img.shields.io/badge/Prisma-7.x-2D3748?style=for-the-badge&logo=prisma&logoColor=white" />
+<img src="https://img.shields.io/badge/NextAuth.js-Security-blueviolet?style=for-the-badge&logo=nextauth&logoColor=white" />
 <img src="https://img.shields.io/badge/Gemini_AI-2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white" />
 <img src="https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
 
@@ -25,9 +26,9 @@
 
 CollegeCompass is a **production-grade, full-stack college intelligence platform** built for Indian students navigating one of the most high-stakes decisions of their lives — choosing the right college.
 
-It replaces static brochure websites with a **live, data-driven, personalized experience** — giving every student a platform that adapts to their preferences, explains its reasoning, and makes the financial and academic trade-offs crystal clear.
+It replaces static brochure websites with a **live, data-driven, personalized experience** — giving every student a platform that adapts to their preferences, explains its reasoning, and makes the financial and academic trade-offs crystal clear. 
 
-> Built with real NIRF rankings, actual placement data, AI-powered insights, and a behavioral memory system that learns from every interaction.
+> Built with real NIRF rankings, actual placement data, AI-powered insights, a robust authentication system, and a deeply personalized workspace.
 
 ---
 
@@ -37,14 +38,13 @@ It replaces static brochure websites with a **live, data-driven, personalized ex
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        CollegeCompass                               │
 ├──────────────────┬──────────────────┬──────────────────────────────┤
-│   DISCOVERY      │   INTELLIGENCE   │        PERSONALIZATION       │
+│   DISCOVERY      │   INTELLIGENCE   │        WORKSPACE (Auth)      │
 │                  │                  │                              │
-│  • College List  │  • Discover      │  • Adaptive Homepage         │
-│  • Smart Search  │    Engine        │  • Recent History            │
-│  • Stream Filter │  • Compare       │  • Saved Colleges            │
-│  • Detail Pages  │    Insights      │  • Saved Comparisons         │
-│                  │  • Fit Analysis  │  • Inferred Preferences      │
-│                  │  • Rank          │  • Stream Memory             │
+│  • College List  │  • Discover      │  • Authenticated Users       │
+│  • Smart Search  │    Engine        │  • Cloud-synced Shortlists   │
+│  • Stream Filter │  • Compare       │  • Saved Comparisons         │
+│  • Detail Pages  │    Insights      │  • Tracked Exam Deadlines    │
+│  • Course Cutoffs│  • Rank          │  • Verified Student Reviews  │
 │                  │    Predictor     │                              │
 ├──────────────────┴──────────────────┴──────────────────────────────┤
 │                  FINANCIAL INTELLIGENCE                             │
@@ -56,12 +56,19 @@ It replaces static brochure websites with a **live, data-driven, personalized ex
 
 ## 🚀 Core Features
 
-### 🔍 Smart Discovery & Search
-- **Global Tokenized Search** — Acronym-aware autocomplete (`IIT → Indian Institute of Technology`) with instant suggestions mapped to names, locations, and slugs.
-- **Advanced College Explorer** — Filterable by state, city, type (Public/Private), fees, NIRF rank, placements, and **Academic Stream**.
-- **Stream Filter System** — Pill-selector for Engineering, Medical, Management, Law, Science, and Arts — applied platform-wide across Search, Explore, and Discover.
+### 🔐 Authenticated Workspace
+A fully secure, database-backed user environment powered by **NextAuth.js**.
+- **Cloud Shortlists**: Save colleges and access them from any device.
+- **Exam Tracking**: Monitor personalized entrance exam schedules.
+- **Active Comparisons**: Save and resume deep-dive comparison sessions.
+- **Verified Reviews**: Post and manage reviews tied directly to your profile.
 
-### 🧭 Discover Engine
+### 🔍 Smart Discovery & Search
+- **Global Tokenized Search** — Acronym-aware autocomplete (`IIT → Indian Institute of Technology`) with instant suggestions.
+- **Advanced College Explorer** — Filterable by state, city, type (Public/Private), fees, NIRF rank, placements, and **Academic Stream**.
+- **Stream Filter System** — Pill-selector for Engineering, Medical, Management, Law, Science, and Arts.
+
+### 🧭 AI Discover Engine
 The most powerful feature. Instead of a generic search, the Discover Engine is a **real-time, preference-weighted scoring system**.
 
 ```
@@ -73,88 +80,24 @@ User selects:
 Engine computes:
   IIT Bombay     ████████████████░░  Match Score: 94
   BITS Pilani    ████████████████░░  Match Score: 91
-  NIT Surathkal  ████████████░░░░░░  Match Score: 78
-  ...
 ```
-
 - Additive scoring with priority weights
 - Hard budget/stream constraint penalties
 - Live narrative explanations per match
-- Popular path presets (e.g., "High ROI Public Institutions")
 
 ### 🆚 Intelligent Compare
 Side-by-side comparison of 2–3 colleges with a **dual-layer intelligence system**:
+- **Layer 1:** Instant deterministic chips comparing Placements, Salaries, and Affordability.
+- **Layer 2:** Narrative Analysis powered by AI. (*"IIT Bombay offers stronger placement outcomes, while IIT Delhi provides a more accessible fee structure..."*)
 
-**Layer 1 — Instant Deterministic Chips:**
-```
- Placements | IIT Bombay · 92% placed
- Avg Salary | IIT Bombay · ₹28.5 LPA
- Affordability | IIT Delhi · from ₹0.8L/yr
- NIRF Rank | IIT Madras · #1
-```
+### 🎯 Data-Driven Rank Predictor & Cutoffs
+Students input their JEE / NEET rank, category, and state quota to get a list of colleges they are likely to qualify for, based on **historical cutoff data** stored per college and course.
 
-**Layer 2 — Narrative Analysis (auto-fetched):**
-> *"IIT Bombay offers stronger placement outcomes and higher average salaries relative to its peers. IIT Delhi, while slightly lower on placement percentages, provides a more accessible fee structure..."*
-
-- Winner-highlighted comparison matrix (NIRF, Rating, Fees, Salary, Placement)
-- Shareable comparison URLs
-- Save/bookmark comparison sessions via localStorage
+### 📅 Live Exam Deadline Tracking
+An integrated tracking system for entrance exams (JEE Main, NEET, BITSAT, etc.) with real-time event updates, countdowns to deadlines, and automated syncing.
 
 ### 📊 Investment Outlook (Cost vs Outcome)
-A contextual financial analysis module embedded directly into every College Detail page.
-
-```
-Investment Outlook                           [ Accessible ✓ ]
-────────────────────────────────────────────────────────────
-0y ──────────────────── ~2.3y ─────────────────────── 10y+
-                            ▲ Estimated Payback
-
-☐ Include Education Loan
-
-Payback Scenarios:
-  Conservative   ₹12.0L     ~4.2y
-  Average        ₹18.5L   ● ~2.3y
-  Optimistic     ₹25.0L     ~1.7y
-
-Analysis: Strong outlook due to high placement averages
-relative to moderate tuition costs.
-────────────────────────────────────────────────────────────
-⚠ Estimates are heuristic. Career outcomes vary.
-```
-
-### 🤖 Contextual Insights Engine
-Not a chatbot. A **silent analytical layer** that surfaces intelligence at exactly the right moments.
-
-| Surface | Trigger | Output |
-|---------|---------|--------|
-| Discover card | Click "Fit Analysis" | 2-sentence personalized match explanation |
-| Compare page | Auto on load | Comparative narrative + dimension chips |
-
-Powered by `Gemini 2.5 Flash` with:
-- Strictly typed action-based prompts (no open chat)
-- Server-side in-memory caching
-- Deterministic fallbacks (zero failed states)
-- Analytically toned, 2–3 sentence outputs
-
-### 🎯 Rank Predictor
-Students input their JEE / NEET rank and get a list of colleges they are likely to qualify for, based on historical cutoff data stored per college.
-
-### 🧠 Personalized Dashboard
-The homepage adapts to every user based on their behavior — all stored in `localStorage`, no auth required.
-
-```
-Welcome back 👋
-─────────────────────────────────────────
-Recently Viewed:  IIT Bombay  BITS Pilani
-Saved Colleges:   IIT Delhi
-
-Based on your searches → Engineering · Placements
-Suggested:  NIT Surathkal  IIIT Hyderabad  DTU
-
-Upcoming Deadlines for JEE:
-  ⏰ JEE Advanced registration closes in 4 days
-─────────────────────────────────────────
-```
+A contextual financial analysis module embedded directly into every College Detail page providing estimated payback scenarios based on tuition costs vs. average placements.
 
 ---
 
@@ -164,63 +107,56 @@ Upcoming Deadlines for JEE:
 src/
 ├── app/
 │   ├── page.tsx                  # Adaptive Homepage
-│   ├── colleges/
-│   │   ├── page.tsx              # College Explorer (SSG)
-│   │   └── [id]/page.tsx         # College Detail (SSR)
-│   ├── compare/page.tsx          # Intelligent Compare (SSG)
-│   ├── discover/page.tsx         # Discover Engine (SSG)
-│   ├── predictor/page.tsx        # Rank Predictor (SSG)
+│   ├── colleges/                 # College Explorer & Detail Pages
+│   ├── compare/                  # Intelligent Compare Engine
+│   ├── discover/                 # AI-Powered Matchmaking
+│   ├── predictor/                # Rank Predictor
+│   ├── workspace/                # Authenticated User Dashboard
 │   └── api/
-│       ├── colleges/             # List + Detail endpoints
-│       ├── compare/              # Compare data fetcher
-│       ├── discover/             # Live scoring engine
+│       ├── auth/                 # NextAuth integrations
+│       ├── shortlist/            # DB-backed shortlisting
+│       ├── reviews/              # Verified reviews API
 │       ├── insights/             # Contextual AI actions
-│       ├── predict/              # Rank prediction logic
-│       ├── search/               # Autocomplete suggestions
-│       └── cron/sync-exams/      # Automated exam date sync
+│       └── predict/              # Rank prediction logic
 │
 ├── components/
-│   ├── college/                  # InvestmentOutlook
-│   ├── colleges/                 # Cards, Detail, Skeleton
-│   ├── compare/                  # CompareClient
-│   ├── discover/                 # DiscoverClient
-│   ├── home/                     # HomePageClientView
-│   ├── predictor/                # PredictorClient
-│   └── shared/                   # FallbackImage, EmptyState
+│   ├── auth/                     # Auth Modals & Buttons
+│   ├── college/                  # InvestmentOutlook, Charts
+│   ├── workspace/                # Dashboard Components
+│   └── shared/                   # UI primitives
 │
-├── hooks/
-│   └── useUserMemory.ts          # localStorage behavioral memory
-│
-└── lib/
-    ├── taxonomy.ts               # Stream definitions + icons
-    ├── validations.ts            # Zod schemas
-    └── prisma.ts                 # DB client
+├── hooks/                        # Custom React hooks (Zustand, SWR)
+└── lib/                          # Utils, Zod schemas, Prisma client
 ```
 
 ---
 
 ## 🗄️ Database Schema
 
+Powered by **Prisma ORM** on a **Neon Serverless PostgreSQL** database.
+
+```mermaid
+erDiagram
+    User ||--o{ Account : has
+    User ||--o{ Session : has
+    User ||--o{ Shortlist : manages
+    User ||--o{ TrackedExam : follows
+    User ||--o{ Review : writes
+
+    College ||--o{ Course : offers
+    College ||--o{ Review : receives
+    Course ||--o{ Cutoff : has
+
+    Exam ||--o{ ExamEvent : contains
+    Exam ||--o{ TrackedExam : tracked_by
 ```
-College ──< Course   (1 college → many courses)
-College ──< Review   (1 college → many synthetic reviews)
-Exam               (independent — synced by cron)
-```
 
-**College model key fields:**
-
-| Field | Type | Purpose |
-|-------|------|---------|
-| `slug` | `String @unique` | URL-safe identifier |
-| `streams` | `String[]` | Multi-stream classification |
-| `tags` | `String[]` | Searchable keyword tags |
-| `best_for` | `String[]` | Strength descriptors |
-| `ai_summary` | `Text` | Gemini-generated summary |
-| `exam` | `String[]` | Accepted entrance exams |
-| `nirf_rank` | `Int?` | Official NIRF ranking |
-| `avg_salary` | `Int?` | Average placement salary |
-
-**Indexes:** `state`, `city`, `nirf_rank`, `rating`, `fees_min`, `placement_percentage`, `slug`
+**Key Models:**
+- `User`, `Account`, `Session`: NextAuth security models.
+- `College`, `Course`, `Cutoff`: Core academic and institutional data.
+- `Review`: Student feedback tied to `User` and `College`.
+- `Exam`, `ExamEvent`: Schedules, registrations, and application deadlines.
+- `Shortlist`, `TrackedExam`: User-specific workspace relations.
 
 ---
 
@@ -233,11 +169,10 @@ Exam               (independent — synced by cron)
 | **Styling** | Tailwind CSS v4 + Framer Motion |
 | **ORM** | Prisma 7.x |
 | **Database** | PostgreSQL via Neon Serverless |
-| **AI** | Google Gemini 2.5 Flash (`@google/genai`) |
-| **Deployment** | Vercel (Edge-ready) |
-| **Auth/State** | None — localStorage-first personalization |
+| **Authentication**| NextAuth.js (v4) + Prisma Adapter |
+| **AI Insights** | Google Gemini 2.5 Flash (`@google/genai`) |
+| **State Mgmt** | Zustand (Global Modals) |
 | **Validation** | Zod |
-| **Icons** | Lucide React |
 
 ---
 
@@ -256,25 +191,29 @@ cp .env.example .env.local
 ```
 
 ```env
-# Required
+# Database
 DATABASE_URL="postgresql://user:pass@host/db?sslmode=require"
+
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="generate-a-strong-secret-here"
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+GITHUB_ID="your-github-id"
+GITHUB_SECRET="your-github-secret"
+
+# External Integrations
 GEMINI_API_KEY="your-gemini-api-key"
-
-# Optional (for data enrichment pipeline)
-PEXELS_API_KEY="your-pexels-key"
-GOOGLE_SEARCH_API_KEY="your-google-key"
-GOOGLE_SEARCH_CX="your-search-cx"
-
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
-### 3. Database Setup
+### 3. Database Setup & Seeding
 ```bash
-# Push schema to Neon PostgreSQL
+# Push schema to PostgreSQL
 npm run db:push
 
-# Seed with 100+ enriched college records
-npm run db:seed
+# Run the lightning-fast seed script to populate Colleges, Courses, Reviews & Exams
+npx tsx scripts/fast-seed.ts
+npx tsx scripts/seed-exams.ts
 ```
 
 ### 4. Run Dev Server
@@ -285,96 +224,19 @@ npm run dev
 
 ---
 
-## 🚢 Deployment (Vercel + Neon)
-
-```bash
-# 1. Push to GitHub
-git push origin main
-
-# 2. Import project on Vercel
-# 3. Add environment variables in Vercel dashboard
-# 4. Deploy — Vercel auto-runs: npx prisma generate && next build
-```
-
-**Required Vercel Environment Variables:**
-```
-DATABASE_URL
-GEMINI_API_KEY
-NEXT_PUBLIC_APP_URL
-```
-
----
-
-## 📜 NPM Scripts
-
-| Script | Command | Description |
-|--------|---------|-------------|
-| `dev` | `next dev` | Start development server |
-| `build` | `next build` | Production build |
-| `db:push` | `prisma db push` | Sync schema to DB |
-| `db:seed` | `ts-node prisma/seed.ts` | Seed database |
-| `db:studio` | `prisma studio` | Open Prisma Studio |
-| `db:generate` | `prisma generate` | Regenerate Prisma client |
-
----
-
-## 🧠 Personalization Architecture
-
-CollegeCompass uses a **100% client-side, localStorage-first memory system** — no accounts, no auth, no cloud sync required.
-
-```
-useUserMemory() hook tracks:
-  ├── recentColleges[]       → Recently viewed
-  ├── savedColleges[]        → User shortlist
-  ├── savedComparisons[]     → Saved compare sessions
-  ├── recentSearches[]       → Search history
-  ├── preferredExams[]       → Inferred from activity
-  ├── inferredStream         → Inferred from viewed colleges
-  └── activityLog[]          → Full interaction timeline
-```
-
-This powers the adaptive homepage, personalized suggestions, and user-contextualized AI insights — all with zero backend infrastructure.
-
----
-
 ## 🤖 Insights API
 
-`POST /api/insights`
+Powered by **Gemini 2.5 Flash** with strictly typed actions, server-side caching, and deterministic fallbacks.
 
 ```typescript
 // Explain why a specific college matches user preferences
+POST /api/insights
 {
-  action: "EXPLAIN_FIT",
-  payload: { college: CollegeMatch },
-  userContext: { priorities: string[], stream: string }
-}
-
-// Generate comparative trade-off narrative
-{
-  action: "COMPARE_TRADEOFFS",
-  payload: { colleges: CollegeDetail[] }
+  "action": "EXPLAIN_FIT",
+  "payload": { "college": CollegeMatch },
+  "userContext": { "priorities": ["Placements"], "stream": "Engineering" }
 }
 ```
-
-**Design Principles:**
-- ✅ Strictly typed actions — no open prompt injection
-- ✅ Server-side response caching (in-memory Map)
-- ✅ Analytical tone enforced via prompt engineering
-- ✅ Deterministic fallbacks — zero empty/error states
-- ✅ Temperature: `0.2` — keeps outputs consistent
-
----
-
-## 🗂️ Academic Streams
-
-| Stream | Icon | Colleges |
-|--------|------|---------|
-| Engineering | ⚙️ | IITs, NITs, IIITs, BITS |
-| Medical | 🏥 | AIIMS, MAMC |
-| Management | 💼 | IIMs |
-| Law | ⚖️ | NLUs |
-| Science | 🔬 | IISc, TIFR |
-| Arts | 🎨 | JNU, DU |
 
 ---
 
