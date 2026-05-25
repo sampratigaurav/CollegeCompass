@@ -15,6 +15,7 @@ import { FallbackImage } from "@/components/shared/FallbackImage";
 import { InvestmentOutlook } from "@/components/college/InvestmentOutlook";
 import { useState, useEffect } from "react";
 import { useUserMemory } from "@/hooks/useUserMemory";
+import { useShortlist } from "@/hooks/useShortlist";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 
@@ -74,8 +75,8 @@ export function CollegeDetailClientView({
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const { data: session } = useSession();
 
-  const { addRecentCollege, logActivity, toggleSavedCollege, savedColleges } = useUserMemory();
-  const isSaved = savedColleges.some(c => c.id === college.id);
+  const { addRecentCollege, logActivity } = useUserMemory();
+  const { isSaved, toggleSave } = useShortlist(college.id);
 
   const userReview = session?.user?.id 
     ? college.reviews.find(r => r.userId === session.user.id)
@@ -491,9 +492,7 @@ export function CollegeDetailClientView({
                   </Link>
                 )}
                 <button
-                  onClick={() => toggleSavedCollege({
-                    id: college.id, name: college.name, slug: college.slug, nirf_rank: college.nirf_rank, image_url: college.image_url, type: college.type, location: college.location
-                  })}
+                  onClick={toggleSave}
                   className={`w-full inline-flex items-center justify-center gap-2 rounded-lg border px-5 py-3.5 text-sm font-bold transition-colors active:scale-[0.98] ${
                     isSaved ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : "bg-transparent border-border text-foreground hover:bg-muted"
                   }`}
@@ -552,9 +551,7 @@ export function CollegeDetailClientView({
       {/* Mobile Sticky Action Bar */}
       <div className="lg:hidden fixed bottom-16 left-0 right-0 z-40 bg-background/95 backdrop-blur-md border-t border-border p-3 flex gap-2 shadow-[0_-8px_20px_rgba(0,0,0,0.3)] pb-[calc(env(safe-area-inset-bottom)+12px)]">
         <button
-          onClick={() => toggleSavedCollege({
-            id: college.id, name: college.name, slug: college.slug, nirf_rank: college.nirf_rank, image_url: college.image_url, type: college.type, location: college.location
-          })}
+          onClick={toggleSave}
           className={`shrink-0 inline-flex items-center justify-center rounded-lg border px-3 py-3 active:scale-[0.98] transition-all ${
             isSaved ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" : "bg-muted border-border text-foreground"
           }`}
